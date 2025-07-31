@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Incacore – Frontend
 
-## Getting Started
+Bienvenido al corazón visual de **Incacore**, la aplicación web del presente proyecto. Esta carpeta contiene todos los componentes, estructuras y módulos que dan vida a la interfaz de usuario.
 
-First, run the development server:
+---
+
+## 🚀 Estructura del proyecto
+
+- **`components/`**: Componentes reutilizables (botones, tarjetas, modales…).  
+- **`layouts/`**: Plantillas de diseño y estructuras de página.  
+- **`modules/`**: Lógica de dominio (registro de horas, mantenimiento, alertas…).  
+- **`styles/`**: Temas, variables y utilidades de estilos (TailwindCSS, SASS…).  
+- **`utils/`**: Helpers y funciones auxiliares.  
+- **`assets/`**: Imágenes, fuentes y recursos estáticos.
+
+---
+
+## 🏷️ Guía de ramas
+
+- **`main`**: Versión estable en producción.  
+- **`develop`**: Integración continua de nuevas funcionalidades.  
+- **`feature/<descripción>`**: Desarrollo de funcionalidades específicas.  
+- **`hotfix/<descripción>`**: Correcciones críticas en producción.  
+- **`release/<versión>`**: Preparación de versiones para `main`.
+
+---
+
+## ✍️ Convención de commits
+
+Usamos **Conventional Commits** para estandarizar mensajes y facilitar el historial:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+<tipo>(<scope opcional>): mensaje breve
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **feat**: nueva funcionalidad
+- **fix**: corrección de errores
+- **docs**: cambios en documentación
+- **style**: formato, espaciado, sin lógica
+- **refactor**: refactorización de código
+- **test**: añadir o modificar tests
+- **chore**: tareas de mantenimiento
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**Ejemplos:**
 
-## Learn More
+```bash
+feat(auth): implementar flujo de login
+fix(user): corregir validación de email vacío
+docs: actualizar sección de instalación en README
+```
 
-To learn more about Next.js, take a look at the following resources:
+## 🔄 Flujo de trabajo
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Crear rama** desde `develop`  
+```bash
+   git checkout develop  
+   git checkout -b feature/nombre-descriptivo  
+```
+2. Desarrollar con commits frecuentes siguiendo la convención.  
+3. **Pull Request**: abrir PR a `develop`, etiquetar revisores y describir cambios.  
+4. **Merge** tras aprobación y tests verdes.  
+5. **Release**: cuando `develop` esté listo, crear `release/vX.Y.Z`, probar y merge a `main`.  
+6. **Hotfix**: para bugs en producción, crear `hotfix/<descripción>`, corregir, merge a `main` y luego a `develop`.  
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## 👥 Equipo Frontend
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Nombre                       | Rol                     |
+|------------------------------|-------------------------|
+| Alfredo Castillo             | Desarrollador Frontend  |
+| Luis Angel Quispe Navarro    | Desarrollador Frontend  |
+| Cecilia Suarez               | Desarrolladora Frontend |
+| Ingrid Paola Chaves Barbosa  | Desarrolladora Frontend |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+> _“Gracias por acompañarnos en esta travesía digital. ¡Naveguemos juntos hacia un producto impecable!”_
+
