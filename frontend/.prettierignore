@@ -1,0 +1,36 @@
+# Build output
+.next/
+out/
+dist/
+build/
+.vite/
+
+# Static files cache
+*.cache/
+
+# Dependencies
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment variables
+.env
+.env.* 
+
+# macOS-specific files
+.DS_Store
+
+# Lock files 
+package-lock.json
+pnpm-lock.yaml
+yarn.lock  
+
+# VSCode settings
+.vscode/
+
+# TypeScript build output
+*.tsbuildinfo
