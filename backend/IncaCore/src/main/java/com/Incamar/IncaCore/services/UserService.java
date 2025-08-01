@@ -1,22 +1,64 @@
 package com.Incamar.IncaCore.services;
 
+import com.Incamar.IncaCore.models.AppUser;
+import com.Incamar.IncaCore.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
-public class UserService {
+public class UserService implements IUserServices{
+    @Autowired
+    UserRepository userRepository;
 
-    // This class is currently empty, but it can be used to implement user-related services in the future.
-    // For example, methods for user registration, authentication, profile management, etc. can be added here.
 
-    // Example method (to be implemented):
-    // public User registerUser(User user) {
-    //     // Logic to register a new user
-    //     return user;
-    // }
+    @Override
+    public List<AppUser> getAllUsers() {
+        return userRepository.findAll();
+    }
 
-    // Example method (to be implemented):
-    // public User authenticateUser(String username, String password) {
-    //     // Logic to authenticate a user
-    //     return authenticatedUser;
-    // }
+    @Override
+    public AppUser getUserById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public void createUser(String name, String lastname, String mail, String password) {
+        AppUser newUser = new AppUser();
+
+        newUser.setName(name);
+        newUser.setLastname(lastname);
+        newUser.setMail(mail);
+        newUser.setPassword(password);
+        userRepository.save(newUser);
+    }
+
+
+    @Override
+    public void deleteUserById(Long id) {
+        if(userRepository.existsById(id)){
+            userRepository.deleteById(id);
+        }
+    }
+
+    @Override
+    public AppUser editUser(Long id, AppUser u) {
+        Optional<AppUser> optionalUser = userRepository.findById(id);
+        if(optionalUser.isPresent()){
+            AppUser auxUser = optionalUser.get();
+
+           auxUser.setName((u.getName()));
+           auxUser.setLastname(u.getLastname());
+           auxUser.setMail(u.getMail());
+           auxUser.setPassword(u.getPassword());
+
+           return userRepository.save(auxUser);
+        } else {
+            return null;
+        }
+
+    }
+
 }
