@@ -1,6 +1,4 @@
 package com.Incamar.IncaCore.controllers;
-import com.Incamar.IncaCore.models.AppUser;
-import com.Incamar.IncaCore.services.IUserServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
