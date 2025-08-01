@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Enviar mensaje a Discord
-        uses: rtCamp/action-slack-notify
+        uses: rtCamp/action-slack-notify@v2
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           message: |
