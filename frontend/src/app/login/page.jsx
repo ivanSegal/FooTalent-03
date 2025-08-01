@@ -57,7 +57,6 @@ export default function LoginPage() {
   };
 
   return (
-<<<<<<< HEAD
     <div className="relative max-w-sm mx-auto mt-10">
       <form onSubmit={handleSubmit} className="relative bg-white p-4 rounded shadow">
         <h2 className="text-2xl font-bold mb-4 text-center">Iniciar sesión</h2>
@@ -106,45 +105,7 @@ export default function LoginPage() {
         </div>
       )}
     </div>
-=======
-    <form onSubmit={handleSubmit} className="max-w-sm mx-auto mt-10">
-      <h2 className="text-2xl font-bold mb-4 text-center">Iniciar sesión</h2>
 
-      <input
-        type="email"
-        name="email"
-        placeholder="Correo"
-        value={formData.email}
-        onChange={handleChange}
-        className="w-full border p-2 mb-1 rounded"
-      />
-      {errors.email && (
-        <p className="text-red-500 text-xs mb-3">{errors.email}</p>
-      )}
-
-      <input
-        type="password"
-        name="password"
-        placeholder="Contraseña"
-        value={formData.password}
-        onChange={handleChange}
-        className="w-full border p-2 mb-1 rounded"
-      />
-      {errors.password && (
-        <p className="text-red-500 text-xs mb-3">{errors.password}</p>
-      )}
-
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className={`w-full bg-blue-950 text-white py-2 rounded ${
-          isSubmitting ? "opacity-50 cursor-not-allowed" : ""
-        }`}
-      >
-        {isSubmitting ? "Enviando..." : "Iniciar sesión"}
-      </button>
-    </form>
->>>>>>> feature-register
   );
 }
 
