@@ -1,0 +1,20 @@
+name: Notificar a Discord
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enviar mensaje a Discord
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: 📦 Nuevo push en ${{ github.repository }}
+          description: |
+            🔀 Rama: `${{ github.ref_name }}`
+            ✍️ Autor: `${{ github.actor }}`
+            📝 Commit: `${{ github.event.head_commit.message }}`
