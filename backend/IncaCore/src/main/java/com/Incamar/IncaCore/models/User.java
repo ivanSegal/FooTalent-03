@@ -48,11 +48,14 @@ public class User implements UserDetails {
 
   @Column(nullable = false)
   @Schema(description = "Contraseña encriptada del usuario",
-      example = "$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iYqiSfFdSsKpqjjP6yTr6UPFhCUy",
-      requiredMode = Schema.RequiredMode.REQUIRED)
+      example = "$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iYqiSfFdSsKpqjjP6yTr6UPFhCUy")
   private String password;
 
   @Column(nullable = false, length = 100)
+  @Schema(
+      description = "Nombre de usuario único. Solo acepta letras, números, puntos y guiones bajos",
+      example = "juan.perez_92"
+  )
   private String username;
 
   @Enumerated(EnumType.STRING)

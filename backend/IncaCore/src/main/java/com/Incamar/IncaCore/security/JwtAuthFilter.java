@@ -1,5 +1,6 @@
 package com.Incamar.IncaCore.security;
 
+import com.Incamar.IncaCore.exceptions.UnauthorizedException;
 import com.Incamar.IncaCore.services.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
