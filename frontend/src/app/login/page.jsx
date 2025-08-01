@@ -58,7 +58,7 @@ export default function LoginPage() {
 
   return (
     <div className="relative max-w-sm mx-auto mt-10">
-      <form onSubmit={handleSubmit} className="relative bg-white p-4 rounded shadow">
+      <form onSubmit={handleSubmit} className="bg-white p-6 shadow-md rounded relative z-10">
         <h2 className="text-2xl font-bold mb-4 text-center">Iniciar sesión</h2>
 
         <input
@@ -86,20 +86,21 @@ export default function LoginPage() {
         )}
 
         <button
-          type="submit"
-          disabled={isSubmitting}
-          className={`w-full bg-blue-950 text-white py-2 rounded ${
-            isSubmitting ? "opacity-50 cursor-not-allowed" : ""
-          }`}
-        >
-          {isSubmitting ? "Enviando..." : "Iniciar sesión"}
-        </button>
+  type="submit"
+  disabled={isSubmitting}
+  className={`w-full bg-blue-950 text-white py-2 rounded ${
+    isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+  }`}
+>
+  Iniciar sesión
+</button>
+
       </form>
 
       {isSubmitting && (
         <div className="absolute inset-0 bg-opacity-30 flex items-center justify-center z-20">
           <div className="bg-white p-6 rounded-lg shadow-xl flex flex-col items-center">
-            <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-3" />
+            <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4" />
             <p className="text-blue-900 font-medium">Iniciando sesión...</p>
           </div>
         </div>
@@ -107,3 +108,7 @@ export default function LoginPage() {
     </div>
   );
 }
+
+
+
+
