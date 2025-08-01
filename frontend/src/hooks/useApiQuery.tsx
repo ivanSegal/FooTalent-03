@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import { api } from "../utils/axiosInstance";
+import { api } from "@/services/axiosInstance";
 import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
 export const useApiQuery = <T,>(

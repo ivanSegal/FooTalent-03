@@ -2,7 +2,7 @@
 import React from "react";
 import { useApiQuery } from "@/hooks/useApiQuery";
 import { Usuario } from "@/types/Usuario";
-import { UserAvatarIcon } from "@/app/ui/icons/UserAvatarIcon";
+import { UserAvatarIcon } from "@/assets/icons/UserAvatarIcon";
 
 export default function ListaUsuario() {
   const { data, error, isLoading } = useApiQuery<Usuario[]>("usuarios", "/users");
