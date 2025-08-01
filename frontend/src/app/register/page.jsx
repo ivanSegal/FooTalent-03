@@ -91,9 +91,8 @@ export default function RegisterPage() {
         </button>
       </form>
 
-      {/* Loader tipo modal sobre el formulario */}
       {isLoading && (
-        <div className="absolute inset-0 bg-opacity-30 flex items-center justify-center z-20">
+        <div className="absolute inset-0  bg-opacity-30 flex items-center justify-center z-20">
           <div className="bg-white p-6 rounded-lg shadow-xl flex flex-col items-center">
             <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4" />
             <p className="text-blue-900 font-medium">Registrando...</p>
