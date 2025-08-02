@@ -12,14 +12,14 @@ export default function ListaUsuario() {
 
   return (
     <>
-      <h1 className="text-3xl font-bold">Usuarios</h1>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+      <h1 className="mb-6 text-3xl font-bold text-white">LISTADO DE USUARIOS</h1>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-4 lg:grid-cols-3">
         {data?.map((usuario) => (
           <div
             key={usuario.id}
-            className="flex max-w-4xl items-center gap-3 rounded-xl bg-amber-50 p-4"
+            className="flex max-w-4xl transform items-center gap-3 rounded-xl bg-white p-4 shadow-lg transition-transform duration-300 hover:scale-105"
           >
-            <div className="h-16 w-16">
+            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-200">
               <UserAvatarIcon />
             </div>
 

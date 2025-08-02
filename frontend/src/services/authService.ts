@@ -1,30 +1,43 @@
 import { AuthUser } from "../types/auth";
 import api from "./api";
 
+interface ApiResponse<T> {
+  success: boolean;
+  message: string;
+  data: T;
+}
+
+// Guardamos el JWT en cookie para que el middleware lo lea
 const saveToken = (token: string) => {
-  localStorage.setItem("token", token);
+  document.cookie = `token=${token}; path=/; samesite=Lax;`;
 };
 
-export const register = async (data: AuthUser) => {
-  const response = await api.post("/auth/register", data);
-  console.log("Data being sent to register:", data);
+// Hacemos login y devolvemos el token
+export const login = async (
+  credentials: Pick<AuthUser, "username" | "password">,
+): Promise<{ token: string }> => {
+  // Tipamos la respuesta como ApiResponse<{ token: string }>
+  const { data: payload } = await api.post<ApiResponse<{ token: string }>>(
+    "/auth/login",
+    credentials,
+  );
+  console.log("Login response data:", payload);
 
-  const result = response.data as AuthUser;
-
-  if (result.token) {
-    saveToken(result.token);
+  const token = payload.data.token;
+  if (!token) {
+    throw new Error("No se recibió token en la respuesta de login");
   }
-  console.log("User registered successfully:", result);
-  return result;
+
+  saveToken(token);
+  return { token };
 };
 
-export const login = async (data: Pick<AuthUser, "email" | "password">) => {
-  const response = await api.post("/auth/login", data);
-  const result = response.data as AuthUser;
-
-  if (result.token) {
-    saveToken(result.token);
-  }
-  console.log("User logged in successfully:", result);
-  return result;
+// Registramos un usuario y devolvemos el body completo de la API
+export const register = async (
+  data: Pick<AuthUser, "username" | "password" | "confirmPassword" | "role">,
+): Promise<ApiResponse<unknown>> => {
+  // Tipamos la respuesta como ApiResponse<unknown>
+  const { data: body } = await api.post<ApiResponse<unknown>>("/auth/register", data);
+  console.log("Register response data:", body);
+  return body;
 };
