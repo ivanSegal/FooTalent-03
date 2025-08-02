@@ -17,7 +17,7 @@ export default function ListaUsuario() {
         {data?.map((usuario) => (
           <div
             key={usuario.id}
-            className="flex max-w-4xl transform items-center gap-3 rounded-xl bg-amber-50 p-4 shadow-lg transition-transform duration-300 hover:scale-105"
+            className="flex max-w-4xl transform items-center gap-3 rounded-xl bg-white p-4 shadow-lg transition-transform duration-300 hover:scale-105"
           >
             <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-200">
               <UserAvatarIcon />

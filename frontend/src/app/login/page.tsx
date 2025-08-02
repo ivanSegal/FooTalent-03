@@ -86,7 +86,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`w-full rounded-lg bg-[#2375AC] py-2 text-white transition hover:bg-[#1e6b94] ${isSubmitting ? "cursor-not-allowed opacity-50" : ""} `}
+          className={`w-full cursor-pointer rounded-lg bg-[#2375AC] py-2 text-white transition hover:bg-[#1e6b94] ${isSubmitting ? "cursor-not-allowed opacity-50" : ""} `}
         >
           {isSubmitting ? "Iniciando..." : "Iniciar sesión"}
         </button>
