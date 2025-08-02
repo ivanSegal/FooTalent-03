@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import fondo from "@/assets/images/fondo.png";
 import { login } from "../../services/authService";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -16,19 +18,16 @@ export default function LoginPage() {
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
-
     if (!formData.username.trim()) {
       newErrors.username = "El username es obligatorio.";
     } else if (!usernameRegex.test(formData.username)) {
       newErrors.username = "El username no tiene un formato válido.";
     }
-
     if (!formData.password.trim()) {
       newErrors.password = "La contraseña es obligatoria.";
     } else if (formData.password.length < 6) {
       newErrors.password = "La contraseña debe tener al menos 6 caracteres.";
     }
-
     return newErrors;
   };
 
@@ -44,7 +43,8 @@ export default function LoginPage() {
     setIsSubmitting(true);
     try {
       const data = await login(formData);
-      console.log("Respuesta del login:", data);
+      document.cookie = `token=${data.token}; path=/; samesite=Lax;`;
+      router.push("/dashboard");
     } catch (error) {
       console.error("Error al enviar el formulario:", error);
     } finally {
@@ -88,7 +88,7 @@ export default function LoginPage() {
           disabled={isSubmitting}
           className={`w-full rounded-lg bg-[#2375AC] py-2 text-white transition hover:bg-[#1e6b94] ${isSubmitting ? "cursor-not-allowed opacity-50" : ""} `}
         >
-          Iniciar sesión
+          {isSubmitting ? "Iniciando..." : "Iniciar sesión"}
         </button>
       </form>
 
