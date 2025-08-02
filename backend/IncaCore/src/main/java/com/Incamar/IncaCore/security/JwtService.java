@@ -13,6 +13,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 
 @Service
@@ -39,7 +40,7 @@ public class JwtService {
     Map<String, Object> claims = new HashMap<>();
     claims.put("userId", d.getUuid());
     claims.put("username", d.getUsername());
-    claims.put("role", "ROLE_" + d.getRole());
+    claims.put("role", d.getRole());
     return buildToken(claims, d.getUsername(), jwtExpiration);
   }
 
@@ -59,20 +60,6 @@ public class JwtService {
     return extractAllClaims(token).getSubject();
   }
 
-  public boolean isTokenValid(String token, UserDetails userDetails) {
-    final String username = extractUsername(token);
-    return (username.equals(
-        userDetails.getUsername()) && !isTokenExpired(token));
-  }
-
-  private boolean isTokenExpired(String token) {
-    return extractExpiration(token).before(new Date());
-  }
-
-  private Date extractExpiration(String token) {
-    return extractAllClaims(token).getExpiration();
-  }
-
   private Claims extractAllClaims(String token) {
     return Jwts.parserBuilder()
         .setSigningKey(signingKey)
@@ -81,8 +68,14 @@ public class JwtService {
         .getBody();
   }
 
-  public Boolean extractTwoFaPending(String token) {
+  public UUID extractUserId(String token) {
     Claims claims = extractAllClaims(token);
-    return claims.get("twoFaPending", Boolean.class);
+    String userIdString = claims.get("userId", String.class);
+    return UUID.fromString(userIdString);
+  }
+
+  public String extractRole(String token) {
+    Claims claims = extractAllClaims(token);
+    return claims.get("role", String.class);
   }
 }

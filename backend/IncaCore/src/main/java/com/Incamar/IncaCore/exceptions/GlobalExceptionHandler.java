@@ -6,9 +6,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.context.request.WebRequest;
 
 
 import java.util.stream.Collectors;
@@ -23,8 +25,8 @@ public class GlobalExceptionHandler {
     ErrorResponse error = new ErrorResponse(
         HttpStatus.INTERNAL_SERVER_ERROR.value(),
         "INTERNAL_ERROR",
-        "Internal Error Server",
         ex.getMessage(),
+        ex.toString(),
         request.getRequestURI()
     );
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
@@ -49,7 +51,7 @@ public class GlobalExceptionHandler {
           new ErrorResponse(
               HttpStatus.BAD_REQUEST.value(),
               "VALIDATION_ERROR",
-              "Error validation with data",
+              ex.getMessage(),
               details,
               request.getRequestURI()
           )
@@ -59,8 +61,8 @@ public class GlobalExceptionHandler {
           new ErrorResponse(
               HttpStatus.BAD_REQUEST.value(),
               "BAD_REQUEST",
-              "Invalid argument provided",
               ex.getMessage(),
+              ex.toString(),
               request.getRequestURI()
           )
       );
@@ -71,8 +73,8 @@ public class GlobalExceptionHandler {
         new ErrorResponse(
             HttpStatus.BAD_REQUEST.value(),
             "BAD_REQUEST",
-            "Bad request",
             ex.getMessage(),
+            ex.toString(),
             request.getRequestURI()
         )
     );
@@ -81,26 +83,26 @@ public class GlobalExceptionHandler {
 
   // This method handles UnauthorizedException and returns a 401 Unauthorized response.
   @ExceptionHandler(UnauthorizedException.class)
-  public ResponseEntity<ErrorResponse> handleUnauthorized(UnauthorizedException ex, HttpServletRequest request) {
+  public ResponseEntity<ErrorResponse> handleUnauthorized(UnauthorizedException ex, WebRequest request) {
     ErrorResponse error = new ErrorResponse(
         HttpStatus.UNAUTHORIZED.value(),
         "UNAUTHORIZED",
-        "Unauthorized access",
         ex.getMessage(),
-        request.getRequestURI()
+        request.getDescription(false),
+        request.getDescription(false).split("=")[1]
     );
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
   }
 
   // This method handles ForbiddenException and returns a 403 Forbidden response.
   @ExceptionHandler(ForbiddenException.class)
-  public ResponseEntity<ErrorResponse> handleForbidden(ForbiddenException ex, HttpServletRequest request) {
+  public ResponseEntity<ErrorResponse> handleForbidden(ForbiddenException ex,WebRequest request) {
     ErrorResponse error = new ErrorResponse(
         HttpStatus.FORBIDDEN.value(),
         "FORBIDDEN",
-        "Access to the resource is forbidden",
         ex.getMessage(),
-        request.getRequestURI()
+        request.getDescription(false),
+        request.getDescription(false).split("=")[1]
     );
     return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
   }
@@ -108,26 +110,26 @@ public class GlobalExceptionHandler {
 
   // This method handles ResourceNotFoundException and returns a 404 Not Found response.
   @ExceptionHandler(ResourceNotFoundException.class)
-  public ResponseEntity<ErrorResponse> handleNotFound(ResourceNotFoundException ex, HttpServletRequest request) {
+  public ResponseEntity<ErrorResponse> handleNotFound(ResourceNotFoundException ex, WebRequest request) {
     ErrorResponse error = new ErrorResponse(
         HttpStatus.NOT_FOUND.value(),
         "NOT_FOUND",
-        "Resource not found",
         ex.getMessage(),
-        request.getRequestURI()
+        request.getDescription(false),
+        request.getDescription(false).split("=")[1]
     );
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
   }
 
   // This method handles ConflictException and returns a 409 Conflict response.
   @ExceptionHandler(ConflictException.class)
-  public ResponseEntity<ErrorResponse> handleConflict(ConflictException ex, HttpServletRequest request) {
+  public ResponseEntity<ErrorResponse> handleConflict(ConflictException ex, WebRequest request) {
     ErrorResponse error = new ErrorResponse(
         HttpStatus.CONFLICT.value(),
         "CONFLICT",
-        "Resource already exists",
         ex.getMessage(),
-        request.getRequestURI()
+        request.getDescription(false),
+        request.getDescription(false).split("=")[1]
     );
     return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
   }
@@ -147,15 +149,29 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(ServiceUnavailableException.class)
-  public ResponseEntity<ErrorResponse> handleServiceUnavailable(ServiceUnavailableException ex, HttpServletRequest request) {
+  public ResponseEntity<ErrorResponse> handleServiceUnavailable(ServiceUnavailableException ex, WebRequest request) {
     ErrorResponse error = new ErrorResponse(
         HttpStatus.SERVICE_UNAVAILABLE.value(),
         "SERVICE_UNAVAILABLE",
-        "El servicio no está disponible temporalmente",
         ex.getMessage(),
-        request.getRequestURI()
+        request.getDescription(false),
+        request.getDescription(false).split("=")[1]
     );
     return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(error);
+  }
+
+  @ExceptionHandler(AccessDeniedException.class)
+  public ResponseEntity<ErrorResponse> handleAccessDeniedException(
+      AccessDeniedException ex, WebRequest request) {
+
+    ErrorResponse errorResponse = new ErrorResponse(
+        HttpStatus.FORBIDDEN.value(),
+        "FORBIDDEN",
+        "Acceso denegado",
+        ex.getLocalizedMessage(),
+        request.getDescription(false).replace("uri=", "")
+    );
+    return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
   }
 
 }
