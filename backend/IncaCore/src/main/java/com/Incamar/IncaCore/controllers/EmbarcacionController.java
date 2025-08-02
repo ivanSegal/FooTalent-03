@@ -1,7 +1,9 @@
 package com.Incamar.IncaCore.controllers;
 
+import com.Incamar.IncaCore.documentation.embarcacion.*;
 import com.Incamar.IncaCore.models.Embarcacion;
 import com.Incamar.IncaCore.services.IEmbarcacionService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,18 +13,20 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/embarcaciones")
+@Tag(name = "02 - Embarcaciones",
+        description = "Endpoints para gestión de embarcaciones")
 public class EmbarcacionController {
 
     @Autowired
     private IEmbarcacionService embarcacionService;
 
-    // GET: Obtener todas las embarcaciones
+    @GetAllEmbarcacionesEndpointDoc
     @GetMapping
     public ResponseEntity<List<Embarcacion>> getAllEmbarcaciones() {
         return ResponseEntity.ok(embarcacionService.getAllEmbarcaciones());
     }
 
-    // GET: Obtener embarcacion por ID
+    @GetEmbarcacionByIdEndpointDoc
     @GetMapping("/{id}")
     public ResponseEntity<Embarcacion> getEmbarcacionById(@PathVariable Long id) {
         Embarcacion embarcacion = embarcacionService.getEmbarcacionById(id);
@@ -33,7 +37,7 @@ public class EmbarcacionController {
         }
     }
 
-    // POST: Crear una nueva embarcacion
+    @CreateEmbarcacionEndpointDoc
     @PostMapping
     public ResponseEntity<String> createEmbarcacion(@Valid @RequestBody Embarcacion embarcacion) {
         embarcacionService.createEmbarcacion(
@@ -42,17 +46,17 @@ public class EmbarcacionController {
                 embarcacion.getCapitan(),
                 embarcacion.getModelo()
         );
-        return ResponseEntity.ok("Embarcacion creada correctamente.");
+        return ResponseEntity.ok("Embarcación creada correctamente.");
     }
 
-    // DELETE: Eliminar una embarcacion por ID
+    @DeleteEmbarcacionEndpointDoc
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteEmbarcacion(@PathVariable Long id) {
         embarcacionService.deleteEmbarcacionById(id);
-        return ResponseEntity.ok("Embarcacion eliminada correctamente.");
+        return ResponseEntity.ok("Embarcación eliminada correctamente.");
     }
 
-    // PUT: Editar una embarcacion
+    @UpdateEmbarcacionEndpointDoc
     @PutMapping("/{id}")
     public ResponseEntity<Embarcacion> editEmbarcacion(@PathVariable Long id,
                                                        @Valid @RequestBody Embarcacion embarcacion) {

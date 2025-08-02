@@ -1,8 +1,9 @@
 package com.Incamar.IncaCore.controllers;
 
+import com.Incamar.IncaCore.documentation.auth.LoginEndpointDoc;
+import com.Incamar.IncaCore.documentation.auth.RegisterEndpointDoc;
 import com.Incamar.IncaCore.dtos.users.LoginRequestDto;
 import com.Incamar.IncaCore.dtos.users.RegisterRequestDto;
-import com.Incamar.IncaCore.models.User;
 import com.Incamar.IncaCore.services.AuthService;
 import com.Incamar.IncaCore.utils.ApiResult;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,6 +27,7 @@ public class AuthController {
 
   private final AuthService authService;
 
+  @LoginEndpointDoc
   @PostMapping("/login")
   public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDto request) {
     String token = authService.login(request);
@@ -37,6 +39,7 @@ public class AuthController {
         .body(ApiResult.success(data, "Login exitoso"));
   }
 
+  @RegisterEndpointDoc
   @PostMapping("/register")
   public ResponseEntity<?> register(@Valid @RequestBody RegisterRequestDto request) {
     authService.register(request);
