@@ -14,13 +14,11 @@ import lombok.Setter;
 public class ApiResult<T> {  // <-- aquí se declara la clase genérica
 
   @Schema(description = "Indica si la operación fue exitosa",
-      example = "true",
-      required = true)
+      example = "true")
   private boolean success;
 
   @Schema(description = "Mensaje descriptivo de la respuesta",
       example = "Operación exitosa",
-      required = true,
       maxLength = 500)
   private String message;
 
