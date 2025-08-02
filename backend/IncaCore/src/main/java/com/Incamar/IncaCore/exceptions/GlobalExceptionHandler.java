@@ -19,6 +19,7 @@ public class GlobalExceptionHandler {
   // This method handles all exceptions that are not specifically handled by other methods.
   @ExceptionHandler(Exception.class)
   public ResponseEntity<ErrorResponse> handleConflict(Exception ex, HttpServletRequest request) {
+
     ErrorResponse error = new ErrorResponse(
         HttpStatus.INTERNAL_SERVER_ERROR.value(),
         "INTERNAL_ERROR",
@@ -39,6 +40,7 @@ public class GlobalExceptionHandler {
    */
   @ExceptionHandler({IllegalArgumentException.class, MethodArgumentNotValidException.class})
   public ResponseEntity<ErrorResponse> handleBadRequestExceptions(Exception ex, HttpServletRequest request) {
+
     if (ex instanceof MethodArgumentNotValidException validationEx) {
       String details = validationEx.getBindingResult().getFieldErrors().stream()
           .map(f -> f.getField() + ": " + f.getDefaultMessage())
@@ -65,6 +67,7 @@ public class GlobalExceptionHandler {
     }
 
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+
         new ErrorResponse(
             HttpStatus.BAD_REQUEST.value(),
             "BAD_REQUEST",
