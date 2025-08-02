@@ -92,7 +92,7 @@ export default function LoginPage() {
             isSubmitting ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
-           Iniciar sesión
+          Iniciar sesión
         </button>
       </form>
 
