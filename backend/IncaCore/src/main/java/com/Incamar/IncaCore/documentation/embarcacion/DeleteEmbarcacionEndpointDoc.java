@@ -3,6 +3,7 @@ package com.Incamar.IncaCore.documentation.embarcacion;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.lang.annotation.*;
 
@@ -15,7 +16,8 @@ import java.lang.annotation.*;
 @Documented
 @Operation(
         summary = "Eliminar embarcación",
-        description = "Elimina una embarcación existente del sistema."
+        description = "Elimina una embarcación existente del sistema.",
+        security = @SecurityRequirement(name = "bearer-key")
 )
 @ApiResponses(value = {
         @ApiResponse(

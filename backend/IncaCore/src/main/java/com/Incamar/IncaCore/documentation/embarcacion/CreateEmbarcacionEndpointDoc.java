@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.lang.annotation.*;
 
@@ -20,7 +21,9 @@ import java.lang.annotation.*;
         description = """
          Crea una nueva embarcación en el sistema con nombre, número de patente, capitán y modelo. \s
          Devuelve un mensaje de éxito con estado <b>200 OK</b>.
-        \s"""
+        \s""",
+        security = @SecurityRequirement(name = "bearer-key")
+
 )
 @ApiResponses(value = {
         @ApiResponse(

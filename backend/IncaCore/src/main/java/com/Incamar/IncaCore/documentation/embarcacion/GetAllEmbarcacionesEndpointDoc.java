@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.lang.annotation.*;
 
@@ -18,7 +19,8 @@ import java.lang.annotation.*;
 @Documented
 @Operation(
         summary = "Listar todas las embarcaciones",
-        description = "Devuelve una lista con todas las embarcaciones registradas en el sistema."
+        description = "Devuelve una lista con todas las embarcaciones registradas en el sistema.",
+        security = @SecurityRequirement(name = "bearer-key")
 )
 @ApiResponses(value = {
         @ApiResponse(
