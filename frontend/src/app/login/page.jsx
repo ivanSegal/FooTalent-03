@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { login } from "../../services/authService";
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -41,13 +42,7 @@ export default function LoginPage() {
     setIsSubmitting(true);
 
     try {
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await res.json();
+      const data = await login(formData);
       console.log("Respuesta del login:", data);
     } catch (error) {
       console.error("Error al enviar el formulario:", error);
@@ -57,9 +52,9 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="relative max-w-sm mx-auto mt-10">
-      <form onSubmit={handleSubmit} className="relative bg-white p-4 rounded shadow">
-        <h2 className="text-2xl font-bold mb-4 text-center">Iniciar sesión</h2>
+    <div className="relative mx-auto mt-10 max-w-sm">
+      <form onSubmit={handleSubmit} className="relative rounded bg-white p-4 shadow">
+        <h2 className="mb-4 text-center text-2xl font-bold">Iniciar sesión</h2>
 
         <input
           type="email"
@@ -67,11 +62,9 @@ export default function LoginPage() {
           placeholder="Correo"
           value={formData.email}
           onChange={handleChange}
-          className="w-full border p-2 mb-1 rounded"
+          className="mb-1 w-full rounded border p-2"
         />
-        {errors.email && (
-          <p className="text-red-500 text-xs mb-3">{errors.email}</p>
-        )}
+        {errors.email && <p className="mb-3 text-xs text-red-500">{errors.email}</p>}
 
         <input
           type="password"
@@ -79,17 +72,15 @@ export default function LoginPage() {
           placeholder="Contraseña"
           value={formData.password}
           onChange={handleChange}
-          className="w-full border p-2 mb-1 rounded"
+          className="mb-1 w-full rounded border p-2"
         />
-        {errors.password && (
-          <p className="text-red-500 text-xs mb-3">{errors.password}</p>
-        )}
+        {errors.password && <p className="mb-3 text-xs text-red-500">{errors.password}</p>}
 
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`w-full bg-blue-950 text-white py-2 rounded ${
-            isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+          className={`w-full rounded bg-blue-950 py-2 text-white ${
+            isSubmitting ? "cursor-not-allowed opacity-50" : ""
           }`}
         >
           Iniciar sesión
@@ -97,15 +88,13 @@ export default function LoginPage() {
       </form>
 
       {isSubmitting && (
-        <div className="absolute inset-0 bg-opacity-30 flex items-center justify-center z-20">
-          <div className="bg-white p-6 rounded-lg shadow-xl flex flex-col items-center">
-            <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-3" />
-            <p className="text-blue-900 font-medium">Iniciando sesión...</p>
+        <div className="bg-opacity-30 absolute inset-0 z-20 flex items-center justify-center">
+          <div className="flex flex-col items-center rounded-lg bg-white p-6 shadow-xl">
+            <div className="mb-3 h-8 w-8 animate-spin rounded-full border-4 border-blue-600 border-t-transparent" />
+            <p className="font-medium text-blue-900">Iniciando sesión...</p>
           </div>
         </div>
       )}
     </div>
-
   );
 }
-
