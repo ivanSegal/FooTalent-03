@@ -3,21 +3,23 @@ import { useState } from "react";
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
+    username: "",
     password: "",
+    confirmPassword: "",
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const usernameRegex = /^[a-zA-Z0-9._]{4,20}$/;
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.name.trim()) newErrors.name = "El nombre es obligatorio.";
-    if (!formData.email.includes("@"))
-      newErrors.email = "El correo no es válido.";
+    if (!usernameRegex.test(formData.username)) {
+      newErrors.username =
+        "El nombre de usuario solo puede contener letras, números, puntos o guiones bajos (4-20 caracteres).";
+    }
     if (formData.password.length < 6)
       newErrors.password = "La contraseña debe tener al menos 6 caracteres.";
     return newErrors;
@@ -55,30 +57,30 @@ export default function RegisterPage() {
 
         <input
           type="text"
-          name="name"
-          placeholder="Nombre"
+          name="username"
+          placeholder="Nombre de usuario"
           onChange={handleChange}
           className="w-full border p-2 mb-1 rounded"
         />
-        {errors.name && (
-          <p className="text-red-500 text-xs mb-3">{errors.name}</p>
-        )}
-
-        <input
-          type="email"
-          name="email"
-          placeholder="Correo"
-          onChange={handleChange}
-          className="w-full border p-2 mb-1 rounded"
-        />
-        {errors.email && (
-          <p className="text-red-500 text-xs mb-3">{errors.email}</p>
+        {errors.username && (
+          <p className="text-red-500 text-xs mb-3">{errors.username}</p>
         )}
 
         <input
           type="password"
           name="password"
           placeholder="Contraseña"
+          onChange={handleChange}
+          className="w-full border p-2 mb-1 rounded"
+        />
+        {errors.password && (
+          <p className="text-red-500 text-xs mb-3">{errors.password}</p>
+        )}
+
+        <input
+          type="password"
+          name="confirmPassword"
+          placeholder="Confirmar Contraseña"
           onChange={handleChange}
           className="w-full border p-2 mb-1 rounded"
         />
