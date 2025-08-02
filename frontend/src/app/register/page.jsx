@@ -80,16 +80,6 @@ export default function RegisterPage() {
           <p className="text-red-500 text-xs mb-3">{errors.password}</p>
         )}
 
-        <input
-          type="password"
-          name="confirmPassword"
-          placeholder="Confirmar Contraseña"
-          onChange={handleChange}
-          className="w-full border p-2 mb-1 rounded"
-        />
-        {errors.password && (
-          <p className="text-red-500 text-xs mb-3">{errors.password}</p>
-        )}
 
         <button className="w-full bg-blue-950 text-white py-2 rounded">
           Registrarme
