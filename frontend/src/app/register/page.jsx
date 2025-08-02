@@ -1,23 +1,25 @@
 "use client";
 import { useState } from "react";
-
+import { register } from "../../services/authService";
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
+    username: "",
     password: "",
+    confirmPassword: "",
+    role: "",
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const usernameRegex = /^[a-zA-Z0-9._]{4,20}$/;
 
-  const handleChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.name.trim()) newErrors.name = "El nombre es obligatorio.";
-    if (!formData.email.includes("@"))
-      newErrors.email = "El correo no es válido.";
+    if (!usernameRegex.test(formData.username)) {
+      newErrors.username =
+        "El nombre de usuario solo puede contener letras, números, puntos o guiones bajos (4-20 caracteres).";
+    }
     if (formData.password.length < 6)
       newErrors.password = "La contraseña debe tener al menos 6 caracteres.";
     return newErrors;
@@ -34,12 +36,7 @@ export default function RegisterPage() {
     setErrors({});
     setIsLoading(true);
     try {
-      const res = await fetch("/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-      const data = await res.json();
+      const data = await register(formData);
       console.log("Respuesta del registro:", data);
     } catch (err) {
       console.error("Error:", err);
@@ -49,53 +46,57 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="relative max-w-sm mx-auto mt-10">
+    <div className="relative mx-auto mt-10 max-w-sm">
       <form onSubmit={handleSubmit} className="relative">
-        <h2 className="text-2xl font-bold mb-4 text-center">Registrate</h2>
+        <h2 className="mb-4 text-center text-2xl font-bold">Registrate</h2>
 
         <input
           type="text"
-          name="name"
-          placeholder="Nombre"
+          name="username"
+          placeholder="Nombre de usuario"
           onChange={handleChange}
-          className="w-full border p-2 mb-1 rounded"
+          className="mb-1 w-full rounded border p-2"
         />
-        {errors.name && (
-          <p className="text-red-500 text-xs mb-3">{errors.name}</p>
-        )}
-
-        <input
-          type="email"
-          name="email"
-          placeholder="Correo"
-          onChange={handleChange}
-          className="w-full border p-2 mb-1 rounded"
-        />
-        {errors.email && (
-          <p className="text-red-500 text-xs mb-3">{errors.email}</p>
-        )}
+        {errors.username && <p className="mb-3 text-xs text-red-500">{errors.username}</p>}
 
         <input
           type="password"
           name="password"
           placeholder="Contraseña"
           onChange={handleChange}
-          className="w-full border p-2 mb-1 rounded"
+          className="mb-1 w-full rounded border p-2"
         />
-        {errors.password && (
-          <p className="text-red-500 text-xs mb-3">{errors.password}</p>
-        )}
+        {errors.password && <p className="mb-3 text-xs text-red-500">{errors.password}</p>}
 
-        <button className="w-full bg-blue-950 text-white py-2 rounded">
-          Registrarme
-        </button>
+        <input
+          type="password"
+          name="confirmPassword"
+          placeholder="Confirmar Contraseña"
+          onChange={handleChange}
+          className="mb-1 w-full rounded border p-2"
+        />
+        {errors.password && <p className="mb-3 text-xs text-red-500">{errors.password}</p>}
+
+        <select
+          name="role"
+          value={formData.role}
+          onChange={handleChange}
+          className="mb-4 w-full rounded border bg-white p-2"
+        >
+          <option value="">Selecciona un rol</option>
+          <option value="ADMIN">ADMIN</option>
+          <option value="OPERATIONS_MANAGER">OPERATIONS_MANAGER</option>
+          <option value="WAREHOUSE_STAFF">WAREHOUSE_STAFF</option>
+        </select>
+
+        <button className="w-full rounded bg-blue-950 py-2 text-white">Registrarme</button>
       </form>
 
       {isLoading && (
-        <div className="absolute inset-0  bg-opacity-30 flex items-center justify-center z-20">
-          <div className="bg-white p-6 rounded-lg shadow-xl flex flex-col items-center">
-            <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4" />
-            <p className="text-blue-900 font-medium">Registrando...</p>
+        <div className="bg-opacity-30 absolute inset-0 z-20 flex items-center justify-center">
+          <div className="flex flex-col items-center rounded-lg bg-white p-6 shadow-xl">
+            <div className="mb-4 h-8 w-8 animate-spin rounded-full border-4 border-blue-600 border-t-transparent" />
+            <p className="font-medium text-blue-900">Registrando...</p>
           </div>
         </div>
       )}
