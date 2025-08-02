@@ -3,6 +3,7 @@ import { Rubik } from "next/font/google";
 import "./globals.css";
 import ReactQueryProvider from "@/contexts/ReactQueryProvider";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const rubik = Rubik({
   variable: "--font-rubik",
@@ -21,6 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${rubik.variable} antialiased`}>
         <Navbar />
         <ReactQueryProvider>{children}</ReactQueryProvider>
+        <Footer />
       </body>
     </html>
   );
