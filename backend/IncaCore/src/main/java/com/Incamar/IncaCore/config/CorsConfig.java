@@ -16,7 +16,10 @@ public class CorsConfig {
     configuration.setAllowCredentials(true);
     configuration.setAllowedOriginPatterns(List.of(
         "https://localhost:*",
-        "http://localhost:8080"
+        "http://localhost:8080",
+        "http://localhost:3000",
+        "https://incacore.vercel.app/"
+
 
     ));
     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"));
