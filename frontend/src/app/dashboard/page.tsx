@@ -27,7 +27,7 @@ export default function DashboardPage() {
   const currentItems = filtered.slice((page - 1) * pageSize, page * pageSize);
 
   return (
-    <main className="min-h-screen bg-gray-50 p-8">
+    <main className="mb-10 min-h-screen bg-gray-50 p-8">
       <h1 className="mb-6 text-3xl font-bold">Dashboard</h1>
 
       <div className="mb-4 flex items-center space-x-2">
@@ -75,7 +75,7 @@ export default function DashboardPage() {
         <button
           onClick={() => setPage((p) => Math.max(1, p - 1))}
           disabled={page === 1}
-          className="rounded bg-blue-500 px-3 py-1 text-white disabled:opacity-50"
+          className="cursor-pointer rounded-xl bg-[#2375AC] px-6 py-1 text-white disabled:opacity-50"
         >
           Anterior
         </button>
@@ -85,7 +85,7 @@ export default function DashboardPage() {
         <button
           onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
           disabled={page === totalPages}
-          className="rounded bg-blue-500 px-3 py-1 text-white disabled:opacity-50"
+          className="cursor-pointer rounded-xl bg-[#2375AC] px-6 py-1 text-white disabled:opacity-50"
         >
           Siguiente
         </button>
