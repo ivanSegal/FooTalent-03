@@ -1,13 +1,13 @@
-// src/app/layout.tsx
 import type { Metadata } from "next";
 import { Rubik } from "next/font/google";
 import "./globals.css";
 import ReactQueryProvider from "@/contexts/ReactQueryProvider";
+import Navbar from "@/components/Navbar";
 
 const rubik = Rubik({
   variable: "--font-rubik",
   subsets: ["latin"],
-  weight: ["300","400","500","600","700","800","900"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
@@ -19,6 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={`${rubik.variable} antialiased`}>
+        <Navbar />
         <ReactQueryProvider>{children}</ReactQueryProvider>
       </body>
     </html>
