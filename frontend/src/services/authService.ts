@@ -9,7 +9,7 @@ interface ApiResponse<T> {
 
 // Guardamos el JWT en cookie para que el middleware lo lea
 const saveToken = (token: string) => {
-  document.cookie = `token=${token}; path=/; samesite=Lax;`;
+  document.cookie = `token=${token}; path=/; SameSite=None; Secure;`;
 };
 
 // Hacemos login y devolvemos el token
