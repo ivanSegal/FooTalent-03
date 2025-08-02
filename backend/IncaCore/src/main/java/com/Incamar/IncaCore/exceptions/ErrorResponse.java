@@ -13,7 +13,6 @@ public class ErrorResponse {
     private String message;
     private String detailsError;
     private String path;
-    private long timestamp;
 
     public ErrorResponse(int statusCode, String errorCode, String message, String detailsError, String path) {
         this.statusCode = statusCode;
@@ -21,7 +20,6 @@ public class ErrorResponse {
         this.message = message;
         this.detailsError = detailsError;
         this.path = path;
-        this.timestamp = System.currentTimeMillis();
     }
 
     public ErrorResponse (String errorCode, String message){

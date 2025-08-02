@@ -2,7 +2,7 @@ package com.Incamar.IncaCore.enums;
 
 // This enum is currently empty, but it can be used to define various user roles in the future.
 public enum Role {
-  ADMIN("Administrador (Dueño del negocio)"),
+  ADMIN("Administrador"),
   OPERATIONS_MANAGER("Encargado de Operaciones"),
   WAREHOUSE_STAFF("Personal de Almacén");
 

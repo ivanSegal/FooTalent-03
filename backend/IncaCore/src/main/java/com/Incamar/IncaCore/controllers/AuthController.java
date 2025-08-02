@@ -27,7 +27,7 @@ public class AuthController {
   private final AuthService authService;
 
   @PostMapping("/login")
-  public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDto request) {
+  public ResponseEntity<ApiResult<?>> login(@Valid @RequestBody LoginRequestDto request) {
     String token = authService.login(request);
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", "Bearer " + token);
@@ -38,7 +38,7 @@ public class AuthController {
   }
 
   @PostMapping("/register")
-  public ResponseEntity<?> register(@Valid @RequestBody RegisterRequestDto request) {
+  public ResponseEntity<ApiResult<?>> register(@Valid @RequestBody RegisterRequestDto request) {
     authService.register(request);
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(ApiResult.success( "Registro exitoso"));
