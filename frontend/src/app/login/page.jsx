@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { login } from "../../services/authService";
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({ username: "", password: "" });
@@ -41,13 +42,7 @@ export default function LoginPage() {
     setIsSubmitting(true);
 
     try {
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await res.json();
+      const data = await login(formData);
       console.log("Respuesta del login:", data);
     } catch (error) {
       console.error("Error al enviar el formulario:", error);
