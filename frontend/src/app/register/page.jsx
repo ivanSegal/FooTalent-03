@@ -6,6 +6,7 @@ export default function RegisterPage() {
     username: "",
     password: "",
     confirmPassword: "",
+    role: "",
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -56,9 +57,7 @@ export default function RegisterPage() {
           onChange={handleChange}
           className="mb-1 w-full rounded border p-2"
         />
-        {errors.username && (
-          <p className="text-red-500 text-xs mb-3">{errors.username}</p>
-        )}
+        {errors.username && <p className="mb-3 text-xs text-red-500">{errors.username}</p>}
 
         <input
           type="password"
@@ -74,16 +73,23 @@ export default function RegisterPage() {
           name="confirmPassword"
           placeholder="Confirmar Contraseña"
           onChange={handleChange}
-          className="w-full border p-2 mb-1 rounded"
+          className="mb-1 w-full rounded border p-2"
         />
-        {errors.password && (
-          <p className="text-red-500 text-xs mb-3">{errors.password}</p>
-        )}
+        {errors.password && <p className="mb-3 text-xs text-red-500">{errors.password}</p>}
 
+        <select
+          name="role"
+          value={formData.role}
+          onChange={handleChange}
+          className="mb-4 w-full rounded border bg-white p-2"
+        >
+          <option value="">Selecciona un rol</option>
+          <option value="ADMIN">ADMIN</option>
+          <option value="OPERATIONS_MANAGER">OPERATIONS_MANAGER</option>
+          <option value="WAREHOUSE_STAFF">WAREHOUSE_STAFF</option>
+        </select>
 
-        <button className="w-full bg-blue-950 text-white py-2 rounded">
-          Registrarme
-        </button>
+        <button className="w-full rounded bg-blue-950 py-2 text-white">Registrarme</button>
       </form>
 
       {isLoading && (

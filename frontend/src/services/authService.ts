@@ -7,6 +7,7 @@ const saveToken = (token: string) => {
 
 export const register = async (data: AuthUser) => {
   const response = await api.post("/auth/register", data);
+  console.log("Data being sent to register:", data);
 
   const result = response.data as AuthUser;
 
