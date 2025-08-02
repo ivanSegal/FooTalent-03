@@ -12,7 +12,7 @@ export default function ListaUsuario() {
 
   return (
     <>
-      <h1 className="text-3xl font-bold">Usuarios</h1>
+      <h1 className="text-3xl font-bold text-white">Usuarios</h1>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
         {data?.map((usuario) => (
           <div

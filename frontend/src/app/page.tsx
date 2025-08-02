@@ -6,7 +6,7 @@ export default function Home() {
       <main className="row-start-2 flex flex-col items-center gap-[32px] sm:items-start">
         <ListaUsuario />
       </main>
-      <footer className="row-start-3 flex flex-wrap items-center justify-center gap-[24px]">
+      <footer className="row-start-3 flex flex-wrap items-center justify-center gap-[24px] text-white">
         <span>Prueba de Concepto</span>
         <span>Foo Talent Group</span>
         <span>Equipo 3 - Turno nocturno</span>
