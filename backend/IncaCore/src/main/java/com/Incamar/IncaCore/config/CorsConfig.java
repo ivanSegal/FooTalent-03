@@ -1,15 +1,34 @@
 package com.Incamar.IncaCore.config;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import java.util.List;
+
+@Configuration
 public class CorsConfig {
 
-    // This class is currently empty, but it can be used to implement CORS configuration in the future.
-    // For example, methods for configuring allowed origins, methods, headers, etc. can be added here.
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowCredentials(true);
+    configuration.setAllowedOriginPatterns(List.of(
+        "https://localhost:*",
+        "http://localhost:8080",
+        "http://localhost:3000",
+        "https://incacore.vercel.app/"
 
-    // Example method (to be implemented):
-    // public CorsConfigurationSource corsConfigurationSource() {
-    //     CorsConfiguration configuration = new CorsConfiguration();
-    //     configuration.setAllowedOrigins(Arrays.asList("http://example.com"));
-    //     configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
-    //     return new UrlBasedCorsConfigurationSource(configuration);
-    // }
+
+    ));
+    configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"));
+    configuration.setAllowedHeaders(
+        List.of("Authorization", "Content-Type", "Accept", "X-Requested-With", "Origin",
+            "Cache-Control", "X-CSRF-Token"));
+    configuration.setMaxAge(3600L);
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
+  }
 }
