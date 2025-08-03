@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import fondo from "@/assets/images/fondo.png";
 import { register } from "../../services/authService";
+import { showAutoAlert, showAlert } from "@/utils/showAlert";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -62,13 +63,11 @@ export default function RegisterPage() {
 
     try {
       await register(formData);
-      setSuccessMessage("¡Registro exitoso!");
-      setTimeout(() => {
-        router.push("/login");
-      }, 1500);
+      await showAutoAlert("¡Registro exitoso!", "Ahora puedes iniciar sesión", "success", 2000);
+      router.push("/login");
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Error al intentar registrar";
-      setErrors({ form: message });
+      showAlert("Registro fallido", message, "error");
     } finally {
       setIsLoading(false);
     }
