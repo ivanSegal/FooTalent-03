@@ -2,10 +2,10 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(req: NextRequest) {
-  const loggedIn = req.cookies.get("loggedIn")?.value;
+  const token = req.cookies.get("token")?.value;
 
   // Si no hay token de sesión, redirigimos al usuario a la página de inicio de sesión
-  if (req.nextUrl.pathname.startsWith("/dashboard") && !loggedIn) {
+  if (req.nextUrl.pathname.startsWith("/dashboard") && !token) {
     const loginUrl = req.nextUrl.clone();
     loginUrl.pathname = "/login";
     return NextResponse.redirect(loginUrl);

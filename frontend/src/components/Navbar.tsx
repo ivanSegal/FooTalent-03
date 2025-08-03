@@ -2,14 +2,17 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import logo from "@/assets/images/Logo.png";
+import Cookies from "js-cookie";
+import { showAlert, showAutoAlert } from "@/utils/showAlert";
 
 export default function Navbar() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const router = useRouter();
 
   // Barra transparente
   useEffect(() => {
@@ -20,9 +23,25 @@ export default function Navbar() {
   }, []);
 
   // Lectura del token
-  const hasToken =
-    typeof document !== "undefined" &&
-    document.cookie.split("; ").some((c) => c.startsWith("token="));
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const hasToken = document.cookie.includes("token=");
+      setIsLoggedIn(hasToken);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleLogout = () => {
+    Cookies.remove("token", { path: "/" });
+    document.cookie = "loggedIn=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    showAutoAlert("Sesión cerrada", "Has salido del sistema correctamente", "success", 2000);
+    setTimeout(() => {
+      router.push("/");
+    }, 2000);
+  };
 
   return (
     <nav
@@ -48,28 +67,37 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Botones de Auth sin presencia de token */}
-        {!hasToken && (
-          <div className="hidden space-x-4 md:flex">
-            <Link
-              href="/login"
-              className="rounded-xl bg-[#2375AC] px-5 py-2 font-medium text-white transition hover:bg-[#2380ac]"
+        {/* Botones de Auth */}
+        <div className="hidden space-x-4 md:flex">
+          {!isLoggedIn ? (
+            <>
+              <Link
+                href="/login"
+                className="rounded-xl bg-[#2375AC] px-5 py-2 font-medium text-white transition hover:bg-[#2380ac]"
+              >
+                Iniciar Sesión
+              </Link>
+              <Link
+                href="/register"
+                className="rounded-xl border border-[#2375AC] px-5 py-2 font-medium text-white transition hover:bg-[#2380ac] hover:text-white"
+              >
+                Registrarse
+              </Link>
+            </>
+          ) : (
+            <button
+              onClick={handleLogout}
+              className="cursor-pointer rounded-xl border border-[#F87171] px-5 py-2 font-medium text-white transition hover:bg-[#F87171]"
             >
-              Iniciar Sesión
-            </Link>
-            <Link
-              href="/register"
-              className="rounded-xl border border-[#2375AC] px-5 py-2 font-medium text-white transition hover:bg-[#2380ac] hover:text-white"
-            >
-              Registrarse
-            </Link>
-          </div>
-        )}
+              Cerrar Sesión
+            </button>
+          )}
+        </div>
 
         {/* Mobile */}
         <button
           onClick={() => setMenuOpen((o) => !o)}
-          className="flex-none text-white focus:outline-none md:hidden"
+          className="flex-none cursor-pointer text-white focus:outline-none md:hidden"
           aria-label="Menú"
         >
           {menuOpen ? (
@@ -112,7 +140,7 @@ export default function Navbar() {
             >
               Dashboard
             </Link>
-            {!hasToken && (
+            {!isLoggedIn ? (
               <>
                 <Link
                   href="/login"
@@ -129,6 +157,13 @@ export default function Navbar() {
                   Registrarse
                 </Link>
               </>
+            ) : (
+              <button
+                onClick={handleLogout}
+                className="w-3/4 rounded-xl border border-[#F87171] px-5 py-2 text-center font-medium text-white hover:bg-red-600"
+              >
+                Cerrar Sesión
+              </button>
             )}
           </div>
         </div>

@@ -67,7 +67,6 @@ export default function RegisterPage() {
         router.push("/login");
       }, 1500);
     } catch (error: unknown) {
-      // Manejamos error sin usar 'any'
       const message = error instanceof Error ? error.message : "Error al intentar registrar";
       setErrors({ form: message });
     } finally {
@@ -75,7 +74,7 @@ export default function RegisterPage() {
     }
   };
 
-  // Extraemos el texto del botón para evitar ternarias anidadas
+  // Concatenamos el texto del botón según el estado
   const buttonText = isLoading ? "Registrando..." : successMessage || "Registrarme";
 
   return (

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import fondo from "@/assets/images/fondo.png";
 import { login } from "../../services/authService";
-import { showAlert } from "@/utils/showAlert";
+import { showAlert, showAutoAlert } from "@/utils/showAlert";
 import { AxiosError } from "axios";
 
 export default function LoginPage() {
@@ -47,7 +47,8 @@ export default function LoginPage() {
     try {
       await login(formData);
       document.cookie = "loggedIn=true; path=/;";
-      router.push("/dashboard");
+      await showAutoAlert("¡Bienvenido!", "Inicio de sesión exitoso", "success", 2000);
+      router.push("/dashboard?logged=true");
     } catch (err: unknown) {
       setIsSubmitting(false);
 
