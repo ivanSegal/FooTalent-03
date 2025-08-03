@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import fondo from "@/assets/images/fondo.png";
 import { register } from "../../services/authService";
+import { showAutoAlert, showAlert } from "@/utils/showAlert";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -62,20 +63,17 @@ export default function RegisterPage() {
 
     try {
       await register(formData);
-      setSuccessMessage("¡Registro exitoso!");
-      setTimeout(() => {
-        router.push("/login");
-      }, 1500);
+      await showAutoAlert("¡Registro exitoso!", "Ahora puedes iniciar sesión", "success", 2000);
+      router.push("/login");
     } catch (error: unknown) {
-      // Manejamos error sin usar 'any'
       const message = error instanceof Error ? error.message : "Error al intentar registrar";
-      setErrors({ form: message });
+      showAlert("Registro fallido", message, "error");
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Extraemos el texto del botón para evitar ternarias anidadas
+  // Concatenamos el texto del botón según el estado
   const buttonText = isLoading ? "Registrando..." : successMessage || "Registrarme";
 
   return (

@@ -2,10 +2,16 @@
 import React from "react";
 import { useApiQuery } from "@/hooks/useApiQuery";
 import { Usuario } from "@/types/Usuario";
+import { usePathname } from "next/navigation";
 import { UserAvatarIcon } from "@/assets/icons/UserAvatarIcon";
 
 export default function ListaUsuario() {
-  const { data, error, isLoading } = useApiQuery<Usuario[]>("usuarios", "/users");
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+  const { data, error, isLoading } = useApiQuery<Usuario[]>(
+    "usuarios",
+    isHome ? "https://jsonplaceholder.typicode.com/users" : "/api/users/getAllUsers",
+  );
 
   if (isLoading) return <p>Cargando usuarios...</p>;
   if (error) return <p>Error al cargar los usuarios: {error.message}</p>;
