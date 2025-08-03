@@ -36,6 +36,7 @@ export default function Navbar() {
 
   const handleLogout = () => {
     Cookies.remove("token", { path: "/" });
+    localStorage.removeItem("token");
     document.cookie = "loggedIn=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     showAutoAlert("Sesión cerrada", "Has salido del sistema correctamente", "success", 2000);
     setTimeout(() => {
