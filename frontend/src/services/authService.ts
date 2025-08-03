@@ -7,11 +7,6 @@ interface ApiResponse<T> {
   data: T;
 }
 
-// Guardamos el JWT en cookie para que el middleware lo lea
-const saveToken = (token: string) => {
-  document.cookie = `token=${token}; path=/; SameSite=None; Secure;`;
-};
-
 // Hacemos login y devolvemos el token
 export const login = async (
   credentials: Pick<AuthUser, "username" | "password">,
@@ -28,7 +23,7 @@ export const login = async (
     throw new Error("No se recibió token en la respuesta de login");
   }
 
-  saveToken(token);
+  localStorage.setItem("token", token);
   return { token };
 };
 

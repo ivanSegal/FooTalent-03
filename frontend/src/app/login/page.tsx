@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import fondo from "@/assets/images/fondo.png";
 import { login } from "../../services/authService";
+import { showAlert } from "@/utils/showAlert";
+import { AxiosError } from "axios";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -41,12 +43,25 @@ export default function LoginPage() {
 
     setErrors({});
     setIsSubmitting(true);
+
     try {
-      const data = await login(formData);
-      document.cookie = `token=${data.token}; path=/; samesite=Lax;`;
+      await login(formData);
+      document.cookie = "loggedIn=true; path=/;";
       router.push("/dashboard");
-    } catch (error) {
-      console.error("Error al enviar el formulario:", error);
+    } catch (err: unknown) {
+      setIsSubmitting(false);
+
+      let message = "Ha ocurrido un error inesperado. Intenta nuevamente.";
+
+      if ((err as AxiosError).response?.status === 400) {
+        const backendMessage = (err as AxiosError<{ message?: string }>)?.response?.data?.message;
+        message = backendMessage || "Nombre de usuario o contraseña incorrectos.";
+      } else if (err instanceof Error && err.message) {
+        message = err.message;
+      }
+
+      showAlert("Error al iniciar sesión", message, "error");
+      return;
     } finally {
       setIsSubmitting(false);
     }
