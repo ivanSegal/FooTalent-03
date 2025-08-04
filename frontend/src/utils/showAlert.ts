@@ -20,6 +20,8 @@ export const showAutoAlert = (
   timer: number = 2000,
 ) => {
   return Swal.fire({
+    toast: true,
+    position: "top-end",
     title,
     text,
     icon,
