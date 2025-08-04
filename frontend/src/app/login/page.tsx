@@ -6,9 +6,11 @@ import fondo from "@/assets/images/fondo.png";
 import { login } from "../../services/authService";
 import { showAlert, showAutoAlert } from "@/utils/showAlert";
 import { AxiosError } from "axios";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { setUsername } = useAuth();
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -45,7 +47,8 @@ export default function LoginPage() {
     setIsSubmitting(true);
 
     try {
-      await login(formData);
+      const { username } = await login(formData);
+      setUsername(username ?? null);
       document.cookie = "loggedIn=true; path=/;";
       await showAutoAlert("¡Bienvenido!", "Inicio de sesión exitoso", "success", 2000);
       router.push("/dashboard?logged=true");

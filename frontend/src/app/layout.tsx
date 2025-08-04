@@ -4,6 +4,7 @@ import "./globals.css";
 import ReactQueryProvider from "@/contexts/ReactQueryProvider";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 const rubik = Rubik({
   variable: "--font-rubik",
@@ -20,9 +21,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={`${rubik.variable} antialiased`}>
-        <Navbar />
-        <ReactQueryProvider>{children}</ReactQueryProvider>
-        <Footer />
+        <AuthProvider>
+          <Navbar />
+          <ReactQueryProvider>{children}</ReactQueryProvider>
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );

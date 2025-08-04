@@ -7,8 +7,10 @@ import { useState, useEffect } from "react";
 import logo from "@/assets/images/Logo.png";
 import Cookies from "js-cookie";
 import { showAlert, showAutoAlert } from "@/utils/showAlert";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Navbar() {
+  const { username, setUsername } = useAuth();
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -37,10 +39,11 @@ export default function Navbar() {
   const handleLogout = () => {
     Cookies.remove("token", { path: "/" });
     localStorage.removeItem("token");
+    setUsername(null);
     document.cookie = "loggedIn=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     showAutoAlert("Sesión cerrada", "Has salido del sistema correctamente", "success", 2000);
     setTimeout(() => {
-      router.push("/");
+      router.push("/login");
     }, 2000);
   };
 
@@ -52,6 +55,13 @@ export default function Navbar() {
         <Link href="/" className="flex-none">
           <Image src={logo} alt="IncaCore Logo" width={100} height={20} priority />
         </Link>
+
+        {/* Mobile username display */}
+        {isLoggedIn && username && (
+          <span className="flex items-center gap-2 px-2 py-1 font-medium text-white md:hidden">
+            Bienvenido, {username}
+          </span>
+        )}
 
         {/* Desktop */}
         <div className="hidden flex-1 justify-center space-x-8 md:flex">
@@ -68,8 +78,8 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Botones de Auth */}
-        <div className="hidden space-x-4 md:flex">
+        {/* Botones de Auth y username desktop */}
+        <div className="hidden items-center space-x-4 md:flex">
           {!isLoggedIn ? (
             <>
               <Link
@@ -86,12 +96,19 @@ export default function Navbar() {
               </Link>
             </>
           ) : (
-            <button
-              onClick={handleLogout}
-              className="cursor-pointer rounded-xl border border-[#F87171] px-5 py-2 font-medium text-white transition hover:bg-[#F87171]"
-            >
-              Cerrar Sesión
-            </button>
+            <>
+              {username && (
+                <span className="flex items-center gap-2 px-4 py-2 font-medium text-white">
+                  Bienvenido, {username}
+                </span>
+              )}
+              <button
+                onClick={handleLogout}
+                className="cursor-pointer rounded-xl border border-[#F87171] px-5 py-2 font-medium text-white transition hover:bg-[#F87171]"
+              >
+                Cerrar Sesión
+              </button>
+            </>
           )}
         </div>
 
