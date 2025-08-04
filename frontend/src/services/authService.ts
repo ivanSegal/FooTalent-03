@@ -1,6 +1,7 @@
 import { AuthUser } from "../types/auth";
 import api from "./api";
 import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 
 interface ApiResponse<T> {
   success: boolean;
@@ -20,7 +21,7 @@ const saveTokenInCookie = (token: string) => {
 // Hacemos login y devolvemos el token
 export const login = async (
   credentials: Pick<AuthUser, "username" | "password">,
-): Promise<{ token: string }> => {
+): Promise<{ token: string; username?: string }> => {
   const { data: payload } = await api.post<ApiResponse<{ token: string }>>(
     "/auth/login",
     credentials,
@@ -31,7 +32,15 @@ export const login = async (
   if (!token) throw new Error("No se recibió token en la respuesta de login");
 
   saveTokenInCookie(token);
-  return { token };
+  // Decodifica el token para obtener el username
+  let username: string | undefined = undefined;
+  try {
+    const decoded = jwtDecode<{ username?: string }>(token);
+    username = decoded.username;
+  } catch (err) {
+    console.warn("No se pudo decodificar el token JWT", err);
+  }
+  return { token, username };
 };
 
 // Registro de usuario
