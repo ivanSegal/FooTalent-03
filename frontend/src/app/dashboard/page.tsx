@@ -8,7 +8,7 @@ import {
   deleteEmbarcacion,
 } from "@/services/embarcacionService";
 import { Embarcacion } from "@/types/embarcacion";
-import { showConfirmAlert, showAlert } from "@/utils/showAlert";
+import { showConfirmAlert, showAlert, showAutoAlert } from "@/utils/showAlert";
 
 export default function DashboardPage() {
   const [embarcaciones, setEmbarcaciones] = useState<Embarcacion[]>([]);
@@ -43,8 +43,10 @@ export default function DashboardPage() {
       await createEmbarcacion(formValues);
       setFormValues({});
       fetchData();
+      showAutoAlert("¡Éxito!", "Embarcación creada correctamente.", "success");
     } catch (err) {
       console.error("Error al crear embarcación", err);
+      showAutoAlert("Error", "No se pudo crear la embarcación.", "error");
     }
   };
 
@@ -54,8 +56,11 @@ export default function DashboardPage() {
       setEditId(null);
       setFormValues({});
       fetchData();
+
+      showAutoAlert("Actualizado", "La embarcación ha sido actualizada correctamente.", "success");
     } catch (err) {
       console.error("Error al actualizar embarcación", err);
+      showAutoAlert("Error", "Hubo un problema al actualizar la embarcación.", "error");
     }
   };
 
