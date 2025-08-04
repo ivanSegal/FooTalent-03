@@ -28,3 +28,23 @@ export const showAutoAlert = (
     timerProgressBar: true,
   });
 };
+
+export const showConfirmAlert = async (
+  title: string,
+  text: string,
+  confirmButtonText: string = "Sí, confirmar",
+  cancelButtonText: string = "Cancelar",
+) => {
+  const result = await Swal.fire({
+    title,
+    text,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText,
+    cancelButtonText,
+  });
+
+  return result.isConfirmed;
+};

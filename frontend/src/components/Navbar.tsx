@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import logo from "@/assets/images/Logo.png";
 import Cookies from "js-cookie";
-import { showAlert, showAutoAlert } from "@/utils/showAlert";
+import { showAutoAlert } from "@/utils/showAlert";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function Navbar() {
