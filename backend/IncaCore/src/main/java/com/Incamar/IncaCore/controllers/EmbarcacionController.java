@@ -5,28 +5,32 @@ import com.Incamar.IncaCore.models.Embarcacion;
 import com.Incamar.IncaCore.services.IEmbarcacionService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/embarcaciones")
-@Tag(name = "02 - Embarcaciones",
+@Tag(name = "03 - Embarcaciones",
         description = "Endpoints para gestión de embarcaciones")
 public class EmbarcacionController {
 
-    @Autowired
-    private IEmbarcacionService embarcacionService;
+    private final IEmbarcacionService embarcacionService;
 
     @GetAllEmbarcacionesEndpointDoc
+    @PreAuthorize("hasAnyRole('WAREHOUSE_STAFF', 'OPERATIONS_MANAGER', 'ADMIN')")
     @GetMapping
     public ResponseEntity<List<Embarcacion>> getAllEmbarcaciones() {
         return ResponseEntity.ok(embarcacionService.getAllEmbarcaciones());
     }
 
     @GetEmbarcacionByIdEndpointDoc
+    @PreAuthorize("hasAnyRole('WAREHOUSE_STAFF', 'OPERATIONS_MANAGER', 'ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<Embarcacion> getEmbarcacionById(@PathVariable Long id) {
         Embarcacion embarcacion = embarcacionService.getEmbarcacionById(id);
@@ -38,6 +42,7 @@ public class EmbarcacionController {
     }
 
     @CreateEmbarcacionEndpointDoc
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<String> createEmbarcacion(@Valid @RequestBody Embarcacion embarcacion) {
         embarcacionService.createEmbarcacion(
@@ -46,17 +51,20 @@ public class EmbarcacionController {
                 embarcacion.getCapitan(),
                 embarcacion.getModelo()
         );
-        return ResponseEntity.ok("Embarcación creada correctamente.");
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body("Embarcación creada correctamente.");
     }
 
     @DeleteEmbarcacionEndpointDoc
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteEmbarcacion(@PathVariable Long id) {
         embarcacionService.deleteEmbarcacionById(id);
-        return ResponseEntity.ok("Embarcación eliminada correctamente.");
+        return ResponseEntity.noContent().build();
     }
 
     @UpdateEmbarcacionEndpointDoc
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Embarcacion> editEmbarcacion(@PathVariable Long id,
                                                        @Valid @RequestBody Embarcacion embarcacion) {

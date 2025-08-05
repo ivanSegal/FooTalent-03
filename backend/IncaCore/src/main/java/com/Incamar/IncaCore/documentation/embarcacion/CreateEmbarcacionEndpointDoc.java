@@ -19,15 +19,14 @@ import java.lang.annotation.*;
 @Operation(
         summary = "Crear nueva embarcación",
         description = """
-         Crea una nueva embarcación en el sistema con nombre, número de patente, capitán y modelo. \s
-         Devuelve un mensaje de éxito con estado <b>200 OK</b>.
-        \s""",
+        Crea una nueva embarcación en el sistema especificando nombre, número de patente, capitán y modelo. \
+        Requiere autenticación de usuarios con rol <strong>ADMIN.</strong>
+        """,
         security = @SecurityRequirement(name = "bearer-key")
-
 )
 @ApiResponses(value = {
         @ApiResponse(
-                responseCode = "200",
+                responseCode = "201",
                 description = "Embarcación creada correctamente",
                 content = @Content(
                         mediaType = "application/json",
@@ -84,6 +83,42 @@ import java.lang.annotation.*;
                 )
         ),
         @ApiResponse(
+                responseCode = "401",
+                description = "No autorizado (token ausente o inválido)",
+                content = @Content(
+                        mediaType = "application/json",
+                        schema = @Schema(
+                                example = """
+                    {
+                      "statusCode": 401,
+                      "message": "Acceso no autorizado",
+                      "errorCode": "UNAUTHORIZED",
+                      "details": "...",
+                      "path": "/api/embarcaciones"
+                    }
+                """
+                        )
+                )
+        ),
+        @ApiResponse(
+                responseCode = "403",
+                description = "Acceso denegado por falta de permisos",
+                content = @Content(
+                        mediaType = "application/json",
+                        schema = @Schema(
+                                example = """
+                    {
+                      "statusCode": 403,
+                      "message": "Acceso denegado",
+                      "errorCode": "FORBIDDEN",
+                      "details": "...",
+                      "path": "/api/embarcaciones"
+                    }
+                """
+                        )
+                )
+        ),
+        @ApiResponse(
                 responseCode = "500",
                 description = "Error interno del servidor",
                 content = @Content(
@@ -102,5 +137,4 @@ import java.lang.annotation.*;
                 )
         )
 })
-public @interface CreateEmbarcacionEndpointDoc {
-}
+public @interface CreateEmbarcacionEndpointDoc {}

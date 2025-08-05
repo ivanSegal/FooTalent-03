@@ -1,6 +1,6 @@
 package com.Incamar.IncaCore.controllers;
-import com.Incamar.IncaCore.documents.GetAllUsersEndpointDoc;
-import com.Incamar.IncaCore.documents.GetUserByIdEndpointDoc;
+import com.Incamar.IncaCore.documentation.user.GetAllUsersEndpointDoc;
+import com.Incamar.IncaCore.documentation.user.GetUserByIdEndpointDoc;
 import com.Incamar.IncaCore.dtos.users.JwtDataDto;
 import com.Incamar.IncaCore.dtos.users.UserResponseDto;
 import com.Incamar.IncaCore.services.UserService;
@@ -22,11 +22,6 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
-
-    @GetMapping("/hola")
-    public String TestController(){
-        return "Hola Mundo";
-    }
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/getAllUsers")
