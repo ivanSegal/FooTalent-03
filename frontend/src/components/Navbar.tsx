@@ -43,7 +43,7 @@ export default function Navbar() {
     document.cookie = "loggedIn=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     showAutoAlert("Sesión cerrada", "Has salido del sistema correctamente", "success", 2000);
     setTimeout(() => {
-      router.push("/");
+      router.push("/login");
     }, 2000);
   };
 
