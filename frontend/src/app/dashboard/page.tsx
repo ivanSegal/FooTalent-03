@@ -86,7 +86,15 @@ export default function DashboardPage() {
 
   const filtered = useMemo(() => {
     return embarcaciones
-      .filter((e) => e.nombre.toLowerCase().includes(search.toLowerCase()))
+    .filter((e)=>{
+      const searchLower = search.toLowerCase();
+      return (
+        e.nombre.toLowerCase().includes(searchLower) ||
+        e.capitan.toLowerCase().includes(searchLower) ||
+        e.modelo.toLowerCase().includes(searchLower) ||
+        e.npatente.toLowerCase().includes(searchLower)
+      );
+    })
       .sort((a, b) => a.id - b.id);
   }, [search, embarcaciones]);
 
