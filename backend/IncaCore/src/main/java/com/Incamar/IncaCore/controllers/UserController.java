@@ -23,11 +23,6 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/hola")
-    public String TestController(){
-        return "Hola Mundo";
-    }
-
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/getAllUsers")
     @GetAllUsersEndpointDoc

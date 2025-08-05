@@ -6,7 +6,7 @@ import com.Incamar.IncaCore.services.IEmbarcacionService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +24,6 @@ public class EmbarcacionController {
 
     @GetAllEmbarcacionesEndpointDoc
     @PreAuthorize("hasAnyRole('WAREHOUSE_STAFF', 'OPERATIONS_MANAGER', 'ADMIN')")
-
     @GetMapping
     public ResponseEntity<List<Embarcacion>> getAllEmbarcaciones() {
         return ResponseEntity.ok(embarcacionService.getAllEmbarcaciones());
@@ -52,7 +51,8 @@ public class EmbarcacionController {
                 embarcacion.getCapitan(),
                 embarcacion.getModelo()
         );
-        return ResponseEntity.ok("Embarcación creada correctamente.");
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body("Embarcación creada correctamente.");
     }
 
     @DeleteEmbarcacionEndpointDoc
@@ -60,7 +60,7 @@ public class EmbarcacionController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteEmbarcacion(@PathVariable Long id) {
         embarcacionService.deleteEmbarcacionById(id);
-        return ResponseEntity.ok("Embarcación eliminada correctamente.");
+        return ResponseEntity.noContent().build();
     }
 
     @UpdateEmbarcacionEndpointDoc

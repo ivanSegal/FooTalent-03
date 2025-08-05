@@ -1,6 +1,8 @@
 package com.Incamar.IncaCore.documentation.embarcacion;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -8,7 +10,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.lang.annotation.*;
 
 /**
- * Swagger documentation for POST /api/embarcaciones.
+ * Swagger documentation for DELETE /api/embarcaciones.
  */
 
 @Target(ElementType.METHOD)
@@ -16,21 +18,81 @@ import java.lang.annotation.*;
 @Documented
 @Operation(
         summary = "Eliminar embarcación",
-        description = "Elimina una embarcación existente del sistema.",
+        description = """
+        Elimina una embarcación existente del sistema por su ID único. \
+        Solo usuarios con rol <strong>ADMIN</strong> pueden realizar esta operación.
+        """,
         security = @SecurityRequirement(name = "bearer-key")
 )
 @ApiResponses(value = {
         @ApiResponse(
-                responseCode = "200",
-                description = "Embarcación eliminada correctamente"
+                responseCode = "204",
+                description = "Embarcación eliminada correctamente",
+                content = @Content(mediaType = "application/json")
+        ),
+        @ApiResponse(
+                responseCode = "401",
+                description = "No autorizado (token ausente o inválido)",
+                content = @Content(
+                        mediaType = "application/json",
+                        schema = @Schema(example = """
+                        {
+                          "statusCode": 401,
+                          "message": "Acceso no autorizado",
+                          "errorCode": "UNAUTHORIZED",
+                          "details": "Token inválido o expirado",
+                          "path": "/api/embarcaciones/{id}"
+                        }
+                        """)
+                )
+        ),
+        @ApiResponse(
+                responseCode = "403",
+                description = "Acceso denegado por falta de permisos",
+                content = @Content(
+                        mediaType = "application/json",
+                        schema = @Schema(example = """
+                        {
+                          "statusCode": 403,
+                          "message": "Acceso denegado",
+                          "errorCode": "FORBIDDEN",
+                          "details": "El usuario no tiene permisos para eliminar esta embarcación",
+                          "path": "/api/embarcaciones/{id}"
+                        }
+                        """)
+                )
         ),
         @ApiResponse(
                 responseCode = "404",
-                description = "Embarcación no encontrada"
+                description = "Embarcación no encontrada",
+                content = @Content(
+                        mediaType = "application/json",
+                        schema = @Schema(example = """
+                        {
+                          "statusCode": 404,
+                          "message": "Embarcación no encontrada con id: {id}",
+                          "errorCode": "NOT_FOUND",
+                          "details": "No existe una embarcación con el ID proporcionado",
+                          "path": "/api/embarcaciones/{id}"
+                        }
+                        """)
+                )
         ),
         @ApiResponse(
                 responseCode = "500",
-                description = "Error interno del servidor"
+                description = "Error interno del servidor",
+                content = @Content(
+                        mediaType = "application/json",
+                        schema = @Schema(example = """
+                        {
+                          "statusCode": 500,
+                          "message": "Error inesperado",
+                          "errorCode": "INTERNAL_SERVER_ERROR",
+                          "details": "NullPointerException at line ...",
+                          "path": "/api/embarcaciones/{id}"
+                        }
+                        """)
+                )
         )
 })
 public @interface DeleteEmbarcacionEndpointDoc {}
