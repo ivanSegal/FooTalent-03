@@ -14,16 +14,11 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI fimaOpenAPI() {
         return new OpenAPI()
-                .info(new Info()
-                        .title("IncaCore")
-                        .description("API Rest para FooTalent")
+                .info(new Info().title("IncaCore")
+                        .description("Aplicación API Rest para la plataforma FooTalent")
                         .version("v1.0.0"))
                 .components(new Components()
                         .addSecuritySchemes("bearer-key",
-                                new SecurityScheme()
-                                        .type(SecurityScheme.Type.HTTP)
-                                        .scheme("bearer")
-                                        .bearerFormat("JWT")))
-                .addSecurityItem(new SecurityRequirement().addList("bearer-key"));
+                                new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")));
     }
 }

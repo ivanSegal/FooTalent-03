@@ -1,64 +1,55 @@
 package com.Incamar.IncaCore.controllers;
-import com.Incamar.IncaCore.models.AppUser;
-import com.Incamar.IncaCore.services.IUserServices;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.Incamar.IncaCore.documents.GetAllUsersEndpointDoc;
+import com.Incamar.IncaCore.documents.GetUserByIdEndpointDoc;
+import com.Incamar.IncaCore.dtos.users.JwtDataDto;
+import com.Incamar.IncaCore.dtos.users.UserResponseDto;
+import com.Incamar.IncaCore.services.UserService;
+import com.Incamar.IncaCore.utils.ApiResult;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/users")
+@RequiredArgsConstructor
+@Tag(name = "02 - Usuarios",
+    description = "Endpoints para la gestion de usuarios.")
 public class UserController {
+
+    private final UserService userService;
 
     @GetMapping("/hola")
     public String TestController(){
         return "Hola Mundo";
     }
 
-    @Autowired
-    private IUserServices userServices;
-
-    // GET: Obtener todos los usuarios
-    @GetMapping
-    public ResponseEntity<List<AppUser>> getAllUsers() {
-        return ResponseEntity.ok(userServices.getAllUsers());
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/getAllUsers")
+    @GetAllUsersEndpointDoc
+    public ResponseEntity<ApiResult<?>> getAllUsers() {
+        List<UserResponseDto> users = userService.getAllUsers();
+        return ResponseEntity.ok(ApiResult.success(users,
+            "Se enviaron correctamente la lista de usuarios."));
     }
 
-    // GET: Obtener un usuario por ID
-    @GetMapping("/{id}")
-    public ResponseEntity<AppUser> getUserById(@PathVariable Long id) {
-        AppUser user = userServices.getUserById(id);
-        if (user != null) {
-            return ResponseEntity.ok(user);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @PreAuthorize("hasAnyRole('WAREHOUSE_STAFF', 'OPERATIONS_MANAGER', 'ADMIN')")
+    @GetMapping("/getUserById/{id}")
+    @GetUserByIdEndpointDoc
+    public ResponseEntity<ApiResult<?>> getUserById(
+        @PathVariable UUID id,
+        Authentication authentication
+    ) {
+        JwtDataDto jwtDataDto = (JwtDataDto) authentication.getPrincipal();
+        UserResponseDto userResponseDto = userService.getUser(jwtDataDto, id);
+        return ResponseEntity.ok(ApiResult.success(userResponseDto,
+            "Usuario encontrado exitosamente."));
     }
 
-    // POST: Crear un nuevo usuario
-    @PostMapping
-    public ResponseEntity<String> createUser(@RequestBody AppUser user) {
-        userServices.createUser(
-                user.getName(),
-                user.getLastname(),
-                user.getMail(),
-                user.getPassword()
-        );
-        return ResponseEntity.ok("Usuario creado correctamente.");
-    }
 
-    // DELETE: Eliminar un usuario por ID
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
-        userServices.deleteUserById(id);
-        return ResponseEntity.ok("Usuario eliminado correctamente.");
-    }
 
-    // PUT: Editar un usuario
-    @PutMapping("/{id}")
-    public ResponseEntity<AppUser> editUser(@PathVariable Long id, @RequestBody AppUser user) {
-        AppUser updatedUser = userServices.editUser(id, user);
-        return ResponseEntity.ok(updatedUser);
-    }
 }

@@ -1,64 +1,48 @@
 package com.Incamar.IncaCore.services;
 
-import com.Incamar.IncaCore.models.AppUser;
+import com.Incamar.IncaCore.dtos.users.JwtDataDto;
+import com.Incamar.IncaCore.dtos.users.UserResponseDto;
+import com.Incamar.IncaCore.exceptions.ForbiddenException;
+import com.Incamar.IncaCore.exceptions.ResourceNotFoundException;
+import com.Incamar.IncaCore.mappers.UserMapper;
+import com.Incamar.IncaCore.models.User;
 import com.Incamar.IncaCore.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
-public class UserService implements IUserServices{
-    @Autowired
-    UserRepository userRepository;
+public class UserService implements UserDetailsService {
+  private final UserRepository userRepository;
+  private final UserMapper userMapper;
 
+  @Override
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    return userRepository.findByUsername(username)
+        .orElseThrow(() ->
+            new UsernameNotFoundException("Usuario no encontrado con email: " + username));
+  }
 
-    @Override
-    public List<AppUser> getAllUsers() {
-        return userRepository.findAll();
+  public List<UserResponseDto> getAllUsers() {
+    List<User> users = userRepository.findAll();
+    return users.stream()
+        .map(userMapper::toDTO)
+        .collect(Collectors.toList());
+  }
+
+  public UserResponseDto getUser(JwtDataDto jwtDataDto, UUID id) {
+    User user = userRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con id: " + id));
+    if (!user.getRole().equals("ADMIN") && !user.getId().equals(jwtDataDto.getUuid()) ) {
+      throw new ForbiddenException("No puedes acceder a otro usuario.");
     }
-
-    @Override
-    public AppUser getUserById(Long id) {
-        return userRepository.findById(id).orElse(null);
-    }
-
-    @Override
-    public void createUser(String name, String lastname, String mail, String password) {
-        AppUser newUser = new AppUser();
-
-        newUser.setName(name);
-        newUser.setLastname(lastname);
-        newUser.setMail(mail);
-        newUser.setPassword(password);
-        userRepository.save(newUser);
-    }
-
-
-    @Override
-    public void deleteUserById(Long id) {
-        if(userRepository.existsById(id)){
-            userRepository.deleteById(id);
-        }
-    }
-
-    @Override
-    public AppUser editUser(Long id, AppUser u) {
-        Optional<AppUser> optionalUser = userRepository.findById(id);
-        if(optionalUser.isPresent()){
-            AppUser auxUser = optionalUser.get();
-
-           auxUser.setName((u.getName()));
-           auxUser.setLastname(u.getLastname());
-           auxUser.setMail(u.getMail());
-           auxUser.setPassword(u.getPassword());
-
-           return userRepository.save(auxUser);
-        } else {
-            return null;
-        }
-
-    }
-
+    return userMapper.toDTO(user);
+  }
 }
