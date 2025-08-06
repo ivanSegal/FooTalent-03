@@ -14,6 +14,7 @@ export const getAllEmbarcaciones = async (): Promise<Embarcacion[]> => {
     page++;
   } while (!last);
   return embarcaciones;
+  
 };
 
 
