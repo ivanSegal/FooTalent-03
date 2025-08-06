@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import fondo from "@/assets/images/fondo.png";
 import { register } from "../../services/authService";
@@ -19,6 +19,7 @@ export default function RegisterPage() {
   const [successMessage, setSuccessMessage] = useState("");
   const usernameRegex = /^[a-zA-Z0-9._]{4,20}$/;
 
+  useEffect(() => {setSuccessMessage("");}, []);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 

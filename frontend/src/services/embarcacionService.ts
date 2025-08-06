@@ -4,7 +4,7 @@ import api from "./api";
 
 // Obtener todas las embarcaciones
 export const getAllEmbarcaciones = async (): Promise<Embarcacion[]> => {
-  let embarcaciones: Embarcacion[] = [];
+  const embarcaciones: Embarcacion[] = [];
   let page = 0;
   let last = false;
   do {
@@ -14,7 +14,6 @@ export const getAllEmbarcaciones = async (): Promise<Embarcacion[]> => {
     page++;
   } while (!last);
   return embarcaciones;
-  
 };
 
 
