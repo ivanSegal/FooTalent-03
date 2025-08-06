@@ -11,6 +11,8 @@ import com.Incamar.IncaCore.mappers.UserMapper;
 import com.Incamar.IncaCore.models.User;
 import com.Incamar.IncaCore.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,7 +21,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -35,11 +36,9 @@ public class UserService implements UserDetailsService, IUserService {
   }
 
   @Override
-  public List<UserResponseDto> getAllUsers() {
-    List<User> users = userRepository.findAll();
-    return users.stream()
-        .map(userMapper::toDTO)
-        .collect(Collectors.toList());
+  public Page<UserResponseDto> getAllUsers(Pageable pageable) {
+    Page<User> userPage = userRepository.findAll(pageable);
+    return userPage.map(userMapper::toDTO);
   }
 
   @Override
@@ -89,5 +88,12 @@ public class UserService implements UserDetailsService, IUserService {
     auxUser.setCreatedAt(request.getCreatedAt());
 
     return userRepository.save(auxUser);
+  }
+
+  @Override
+  public Page<UserResponseDto> searchUsersByUsername(String username, Pageable pageable) {
+    return userRepository
+            .findByUsernameContainingIgnoreCase(username, pageable)
+            .map(userMapper::toDTO);
   }
 }
