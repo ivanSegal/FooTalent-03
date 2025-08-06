@@ -1,12 +1,21 @@
 import { Embarcacion } from "@/types/embarcacion";
+import { Paginacion } from "@/types/paginacion";
 import api from "./api";
 
 // Obtener todas las embarcaciones
 export const getAllEmbarcaciones = async (): Promise<Embarcacion[]> => {
-  const response = await api.get<Embarcacion[]>("/api/embarcaciones");
-
-  return response.data;
+  let embarcaciones: Embarcacion[] = [];
+  let page = 0;
+  let last = false;
+  do {
+    const response = await api.get<Paginacion<Embarcacion>>(`/api/embarcaciones?page=${page}`);
+    embarcaciones.push(...response.data.content);
+    last = response.data.last;
+    page++;
+  } while (!last);
+  return embarcaciones;
 };
+
 
 // Crear nueva embarcación
 export const createEmbarcacion = async (data: Partial<Embarcacion>): Promise<Embarcacion> => {
