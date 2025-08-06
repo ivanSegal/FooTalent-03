@@ -50,7 +50,6 @@ public class SecurityConfig {
                 "/"
 
             ).permitAll()
-            .requestMatchers("/api/embarcaciones/**").hasRole("ADMIN")
             .anyRequest().authenticated()
         )
         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

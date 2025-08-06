@@ -1,4 +1,4 @@
-package com.Incamar.IncaCore.documentation.embarcacion;
+package com.Incamar.IncaCore.documentation.user;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,15 +11,15 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.lang.annotation.*;
 
 /**
- * Swagger documentation for POST /api/embarcaciones.
+ * Swagger documentation for POST /api/users.
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Operation(
-        summary = "Crear nueva embarcación",
+        summary = "Crear nuevo usuario",
         description = """
-        Crea una nueva embarcación en el sistema especificando nombre, número de patente, capitán y modelo. \
+        Crea un nuevo usuario en el sistema especificando nombre de usuario, contraseña, rol y fecha de creación. \
         Requiere autenticación de usuarios con rol <strong>ADMIN.</strong>
         """,
         security = @SecurityRequirement(name = "bearer-key")
@@ -27,20 +27,19 @@ import java.lang.annotation.*;
 @ApiResponses(value = {
         @ApiResponse(
                 responseCode = "201",
-                description = "Embarcación creada correctamente",
+                description = "Usuario creado exitosamente",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(
                                 example = """
                     {
                       "success": true,
-                      "message": "Embarcación creada correctamente.",
+                      "message": "Usuario creado exitosamente.",
                       "data": {
-                        "id": 101,
-                        "nombre": "Titanic II",
-                        "patente": "ABC1234",
-                        "capitan": "Juan Pérez",
-                        "modelo": "Modelo 2025"
+                        "username": "juan.perez_94",
+                        "password": "MiContraseña123!"
+                        "role": "ADMIN"
+                        "createdAt": "..."
                       }
                     }
                 """
@@ -55,27 +54,27 @@ import java.lang.annotation.*;
                         examples = {
                                 @ExampleObject(
                                         name = "Campos requeridos faltantes",
-                                        summary = "Cuando falta el campo nombre, patente o capitán",
+                                        summary = "Cuando falta el campo username, password, role o createdAt",
                                         value = """
                         {
                           "statusCode": 400,
                           "message": "Error validation with data",
                           "errorCode": "VALIDATION_ERROR",
-                          "detailsError": "nombre: no puede estar vacío",
-                          "path": "/api/embarcaciones"
+                          "detailsError": "username: no puede estar vacío",
+                          "path": "/api/users"
                         }
                     """
                                 ),
                                 @ExampleObject(
-                                        name = "Patente duplicada",
-                                        summary = "Cuando se intenta registrar una patente ya existente",
+                                        name = "Nombre de Usuario duplicado",
+                                        summary = "Cuando se intenta registrar una nombre de usuario ya existente",
                                         value = """
                         {
                           "statusCode": 400,
-                          "message": "La patente ya está registrada",
+                          "message": "El nombre de usuario ya está registrado",
                           "errorCode": "DUPLICATE_ENTRY",
-                          "detailsError": "patente: ABC1234",
-                          "path": "/api/embarcaciones"
+                          "detailsError": "username: juan.perez_94",
+                          "path": "/api/users"
                         }
                     """
                                 )
@@ -94,7 +93,7 @@ import java.lang.annotation.*;
                       "message": "Acceso no autorizado",
                       "errorCode": "UNAUTHORIZED",
                       "details": "...",
-                      "path": "/api/embarcaciones"
+                      "path": "/api/users"
                     }
                 """
                         )
@@ -112,7 +111,7 @@ import java.lang.annotation.*;
                       "message": "Acceso denegado",
                       "errorCode": "FORBIDDEN",
                       "details": "...",
-                      "path": "/api/embarcaciones"
+                      "path": "/api/users"
                     }
                 """
                         )
@@ -130,11 +129,11 @@ import java.lang.annotation.*;
                       "message": "Internal Error Server",
                       "errorCode": "INTERNAL_ERROR",
                       "detailsError": "NullPointerException...",
-                      "path": "/api/embarcaciones"
+                      "path": "/api/users"
                     }
                 """
                         )
                 )
         )
 })
-public @interface CreateEmbarcacionEndpointDoc {}
+public @interface CreateUserEndpointDoc {}

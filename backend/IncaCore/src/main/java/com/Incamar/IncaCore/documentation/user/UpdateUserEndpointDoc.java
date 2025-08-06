@@ -1,4 +1,4 @@
-package com.Incamar.IncaCore.documentation.embarcacion;
+package com.Incamar.IncaCore.documentation.user;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.lang.annotation.*;
 
 /**
- * Swagger documentation for PUT /api/embarcaciones.
+ * Swagger documentation for PUT /api/users.
  */
 
 
@@ -18,9 +18,9 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Operation(
-        summary = "Actualizar embarcación",
+        summary = "Actualizar usuario",
         description = """
-        Actualiza la información de una embarcación existente identificada por su ID. \
+        Actualiza la información de un usuario existente identificado por su ID. \
         Accesible solo para usuarios autorizados con rol <strong>ADMIN.</strong>
         """,
         security = @SecurityRequirement(name = "bearer-key")
@@ -28,19 +28,18 @@ import java.lang.annotation.*;
 @ApiResponses(value = {
         @ApiResponse(
                 responseCode = "200",
-                description = "Embarcación actualizada correctamente",
+                description = "Usuario actualizado exitosamente",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(example = """
                         {
                           "success": true,
-                          "message": "Embarcación actualizada correctamente.",
+                          "message": "Usuario actualizado exitosamente.",
                           "data": {
-                            "id": 101,
-                            "nombre": "Nuevo Nombre",
-                            "patente": "XYZ9876",
-                            "capitan": "Carlos Sánchez",
-                            "modelo": "Modelo 2026"
+                            "username": "juan.perez_94",
+                            "password": "MiContraseña123!"
+                            "role": "ADMIN"
+                            "createdAt": "..."
                           }
                         }
                         """)
@@ -56,8 +55,8 @@ import java.lang.annotation.*;
                           "statusCode": 400,
                           "message": "Error de validación",
                           "errorCode": "VALIDATION_ERROR",
-                          "details": "patente: no puede estar vacío",
-                          "path": "/api/embarcaciones/{id}"
+                          "details": "username: no puede estar vacío",
+                          "path": "/api/users/{id}"
                         }
                         """)
                 )
@@ -73,7 +72,7 @@ import java.lang.annotation.*;
                           "message": "Acceso no autorizado",
                           "errorCode": "AUTH_ERROR",
                           "details": "...",
-                          "path": "/api/embarcaciones/{id}"
+                          "path": "/api/users/{id}"
                         }
                         """)
                 )
@@ -89,23 +88,39 @@ import java.lang.annotation.*;
                           "message": "Acceso denegado",
                           "errorCode": "FORBIDDEN",
                           "details": "...",
-                          "path": "/api/embarcaciones/{id}"
+                          "path": "/api/users/{id}"
                         }
                         """)
                 )
         ),
         @ApiResponse(
                 responseCode = "404",
-                description = "Embarcación no encontrada",
+                description = "Usuario no encontrado",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(example = """
                         {
                           "statusCode": 404,
-                          "message": "Embarcación no encontrada con id: 101",
+                          "message": "Usuario no encontrado con id: ...",
                           "errorCode": "NOT_FOUND",
                           "details": "...",
-                          "path": "/api/embarcaciones/{id}"
+                          "path": "/api/users/{id}"
+                        }
+                        """)
+                )
+        ),
+        @ApiResponse(
+                responseCode = "409",
+                description = "El nombre de usuario ingresado ya esta en uso",
+                content = @Content(
+                        mediaType = "application/json",
+                        schema = @Schema(example = """
+                        {
+                          "statusCode": 409,
+                          "message": "El nombre de usuario ya está en uso",
+                          "errorCode": "CONFLICT",
+                          "details": "...",
+                          "path": "/api/users/{id}"
                         }
                         """)
                 )
@@ -121,10 +136,10 @@ import java.lang.annotation.*;
                           "message": "Error inesperado",
                           "errorCode": "INTERNAL_SERVER_ERROR",
                           "details": "NullPointerException ...",
-                          "path": "/api/embarcaciones/{id}"
+                          "path": "/api/users/{id}"
                         }
                         """)
                 )
         )
 })
-public @interface UpdateEmbarcacionEndpointDoc {}
+public @interface UpdateUserEndpointDoc {}
