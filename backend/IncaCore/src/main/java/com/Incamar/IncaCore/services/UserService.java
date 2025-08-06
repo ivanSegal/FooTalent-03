@@ -45,7 +45,7 @@ public class UserService implements UserDetailsService, IUserService {
   public UserResponseDto getUser(JwtDataDto jwtDataDto, UUID id) {
     User user = userRepository.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con id: " + id));
-    if (!user.getRole().equals("ADMIN") && !user.getId().equals(jwtDataDto.getUuid()) ) {
+    if (!jwtDataDto.getRole().equals("ADMIN") && !user.getId().equals(jwtDataDto.getUuid()) ) {
       throw new ForbiddenException("No puedes acceder a otro usuario.");
     }
     return userMapper.toDTO(user);
