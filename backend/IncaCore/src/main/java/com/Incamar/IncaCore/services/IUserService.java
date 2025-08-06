@@ -5,15 +5,18 @@ import com.Incamar.IncaCore.dtos.users.UserRequestDto;
 import com.Incamar.IncaCore.dtos.users.UserResponseDto;
 import com.Incamar.IncaCore.enums.Role;
 import com.Incamar.IncaCore.models.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 public interface IUserService {
-    List<UserResponseDto> getAllUsers();
+    Page<UserResponseDto> getAllUsers(Pageable pageable);
     UserResponseDto getUser(JwtDataDto jwtDataDto, UUID id);
     void createUser(String username, String password, Role role, LocalDateTime createdAt);
     void deleteUserById(UUID id);
     User editUser(UUID id, UserRequestDto request);
+    Page<UserResponseDto>searchUsersByUsername(String username, Pageable pageable);
 }

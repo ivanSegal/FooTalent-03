@@ -4,6 +4,8 @@ import com.Incamar.IncaCore.exceptions.ResourceNotFoundException;
 import com.Incamar.IncaCore.models.Embarcacion;
 import com.Incamar.IncaCore.repositories.EmbarcacionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,8 +17,8 @@ public class EmbarcacionService implements  IEmbarcacionService{
     EmbarcacionRepository embarcacionRepository;
 
     @Override
-    public List<Embarcacion> getAllEmbarcaciones() {
-        return embarcacionRepository.findAll();
+    public Page<Embarcacion> getAllEmbarcaciones(Pageable pageable) {
+        return embarcacionRepository.findAll(pageable);
     }
 
     @Override
@@ -55,5 +57,10 @@ public class EmbarcacionService implements  IEmbarcacionService{
         auxEmbarcacion.setModelo(embarcacion.getModelo());
 
         return embarcacionRepository.save(auxEmbarcacion);
+    }
+
+    @Override
+    public Page<Embarcacion> searchEmbarcacionesByName(String nombre, Pageable pageable) {
+        return embarcacionRepository.findByNombreContainingIgnoreCase(nombre,pageable);
     }
 }
