@@ -1,11 +1,16 @@
 package com.Incamar.IncaCore.controllers;
 
 import com.Incamar.IncaCore.documentation.embarcacion.*;
+import com.Incamar.IncaCore.documentation.user.SearchUsersEndpointDoc;
+import com.Incamar.IncaCore.dtos.users.UserResponseDto;
 import com.Incamar.IncaCore.models.Embarcacion;
 import com.Incamar.IncaCore.services.IEmbarcacionService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,8 +30,8 @@ public class EmbarcacionController {
     @GetAllEmbarcacionesEndpointDoc
     @PreAuthorize("hasAnyRole('WAREHOUSE_STAFF', 'OPERATIONS_MANAGER', 'ADMIN')")
     @GetMapping
-    public ResponseEntity<List<Embarcacion>> getAllEmbarcaciones() {
-        return ResponseEntity.ok(embarcacionService.getAllEmbarcaciones());
+    public ResponseEntity<Page<Embarcacion>> getAllEmbarcaciones(@ParameterObject Pageable pageable) {
+        return ResponseEntity.ok(embarcacionService.getAllEmbarcaciones(pageable));
     }
 
     @GetEmbarcacionByIdEndpointDoc
@@ -70,5 +75,13 @@ public class EmbarcacionController {
                                                        @Valid @RequestBody Embarcacion embarcacion) {
         Embarcacion updatedEmbarcacion = embarcacionService.editEmbarcacion(id, embarcacion);
         return ResponseEntity.ok(updatedEmbarcacion);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @SearchEmbarcacionesEndpointDoc
+    @GetMapping("/search")
+    public ResponseEntity<Page<Embarcacion>> searchEmbarcaciones(@RequestParam("nombre") String nombre, @ParameterObject Pageable pageable) {
+        Page<Embarcacion> result = embarcacionService.searchEmbarcacionesByName(nombre, pageable);
+        return ResponseEntity.ok(result);
     }
 }

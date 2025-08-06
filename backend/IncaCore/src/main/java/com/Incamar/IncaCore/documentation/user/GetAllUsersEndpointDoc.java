@@ -19,32 +19,57 @@ import java.lang.annotation.Target;
 @Operation(
     summary = "Obtener todos los usuarios",
     description = """
-        Retorna la lista completa de usuarios del sistema. \
+        Retorna la lista paginada de usuarios del sistema. \
         <strong>Solo accesible para usuarios con rol ADMIN.</strong>
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )
 @ApiResponses(value = {
-    @ApiResponse(
-        responseCode = "200",
-        description = "Lista de usuarios obtenida exitosamente",
-        content = @Content(
-            mediaType = "application/json",
-            schema = @Schema(example = """
+        @ApiResponse(
+                responseCode = "200",
+                description = "Lista paginada de usuarios obtenida exitosamente",
+                content = @Content(
+                        mediaType = "application/json",
+                        schema = @Schema(example = """
                 {
-                  "success": true,
-                  "message": "Se enviaron correctamente la lista de usuarios.",
-                  "data": [
+                  "content": [
                     {
                       "uuid": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
                       "username": "juanperez",
                       "role": "ADMIN"
+                    },
+                    {
+                      "uuid": "3fa85f64-5717-4562-b3fc-2c963f66af01",
+                      "username": "mariagarcia",
+                      "role": "USER"
                     }
-                  ]
+                  ],
+                  "pageable": {
+                    "pageNumber": 0,
+                    "pageSize": 10,
+                    "sort": {
+                      "sorted": true,
+                      "unsorted": false,
+                      "empty": false
+                    }
+                  },
+                  "totalPages": 5,
+                  "totalElements": 50,
+                  "last": false,
+                  "size": 10,
+                  "number": 0,
+                  "sort": {
+                    "sorted": true,
+                    "unsorted": false,
+                    "empty": false
+                  },
+                  "first": true,
+                  "numberOfElements": 10,
+                  "empty": false
                 }
                 """)
-        )
-    ),
+                )
+        ),
     @ApiResponse(
         responseCode = "404",
         description = "Usuario no encontrado",
