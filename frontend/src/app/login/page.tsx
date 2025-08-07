@@ -58,8 +58,8 @@ export default function LoginPage() {
       let message = "Ha ocurrido un error inesperado. Intenta nuevamente.";
 
       if ((err as AxiosError).response?.status === 400) {
-        const backendMessage = (err as AxiosError<{ message?: string }>)?.response?.data?.message;
-        message = backendMessage || "Nombre de usuario o contraseña incorrectos.";
+        // const backendMessage = (err as AxiosError<{ message?: string }>)?.response?.data?.message;
+        message = "Nombre de usuario o contraseña incorrectos.";
       } else if (err instanceof Error && err.message) {
         message = err.message;
       }

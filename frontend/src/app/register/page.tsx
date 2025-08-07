@@ -67,7 +67,7 @@ export default function RegisterPage() {
       await showAutoAlert("¡Registro exitoso!", "Ahora puedes iniciar sesión", "success", 2000);
       router.push("/login");
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : "Error al intentar registrar";
+      const message = "Ha ocurrido un error inesperado. Intenta nuevamente.";
       showAlert("Registro fallido", message, "error");
     } finally {
       setIsLoading(false);
