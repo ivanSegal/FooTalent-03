@@ -1,12 +1,4 @@
 <a id="readme-top"></a>
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Don't forget to give the project a star!
-*** Thanks again! Now go create something AMAZING! :D
--->
-
 
 <!--LOGO -->
 <br />
@@ -17,33 +9,6 @@
 
   <h3 align="center">IncaCore - FrontEnd</h3>
 </div>
-
-
-
-<!-- ÍNDICE -->
-<details>
-  <summary>Índice</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">Acerca de</a>
-      <ul>
-        <li><a href="#built-with">Construido Con</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Empezando</a>
-      <ul>
-        <li><a href="#prerequisites">Prerrequisitos</a></li>
-        <li><a href="#installation">Instalación</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Uso</a></li>
-    <li><a href="#roadmap">Enlaces</a></li>
-    <li><a href="#contributing">Detalles Técnicos</a></li>
-  </ol>
-</details>
-
-
 
 <!-- Acerca del Proyecto -->
 ## Acerca de
