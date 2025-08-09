@@ -3,7 +3,6 @@ import { Rubik } from "next/font/google";
 import "./globals.css";
 import ReactQueryProvider from "@/contexts/ReactQueryProvider";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { AuthProvider } from "@/contexts/AuthContext";
 
 const rubik = Rubik({
@@ -24,7 +23,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AuthProvider>
           <Navbar />
           <ReactQueryProvider>{children}</ReactQueryProvider>
-          <Footer />
         </AuthProvider>
       </body>
     </html>
