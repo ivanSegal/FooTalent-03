@@ -18,7 +18,7 @@ servicio de gestión de embarcaciones para la empresa Incamar. webhook
     <tr>
       <td>
         <!-- 🔹 Logotipo del proyecto -->
-        <img src="" <!-- URL de imagen aquí --> width="80">
+        <img src="https://github.com/Jhone-fori-freelancer/FOO-TALENT-DOCUMENTACION-PROJECT-MANAGER/blob/825590f9d1eca22390638e2279a6e061a21ddc43/IMG/IMG-PORTADA.jpg" <!-- URL de imagen aquí --> width="80">
       </td>
       <td>
         <!-- 🔹 Título con enlace al sistema o sitio -->
