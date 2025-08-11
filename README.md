@@ -19,7 +19,7 @@ servicio de gestión de embarcaciones para la empresa Incamar. webhook
     <tr>
       <td>
         <!-- 🔹 Logotipo del proyecto -->
-        <img src="https://github.com/Jhone-fori-freelancer/FOO-TALENT-DOCUMENTACION-PROJECT-MANAGER/blob/825590f9d1eca22390638e2279a6e061a21ddc43/IMG/IMG-PORTADA.jpg" <!-- URL de imagen aquí --> width="80">
+        <img src="https://github.com/Jhone-fori-freelancer/FOO-TALENT-DOCUMENTACION-PROJECT-MANAGER/blob/573aabee3c5830872cd66414e6927afb49f76659/IMG/Logo_1.png" <!-- URL de imagen aquí --> width="80">
       </td>
       <td>
         <!-- 🔹 Título con enlace al sistema o sitio -->
@@ -38,7 +38,7 @@ servicio de gestión de embarcaciones para la empresa Incamar. webhook
 
 <!-- HEADER: Imagen de portada -->
 <div align="center" width="100">
-  <img src="" <!-- URL de imagen aquí --> alt="header"/>
+  <img src="https://github.com/Jhone-fori-freelancer/FOO-TALENT-DOCUMENTACION-PROJECT-MANAGER/blob/825590f9d1eca22390638e2279a6e061a21ddc43/IMG/IMG-PORTADA.jpg" <!-- URL de imagen aquí --> alt="header"/>
 </div>
 
 <!-- Sección de enlaces destacados -->
