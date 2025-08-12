@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import fondo from "@/assets/images/fondo.png";
+// import fondo from "@/assets/images/fondo.png";
 import { register } from "../../services/authService";
 import { showAutoAlert, showAlert } from "@/utils/showAlert";
 
@@ -82,7 +82,7 @@ export default function RegisterPage() {
   return (
     <div
       className="relative grid min-h-screen grid-rows-[20px_auto_20px] items-start justify-items-center bg-cover bg-center px-8 pt-20 pb-20 sm:px-10 sm:pt-36 sm:pb-36"
-      style={{ backgroundImage: `url(${fondo.src})` }}
+      // style={{ backgroundImage: `url(${fondo.src})` }}
     >
       <form
         onSubmit={handleSubmit}
