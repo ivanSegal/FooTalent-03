@@ -39,8 +39,6 @@ Estas instrucciones te guiarán para obtener una copia de este proyecto en funci
 
 ### 💾 Instalación
 
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
-
 1. Clona el repositorio
    ```sh
    git clone https://github.com/ivanSegal/FooTalent-03.git
