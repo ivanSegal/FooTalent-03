@@ -6,33 +6,36 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.lang.annotation.*;
 
 /**
- * Documentación Swagger para POST /api/auth/login.
+ * Documentación Swagger para POST /api/auth/change-password.
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Operation(
-        summary = "Login de usuario",
+        summary = "Cambiar contraseña",
         description = """
-         Autentica al usuario con nombre de usuario y contraseña. \s
-         Devuelve un token JWT en el header <code>Authorization</code> y en el cuerpo con estado <b>200 OK</b>.
-        \s"""
+         Permite al usuario autenticado cambiar su contraseña.
+         - Si la contraseña actual es incorrecta, devolverá un error.
+         Devuelve un nuevo token JWT después del cambio exitoso.
+        """,
+        security = @SecurityRequirement(name = "bearerAuth")
 )
 @ApiResponses(value = {
         @ApiResponse(
                 responseCode = "200",
-                description = "Login exitoso",
+                description = "Contraseña cambiada correctamente",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(
                                 example = """
                                     {
                                       "success": true,
-                                      "message": "Login exitoso",
+                                      "message": "Contraseña cambiada correctamente",
                                       "data": { "token": "eyJhbGci..." }
                                     }
                                 """
@@ -41,37 +44,35 @@ import java.lang.annotation.*;
         ),
         @ApiResponse(
                 responseCode = "400",
-                description = "Solicitud inválida: credenciales incorrectas o error de validación",
+                description = "Solicitud inválida: contraseña actual incorrecta o error de validación",
                 content = @Content(
                         mediaType = "application/json",
                         examples = {
                                 @ExampleObject(
-                                        name = "Credenciales inválidas",
-                                        summary = "Cuando el username o la contraseña son incorrectos",
+                                        name = "Contraseña actual incorrecta",
+                                        summary = "Cuando la contraseña actual no coincide",
                                         value = """
                                             {
                                               "statusCode": 400,
-                                              "message": "Credenciales inválidas",
-                                              "errorCode": "BAD_REQUEST",
-                                              "details": [
-                                                "username: no puede estar vacío"
-                                              ],
-                                              "path": "/auth/login"
+                                              "message": "La contraseña actual es incorrecta",
+                                              "errorCode": "INVALID_PASSWORD",
+                                              "details": [],
+                                              "path": "/api/auth/change-password"
                                             }
                                         """
                                 ),
                                 @ExampleObject(
                                         name = "Error de validación",
-                                        summary = "Cuando faltan campos requeridos o tienen formato incorrecto",
+                                        summary = "Cuando faltan campos obligatorios o tienen formato incorrecto",
                                         value = """
                                             {
                                               "statusCode": 400,
                                               "message": "Falló la validación de los campos",
                                               "errorCode": "VALIDATION_ERROR",
                                               "details": [
-                                                "password: La contraseña es requerida"
+                                                "newPassword: La nueva contraseña es requerida"
                                               ],
-                                              "path": "/auth/login"
+                                              "path": "/api/auth/change-password"
                                             }
                                         """
                                 )
@@ -80,19 +81,17 @@ import java.lang.annotation.*;
         ),
         @ApiResponse(
                 responseCode = "401",
-                description = "Credenciales inválidas",
+                description = "No autorizado o token inválido",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(
                                 example = """
                                     {
                                       "statusCode": 401,
-                                      "errorCode": "BAD_CREDENTIALS",
-                                      "message": "Credenciales inválidas",
-                                      "details": [
-                                        "El nombre de usuario o la contraseña son incorrectos."
-                                      ],
-                                      "path": "/auth/login"
+                                      "errorCode": "AUTH_ERROR",
+                                      "message": "Acceso no autorizado. Token inválido o ausente.",
+                                      "details": [],
+                                      "path": "/api/auth/change-password"
                                     }
                                 """
                         )
@@ -110,12 +109,12 @@ import java.lang.annotation.*;
                                       "message": "Ocurrió un error interno en el servidor",
                                       "errorCode": "INTERNAL_ERROR",
                                       "details": ["java.lang.NullPointerException: ..."],
-                                      "path": "/api/auth/login"
+                                      "path": "/api/auth/change-password"
                                     }
                                 """
                         )
                 )
         )
 })
-public @interface LoginEndpointDoc {
+public @interface ChangePasswordEndpointDoc {
 }

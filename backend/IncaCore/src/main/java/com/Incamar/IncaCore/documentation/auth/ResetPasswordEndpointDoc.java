@@ -10,30 +10,29 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.lang.annotation.*;
 
 /**
- * Documentación Swagger para POST /api/auth/login.
+ * Documentación Swagger para POST /api/auth/reset-password.
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Operation(
-        summary = "Login de usuario",
+        summary = "Restablecer contraseña",
         description = """
-         Autentica al usuario con nombre de usuario y contraseña. \s
-         Devuelve un token JWT en el header <code>Authorization</code> y en el cuerpo con estado <b>200 OK</b>.
-        \s"""
+         Permite establecer una nueva contraseña usando un token de recuperación previamente enviado por correo.
+         Este token es de un solo uso y expira tras un tiempo definido.
+        """
 )
 @ApiResponses(value = {
         @ApiResponse(
                 responseCode = "200",
-                description = "Login exitoso",
+                description = "Contraseña restablecida correctamente",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(
                                 example = """
                                     {
                                       "success": true,
-                                      "message": "Login exitoso",
-                                      "data": { "token": "eyJhbGci..." }
+                                      "message": "Contraseña restablecida correctamente"
                                     }
                                 """
                         )
@@ -41,37 +40,33 @@ import java.lang.annotation.*;
         ),
         @ApiResponse(
                 responseCode = "400",
-                description = "Solicitud inválida: credenciales incorrectas o error de validación",
+                description = "Solicitud inválida: token inválido, expirado o datos incompletos",
                 content = @Content(
                         mediaType = "application/json",
                         examples = {
                                 @ExampleObject(
-                                        name = "Credenciales inválidas",
-                                        summary = "Cuando el username o la contraseña son incorrectos",
+                                        name = "Token inválido o expirado",
                                         value = """
                                             {
                                               "statusCode": 400,
-                                              "message": "Credenciales inválidas",
-                                              "errorCode": "BAD_REQUEST",
-                                              "details": [
-                                                "username: no puede estar vacío"
-                                              ],
-                                              "path": "/auth/login"
+                                              "errorCode": "INVALID_TOKEN",
+                                              "message": "El token de recuperación es inválido o ha expirado",
+                                              "details": [],
+                                              "path": "/api/auth/reset-password"
                                             }
                                         """
                                 ),
                                 @ExampleObject(
                                         name = "Error de validación",
-                                        summary = "Cuando faltan campos requeridos o tienen formato incorrecto",
                                         value = """
                                             {
                                               "statusCode": 400,
-                                              "message": "Falló la validación de los campos",
                                               "errorCode": "VALIDATION_ERROR",
+                                              "message": "Falló la validación de los campos",
                                               "details": [
-                                                "password: La contraseña es requerida"
+                                                "newPassword: La contraseña es requerida"
                                               ],
-                                              "path": "/auth/login"
+                                              "path": "/api/auth/reset-password"
                                             }
                                         """
                                 )
@@ -79,20 +74,18 @@ import java.lang.annotation.*;
                 )
         ),
         @ApiResponse(
-                responseCode = "401",
-                description = "Credenciales inválidas",
+                responseCode = "404",
+                description = "Usuario no encontrado",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(
                                 example = """
                                     {
-                                      "statusCode": 401,
-                                      "errorCode": "BAD_CREDENTIALS",
-                                      "message": "Credenciales inválidas",
-                                      "details": [
-                                        "El nombre de usuario o la contraseña son incorrectos."
-                                      ],
-                                      "path": "/auth/login"
+                                      "statusCode": 404,
+                                      "errorCode": "USER_NOT_FOUND",
+                                      "message": "Usuario no encontrado",
+                                      "details": [],
+                                      "path": "/api/auth/reset-password"
                                     }
                                 """
                         )
@@ -107,15 +100,17 @@ import java.lang.annotation.*;
                                 example = """
                                     {
                                       "statusCode": 500,
-                                      "message": "Ocurrió un error interno en el servidor",
                                       "errorCode": "INTERNAL_ERROR",
-                                      "details": ["java.lang.NullPointerException: ..."],
-                                      "path": "/api/auth/login"
+                                      "message": "Ocurrió un error interno en el servidor",
+                                      "details": [
+                                        "java.lang.NullPointerException: ..."
+                                      ],
+                                      "path": "/api/auth/reset-password"
                                     }
                                 """
                         )
                 )
         )
 })
-public @interface LoginEndpointDoc {
+public @interface ResetPasswordEndpointDoc {
 }

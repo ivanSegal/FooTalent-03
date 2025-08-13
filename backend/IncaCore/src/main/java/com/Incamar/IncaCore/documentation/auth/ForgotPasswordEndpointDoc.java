@@ -10,30 +10,30 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.lang.annotation.*;
 
 /**
- * Documentación Swagger para POST /api/auth/login.
+ * Documentación Swagger para POST /api/auth/forgot-password.
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Operation(
-        summary = "Login de usuario",
+        summary = "Recuperar contraseña",
         description = """
-         Autentica al usuario con nombre de usuario y contraseña. \s
-         Devuelve un token JWT en el header <code>Authorization</code> y en el cuerpo con estado <b>200 OK</b>.
-        \s"""
+         Solicita el envío de un correo para restablecer la contraseña de un usuario registrado. \s
+         Es necesario proporcionar el nombre de usuario válido asociado a una cuenta con correo electrónico registrado.\s
+         Si el usuario no tiene correo asociado, se indicará que contacte al administrador.
+        """
 )
 @ApiResponses(value = {
         @ApiResponse(
                 responseCode = "200",
-                description = "Login exitoso",
+                description = "Correo de recuperación enviado correctamente",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(
                                 example = """
                                     {
                                       "success": true,
-                                      "message": "Login exitoso",
-                                      "data": { "token": "eyJhbGci..." }
+                                      "message": "Se ha enviado un correo para restablecer tu contraseña"
                                     }
                                 """
                         )
@@ -41,61 +41,52 @@ import java.lang.annotation.*;
         ),
         @ApiResponse(
                 responseCode = "400",
-                description = "Solicitud inválida: credenciales incorrectas o error de validación",
+                description = "Solicitud inválida o error de validación",
                 content = @Content(
                         mediaType = "application/json",
                         examples = {
                                 @ExampleObject(
-                                        name = "Credenciales inválidas",
-                                        summary = "Cuando el username o la contraseña son incorrectos",
+                                        name = "Usuario no encontrado",
+                                        summary = "Cuando el nombre de usuario no existe",
+                                        value = """
+                                            {
+                                              "statusCode": 404,
+                                              "message": "Usuario no encontrado",
+                                              "errorCode": "NOT_FOUND",
+                                              "details": [],
+                                              "path": "/api/auth/forgot-password"
+                                            }
+                                        """
+                                ),
+                                @ExampleObject(
+                                        name = "Sin correo asociado",
+                                        summary = "Cuando el usuario no tiene correo asociado para recuperación",
                                         value = """
                                             {
                                               "statusCode": 400,
-                                              "message": "Credenciales inválidas",
+                                              "message": "El usuario no cuenta con un correo asociado, contacte al administrador",
                                               "errorCode": "BAD_REQUEST",
-                                              "details": [
-                                                "username: no puede estar vacío"
-                                              ],
-                                              "path": "/auth/login"
+                                              "details": [],
+                                              "path": "/api/auth/forgot-password"
                                             }
                                         """
                                 ),
                                 @ExampleObject(
                                         name = "Error de validación",
-                                        summary = "Cuando faltan campos requeridos o tienen formato incorrecto",
+                                        summary = "Cuando faltan campos obligatorios o tienen formato incorrecto",
                                         value = """
                                             {
                                               "statusCode": 400,
                                               "message": "Falló la validación de los campos",
                                               "errorCode": "VALIDATION_ERROR",
                                               "details": [
-                                                "password: La contraseña es requerida"
+                                                "username: no puede estar vacío"
                                               ],
-                                              "path": "/auth/login"
+                                              "path": "/api/auth/forgot-password"
                                             }
                                         """
                                 )
                         }
-                )
-        ),
-        @ApiResponse(
-                responseCode = "401",
-                description = "Credenciales inválidas",
-                content = @Content(
-                        mediaType = "application/json",
-                        schema = @Schema(
-                                example = """
-                                    {
-                                      "statusCode": 401,
-                                      "errorCode": "BAD_CREDENTIALS",
-                                      "message": "Credenciales inválidas",
-                                      "details": [
-                                        "El nombre de usuario o la contraseña son incorrectos."
-                                      ],
-                                      "path": "/auth/login"
-                                    }
-                                """
-                        )
                 )
         ),
         @ApiResponse(
@@ -110,12 +101,12 @@ import java.lang.annotation.*;
                                       "message": "Ocurrió un error interno en el servidor",
                                       "errorCode": "INTERNAL_ERROR",
                                       "details": ["java.lang.NullPointerException: ..."],
-                                      "path": "/api/auth/login"
+                                      "path": "/api/auth/forgot-password"
                                     }
                                 """
                         )
                 )
         )
 })
-public @interface LoginEndpointDoc {
+public @interface ForgotPasswordEndpointDoc {
 }
