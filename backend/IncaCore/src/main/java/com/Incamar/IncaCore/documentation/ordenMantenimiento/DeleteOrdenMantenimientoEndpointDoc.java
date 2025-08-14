@@ -23,6 +23,7 @@ import java.lang.annotation.*;
         Solo usuarios con rol <strong>ADMIN</strong> pueden realizar esta operación.
         """,
         security = @SecurityRequirement(name = "bearerAuth")
+
 )
 @ApiResponses(value = {
         @ApiResponse(

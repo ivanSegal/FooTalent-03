@@ -22,7 +22,6 @@ import java.lang.annotation.*;
         Retorna una lista completa de ordenes de mantenimiento registradas en el sistema. \
         Accesible para usuarios con roles: <strong>WAREHOUSE_STAFF, OPERATIONS_MANAGER, o ADMIN.</strong>
         """,
-        security = @SecurityRequirement(name = "bearerAuth")
 )
 @ApiResponses(value = {
         @ApiResponse(

@@ -8,5 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OrdenMantenimientoRepository extends JpaRepository<OrdenMantenimiento, Long> {
+
     Page<OrdenMantenimiento> findByEmbarcacion_NombreContainingIgnoreCase(String nombreParcial, Pageable pageable);
 }

@@ -1,4 +1,4 @@
-package com.Incamar.IncaCore.controller;
+package com.Incamar.IncaCore.controllers;
 
 import com.Incamar.IncaCore.documentation.auth.*;
 import com.Incamar.IncaCore.dtos.auth.*;

@@ -1,3 +1,4 @@
+<<<<<<< HEAD:backend/IncaCore/src/main/java/com/Incamar/IncaCore/controller/OrdenMantenimientoController.java
 package com.Incamar.IncaCore.controller;
 
 import com.Incamar.IncaCore.documentation.ordenMantenimiento.*;
@@ -5,6 +6,17 @@ import com.Incamar.IncaCore.dtos.ordenMantenimiento.OrdenMantenimientoRequestDto
 import com.Incamar.IncaCore.dtos.ordenMantenimiento.OrdenMantenimientoResponseDto;
 import com.Incamar.IncaCore.dtos.user.JwtDataDto;
 import com.Incamar.IncaCore.services.OrdenMantenimientoService;
+=======
+package com.Incamar.IncaCore.controllers;
+
+import com.Incamar.IncaCore.documentation.embarcacion.SearchEmbarcacionesEndpointDoc;
+import com.Incamar.IncaCore.documentation.ordenMantenimiento.*;
+import com.Incamar.IncaCore.dtos.ordenMantenimiento.OrdenMantenimientoRequestDto;
+import com.Incamar.IncaCore.dtos.ordenMantenimiento.OrdenMantenimientoResponseDto;
+import com.Incamar.IncaCore.dtos.users.JwtDataDto;
+import com.Incamar.IncaCore.models.Embarcacion;
+import com.Incamar.IncaCore.services.IOrdenMantenimientoService;
+>>>>>>> origin/develop:backend/IncaCore/src/main/java/com/Incamar/IncaCore/controllers/OrdenMantenimientoController.java
 import com.Incamar.IncaCore.utils.ApiResult;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -25,7 +37,11 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "04 - Ordenes de Mantenimiento", description = "Endpoints para la gestión de órdenes de mantenimiento de " +
         "embarcaciones")
 public class OrdenMantenimientoController {
+<<<<<<< HEAD:backend/IncaCore/src/main/java/com/Incamar/IncaCore/controller/OrdenMantenimientoController.java
     private final OrdenMantenimientoService ordenService;
+=======
+    private final IOrdenMantenimientoService ordenService;
+>>>>>>> origin/develop:backend/IncaCore/src/main/java/com/Incamar/IncaCore/controllers/OrdenMantenimientoController.java
 
     @GetAllOrdenesMantenimientoEndpointDoc
     @PreAuthorize("hasRole('ADMIN')")
