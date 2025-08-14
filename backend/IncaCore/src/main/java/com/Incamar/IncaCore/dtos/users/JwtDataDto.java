@@ -1,4 +1,4 @@
-package com.Incamar.IncaCore.dtos.user;
+package com.Incamar.IncaCore.dtos.users;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

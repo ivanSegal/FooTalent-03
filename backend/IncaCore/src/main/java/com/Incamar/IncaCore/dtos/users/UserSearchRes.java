@@ -1,4 +1,4 @@
-package com.Incamar.IncaCore.dtos.user;
+package com.Incamar.IncaCore.dtos.users;
 
 
 import java.util.UUID;

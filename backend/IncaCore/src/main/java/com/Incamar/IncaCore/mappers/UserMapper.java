@@ -1,9 +1,9 @@
 package com.Incamar.IncaCore.mappers;
 
-import com.Incamar.IncaCore.dtos.user.JwtDataDto;
+import com.Incamar.IncaCore.dtos.users.JwtDataDto;
 import com.Incamar.IncaCore.dtos.auth.RegisterReq;
-import com.Incamar.IncaCore.dtos.user.UpdateUserReq;
-import com.Incamar.IncaCore.dtos.user.UserSearchRes;
+import com.Incamar.IncaCore.dtos.users.UpdateUserReq;
+import com.Incamar.IncaCore.dtos.users.UserSearchRes;
 import com.Incamar.IncaCore.models.User;
 import com.Incamar.IncaCore.enums.AccountStatus;
 import org.mapstruct.*;

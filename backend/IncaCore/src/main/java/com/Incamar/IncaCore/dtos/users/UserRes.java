@@ -1,4 +1,4 @@
-package com.Incamar.IncaCore.dtos.user;
+package com.Incamar.IncaCore.dtos.users;
 
 import com.Incamar.IncaCore.enums.Role;
 

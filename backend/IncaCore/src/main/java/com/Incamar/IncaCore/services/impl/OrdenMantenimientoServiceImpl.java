@@ -2,7 +2,7 @@ package com.Incamar.IncaCore.services.impl;
 
 import com.Incamar.IncaCore.dtos.ordenMantenimiento.OrdenMantenimientoRequestDto;
 import com.Incamar.IncaCore.dtos.ordenMantenimiento.OrdenMantenimientoResponseDto;
-import com.Incamar.IncaCore.dtos.user.JwtDataDto;
+import com.Incamar.IncaCore.dtos.users.JwtDataDto;
 import com.Incamar.IncaCore.enums.Estado;
 import com.Incamar.IncaCore.enums.TipoMantenimiento;
 import com.Incamar.IncaCore.exceptions.ResourceNotFoundException;

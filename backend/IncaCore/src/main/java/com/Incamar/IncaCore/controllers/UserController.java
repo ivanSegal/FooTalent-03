@@ -1,9 +1,9 @@
 package com.Incamar.IncaCore.controllers;
 
-import com.Incamar.IncaCore.dtos.user.UpdateUserReq;
-import com.Incamar.IncaCore.dtos.user.UserSearchReq;
+import com.Incamar.IncaCore.dtos.users.UpdateUserReq;
+import com.Incamar.IncaCore.dtos.users.UserSearchReq;
 
-import com.Incamar.IncaCore.dtos.user.UserSearchRes;
+import com.Incamar.IncaCore.dtos.users.UserSearchRes;
 import com.Incamar.IncaCore.services.UserService;
 import com.Incamar.IncaCore.utils.ApiResult;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

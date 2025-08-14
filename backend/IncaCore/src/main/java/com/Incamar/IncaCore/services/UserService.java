@@ -1,8 +1,8 @@
 package com.Incamar.IncaCore.services;
 
-import com.Incamar.IncaCore.dtos.user.UpdateUserReq;
-import com.Incamar.IncaCore.dtos.user.UserSearchReq;
-import com.Incamar.IncaCore.dtos.user.UserSearchRes;
+import com.Incamar.IncaCore.dtos.users.UpdateUserReq;
+import com.Incamar.IncaCore.dtos.users.UserSearchReq;
+import com.Incamar.IncaCore.dtos.users.UserSearchRes;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

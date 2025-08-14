@@ -1,9 +1,9 @@
 package com.Incamar.IncaCore.services.impl;
 
 
-import com.Incamar.IncaCore.dtos.user.UpdateUserReq;
-import com.Incamar.IncaCore.dtos.user.UserSearchReq;
-import com.Incamar.IncaCore.dtos.user.UserSearchRes;
+import com.Incamar.IncaCore.dtos.users.UpdateUserReq;
+import com.Incamar.IncaCore.dtos.users.UserSearchReq;
+import com.Incamar.IncaCore.dtos.users.UserSearchRes;
 import com.Incamar.IncaCore.models.User;
 import com.Incamar.IncaCore.enums.Role;
 import com.Incamar.IncaCore.exceptions.UserNotFoundException;
