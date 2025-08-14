@@ -1,12 +1,10 @@
 package com.Incamar.IncaCore.controller;
 
 import com.Incamar.IncaCore.documentation.auth.*;
-import com.Incamar.IncaCore.dto.request.*;
-import com.Incamar.IncaCore.dto.request.auth.*;
-import com.Incamar.IncaCore.dto.response.ChangePasswordTempRes;
-import com.Incamar.IncaCore.dto.response.LoginRes;
-import com.Incamar.IncaCore.dto.response.CredentialsRes;
-import com.Incamar.IncaCore.service.AuthService;
+import com.Incamar.IncaCore.dtos.auth.*;
+import com.Incamar.IncaCore.dtos.auth.LoginRes;
+import com.Incamar.IncaCore.dtos.auth.CredentialsRes;
+import com.Incamar.IncaCore.services.AuthService;
 import com.Incamar.IncaCore.utils.ApiResult;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

@@ -1,8 +1,8 @@
 package com.Incamar.IncaCore.security.service;
 
-import com.Incamar.IncaCore.dto.JwtDataDto;
+import com.Incamar.IncaCore.dtos.user.JwtDataDto;
 import com.Incamar.IncaCore.enums.TokenPurpose;
-import com.Incamar.IncaCore.service.TokenBlacklistService;
+import com.Incamar.IncaCore.services.TokenBlacklistService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

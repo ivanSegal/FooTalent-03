@@ -1,6 +1,6 @@
 package com.Incamar.IncaCore.security.service;
 
-import com.Incamar.IncaCore.entity.User;
+import com.Incamar.IncaCore.models.User;
 import com.Incamar.IncaCore.enums.AccountStatus;
 import com.Incamar.IncaCore.enums.Role;
 import org.springframework.security.core.GrantedAuthority;

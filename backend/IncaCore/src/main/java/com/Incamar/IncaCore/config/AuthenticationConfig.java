@@ -1,7 +1,7 @@
 package com.Incamar.IncaCore.config;
 
-import com.Incamar.IncaCore.entity.User;
-import com.Incamar.IncaCore.repository.UserRepository;
+import com.Incamar.IncaCore.models.User;
+import com.Incamar.IncaCore.repositories.UserRepository;
 import com.Incamar.IncaCore.security.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

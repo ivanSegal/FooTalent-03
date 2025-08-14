@@ -1,12 +1,12 @@
 package com.Incamar.IncaCore.controller;
 
-import com.Incamar.IncaCore.dto.request.UserSearchReq;
+import com.Incamar.IncaCore.dtos.user.UpdateUserReq;
+import com.Incamar.IncaCore.dtos.user.UserSearchReq;
 
-import com.Incamar.IncaCore.dto.response.UserSearchRes;
-import com.Incamar.IncaCore.service.UserService;
+import com.Incamar.IncaCore.dtos.user.UserSearchRes;
+import com.Incamar.IncaCore.services.UserService;
 import com.Incamar.IncaCore.utils.ApiResult;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +14,10 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/users")
@@ -35,10 +36,21 @@ public class UserController {
                 .body(ApiResult.success(response,"Operación exitosa"));
     }
 
+    @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/{id}")
-    public ResponseEntity<?> findById(){
-        return null;
+    public ResponseEntity<?> getById(@PathVariable UUID id){
+        UserSearchRes response = userService.findById(id);
+        return ResponseEntity.ok().body(ApiResult.success(response,"Usuario encontrado"));
     }
+
+    @SecurityRequirement(name = "bearerAuth")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateById(@PathVariable UUID id, @RequestBody @Valid UpdateUserReq request){
+        userService.updateById(id, request);
+        return ResponseEntity.ok().body(ApiResult.success("Actualizacion eixosa"));
+    }
+
 
 
 

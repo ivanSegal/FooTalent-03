@@ -1,7 +1,7 @@
 package com.Incamar.IncaCore.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.Incamar.IncaCore.exception.ErrorResponse;
+import com.Incamar.IncaCore.exceptions.ErrorResponse;
 import com.Incamar.IncaCore.security.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

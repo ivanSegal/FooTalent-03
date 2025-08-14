@@ -1,6 +1,6 @@
 package com.Incamar.IncaCore.documentation.auth;
 
-import com.Incamar.IncaCore.dto.response.CredentialsRes;
+import com.Incamar.IncaCore.dtos.auth.CredentialsRes;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;

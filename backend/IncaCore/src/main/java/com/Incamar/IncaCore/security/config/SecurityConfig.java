@@ -1,7 +1,7 @@
 package com.Incamar.IncaCore.security.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.Incamar.IncaCore.exception.ErrorResponse;
+import com.Incamar.IncaCore.exceptions.ErrorResponse;
 import com.Incamar.IncaCore.security.filter.TemporaryPasswordFilter;
 import com.Incamar.IncaCore.security.filter.JwtAuthenticationFilter;
 import jakarta.servlet.http.HttpServletResponse;
