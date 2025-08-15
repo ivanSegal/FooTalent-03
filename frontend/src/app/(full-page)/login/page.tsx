@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 // import fondo from "@/assets/images/fondo.png";
-import { login } from "../../services/authService";
+import { login } from "@/services/authService";
 import { showAlert, showAutoAlert } from "@/utils/showAlert";
 import { AxiosError } from "axios";
 import { useAuth } from "@/contexts/AuthContext";
