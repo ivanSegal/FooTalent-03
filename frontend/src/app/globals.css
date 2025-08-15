@@ -1,5 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
 @import "tailwindcss";
 
+@theme {
+  --font-primary: DM sans, sans-serif;
+
+  --text-title: 36px;
+  --text-title--font-weight: 700; 
+  --text-subtitle: 24px;
+  --text-subtitle--font-weight: 700;
+  --text-button: 18px; 
+  --text-button--font-weight: 600; 
+  --text-body: 18px; 
+  --text-body--font-weight: 400; 
+
+  --color-primary-500: oklch(0.2169 0.0983 273.05);
+  --color-secondary-500: oklch(0.3418 0.0926 278.7);
+  --color-tertiary-500: oklch(0.3136 0.0462 283.41);
+  --color-success: oklch(0.6749 0.1668 134.42);
+  --color-warning: oklch(0.8917 0.147 109.04);
+  --color-error: oklch(0.5752 0.2065 26.69);
+}
 :root {
   --background: #091744;
   --foreground: #171717;
