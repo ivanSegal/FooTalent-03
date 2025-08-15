@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 // import fondo from "@/assets/images/fondo.png";
-import { register } from "../../services/authService";
+import { register } from "@/services/authService";
 import { showAutoAlert, showAlert } from "@/utils/showAlert";
 
 export default function RegisterPage() {
@@ -68,7 +68,7 @@ export default function RegisterPage() {
       await register(formData);
       await showAutoAlert("¡Registro exitoso!", "Ahora puedes iniciar sesión", "success", 2000);
       router.push("/login");
-    } catch (error: unknown) {
+    } catch {
       const message = "Ha ocurrido un error inesperado. Intenta nuevamente.";
       showAlert("Registro fallido", message, "error");
     } finally {
