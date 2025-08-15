@@ -2,6 +2,7 @@
 
 import React from "react";
 import Button from "@/components/UI/Button";
+import Modal from "@/components/UI/Modal";
 
 // Simple card wrapper for nicer presentation
 const Card: React.FC<{ title: string; children: React.ReactNode; description?: string }> = ({
@@ -18,56 +19,6 @@ const Card: React.FC<{ title: string; children: React.ReactNode; description?: s
   </div>
 );
 
-// Accessible modal
-const Modal: React.FC<{
-  open: boolean;
-  title: string;
-  onClose: () => void;
-  children: React.ReactNode;
-}> = ({ open, title, onClose, children }) => {
-  React.useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
-    }
-    if (open) document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
-
-  if (!open) return null;
-  return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm"
-      role="dialog"
-      aria-modal
-      aria-label={title}
-      onClick={onClose}
-    >
-      <div
-        className="max-h-[80vh] w-full max-w-3xl overflow-hidden rounded-xl border border-white/10 bg-white shadow-xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between border-b px-4 py-3">
-          <h3 className="text-base font-semibold text-[#0E1046]">{title}</h3>
-          <button
-            className="rounded p-1 text-gray-500 transition hover:bg-gray-100 hover:text-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0E1046]"
-            aria-label="Cerrar"
-            onClick={onClose}
-          >
-            <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden>
-              <path
-                fillRule="evenodd"
-                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </button>
-        </div>
-        <div className="max-h-[70vh] overflow-auto p-4">{children}</div>
-      </div>
-    </div>
-  );
-};
-
 export default function ButtonDemoPage() {
   const [open, setOpen] = React.useState(false);
   const [copied, setCopied] = React.useState(false);
@@ -81,10 +32,10 @@ export default function Example() {
       <Button severity="primary" appearance="solid">Botón Principal</Button>
 
       {/* Outlined por severidad */}
-      <Button severity="secondary" appearance="outlined">Outlined Secundario</Button>
+      <Button severity="secondary" appearance="outlined">Secundario Outlined</Button>
 
       {/* Loading + icono */}
-      <Button severity="approved" appearance="solid" loading leftIcon={<svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/><svg>}>
+      <Button severity="approved" appearance="solid" loading leftIcon={<svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden><path d="M10 2a8 8 0 100 16 8 8 0 000-16z" /></svg>}>
         Procesando…
       </Button>
 
@@ -193,22 +144,21 @@ export default function Example() {
         </Card>
       </div>
 
-      <Modal open={open} onClose={() => setOpen(false)} title="Cómo usar el Button">
-        <div className="mb-3 flex items-center justify-between">
-          <p className="text-sm text-gray-700">
-            Ejemplo básico de uso y personalización de severidad, apariencia, tamaños y estados.
-          </p>
-          <button
-            onClick={handleCopy}
-            className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0E1046]"
-          >
-            {copied ? "Copiado" : "Copiar"}
-          </button>
-        </div>
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        title="Cómo usar el Button"
+        description="Ejemplos de severidad, apariencia, tamaños, loading, íconos y full width."
+        footer={
+          <Button appearance="outlined" severity="primary" onClick={handleCopy}>
+            {copied ? "Copiado" : "Copiar código"}
+          </Button>
+        }
+        size="xl"
+      >
         <pre className="rounded-lg border bg-gray-50 p-3 text-[11px] leading-5 whitespace-pre-wrap text-gray-900">
           {codeSample}
         </pre>
-
         <div className="mt-4 text-xs text-gray-600">
           Props principales: <code className="font-mono">severity</code>,{" "}
           <code className="font-mono">appearance</code>, <code className="font-mono">size</code>,{" "}
