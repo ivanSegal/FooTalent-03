@@ -30,3 +30,11 @@ body {
   color: var(--foreground);
   font-family: var(--font-rubik), sans-serif;
 }
+
+@media (min-width: 1024px) {
+  /* SweetAlert2 custom offset for top-end-auth on large screens */
+  .swal2-container.swal2-top-end.swal2-top-end-auth {
+    top: 80px !important;
+    right: 150px !important;
+  }
+}
