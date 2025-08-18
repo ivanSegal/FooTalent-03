@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-// import fondo from "@/assets/images/fondo.png";
 import { login } from "@/services/authService";
 import { showAlert, showAutoAlert } from "@/utils/showAlert";
 import { AxiosError } from "axios";
@@ -10,6 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import Button from "@/components/UI/Button";
 import Image from "next/image";
 import LogoLogin from "@/assets/images/LogoLogin.png";
+import { motion, useReducedMotion } from "framer-motion";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -18,9 +18,11 @@ export default function LoginPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [remember, setRemember] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const usernameRegex = /^[a-zA-Z0-9._]{4,20}$/;
+  const reduceMotion = useReducedMotion();
 
-  React.useEffect(() => {
+  useEffect(() => {
     try {
       const stored = localStorage.getItem("rememberedUsername");
       if (stored) {
@@ -29,6 +31,19 @@ export default function LoginPage() {
       }
     } catch {}
   }, []);
+
+  useEffect(() => {
+    if (remember) {
+      try {
+        const stored = localStorage.getItem("rememberedUsername");
+        if (stored) {
+          setFormData((d) => ({ ...d, username: stored }));
+        }
+      } catch {}
+    } else {
+      setFormData((d) => ({ ...d, username: "", password: "" }));
+    }
+  }, [remember]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -67,13 +82,20 @@ export default function LoginPage() {
           localStorage.setItem("rememberedUsername", formData.username);
         } catch {}
       } else {
+        // Remove stored username on submit if not remembering
         try {
           localStorage.removeItem("rememberedUsername");
         } catch {}
       }
       setUsername(username ?? null);
       document.cookie = "loggedIn=true; path=/;";
-      await showAutoAlert("¡Bienvenido!", "Inicio de sesión exitoso", "success", 2000);
+      await showAutoAlert(
+        "¡Bienvenido!",
+        "Inicio de sesión exitoso",
+        "success",
+        2000,
+        "top-end-auth",
+      );
       router.push("/dashboard?logged=true");
     } catch (err: unknown) {
       setIsSubmitting(false);
@@ -95,9 +117,15 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center p-10">
+    <motion.div
+      className="flex min-h-screen w-full items-center justify-center p-10"
+      initial={reduceMotion ? undefined : { opacity: 0, y: 32, filter: "blur(8px)" }}
+      animate={reduceMotion ? undefined : { opacity: 1, y: 0, filter: "blur(0px)" }}
+      transition={reduceMotion ? undefined : { duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+    >
       <form
         onSubmit={handleSubmit}
+        autoComplete="off"
         aria-busy={isSubmitting || undefined}
         className="flex w-[445px] max-w-full flex-col items-center justify-start gap-4 rounded-[14px] bg-white px-[56px] pt-[40px] pb-[40px] shadow-[0_5px_6px_#2F3167,6px_6px_4px_rgba(14,16,70,0.25)]"
       >
@@ -135,6 +163,9 @@ export default function LoginPage() {
               id="username"
               type="text"
               name="username"
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="none"
               value={formData.username}
               onChange={handleChange}
               aria-invalid={!!errors.username || undefined}
@@ -175,17 +206,62 @@ export default function LoginPage() {
             </span>
             <input
               id="password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
+              autoComplete="new-password"
               value={formData.password}
               onChange={handleChange}
               aria-invalid={!!errors.password || undefined}
               aria-describedby={errors.password ? "password-error" : undefined}
-              className={`box-border h-[36px] w-full rounded-[3px] border bg-[#FAFBFC] pr-3 pl-[44px] text-[14px] leading-[20px] font-normal text-[color:var(--color-primary-500)] outline-none placeholder:leading-[20px] placeholder:font-[var(--font-secondary)] placeholder:text-[#97A0AF] focus:ring-2 focus:ring-[color:var(--color-primary-500)] ${
+              className={`box-border h-[36px] w-full rounded-[3px] border bg-[#FAFBFC] pr-10 pl-[44px] text-[14px] leading-[20px] font-normal text-[color:var(--color-primary-500)] outline-none placeholder:leading-[20px] placeholder:font-[var(--font-secondary)] placeholder:text-[#97A0AF] focus:ring-2 focus:ring-[color:var(--color-primary-500)] ${
                 errors.password ? "border-red-500" : "border-[#DFE1E6]"
               }`}
               placeholder="Ingresa tu contraseña"
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword((v) => !v)}
+              aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+              className="absolute top-1/2 right-2 inline-flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--color-primary-500)]"
+              tabIndex={0}
+            >
+              {showPassword ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-[color:var(--color-primary-500)]"
+                  aria-hidden
+                >
+                  <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-[color:var(--color-primary-500)]"
+                  aria-hidden
+                >
+                  <path d="M3 3l18 18" />
+                  <path d="M10.584 10.587a3 3 0 0 0 4.243 4.243" />
+                  <path d="M9.88 5.082A9.956 9.956 0 0 1 12 5c6.5 0 10 7 10 7a21.228 21.228 0 0 1-1.67 2.88M6.16 6.157C3.27 7.94 2 12 2 12s3.5 7 10 7c1.008 0 1.973-.146 2.886-.418" />
+                </svg>
+              )}
+            </button>
           </div>
           {errors.password && (
             <p id="password-error" className="text-xs font-medium text-red-500" role="alert">
@@ -221,14 +297,12 @@ export default function LoginPage() {
         {/* ¿Olvidaste tu contraseña? */}
         <button
           type="button"
-          onClick={() => {
-            /* TODO: navegación a recuperación */
-          }}
+          onClick={() => router.push("/forgotpassword")}
           className="self-start text-[16px] leading-[25px] font-normal text-[color:var(--color-tertiary-500)] underline-offset-2 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--color-primary-500)]"
         >
           ¿Olvidaste tu contraseña?
         </button>
       </form>
-    </div>
+    </motion.div>
   );
 }

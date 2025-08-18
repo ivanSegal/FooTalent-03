@@ -18,16 +18,29 @@ export const showAutoAlert = (
   text: string,
   icon: "success" | "error" | "warning" | "info" | "question",
   timer: number = 2000,
+  position:
+    | "top"
+    | "top-start"
+    | "top-end"
+    | "center"
+    | "center-start"
+    | "center-end"
+    | "bottom"
+    | "bottom-start"
+    | "bottom-end"
+    | "top-end-auth" = "top-end",
 ) => {
+  const isCustomAuth = position === "top-end-auth";
   return Swal.fire({
     toast: true,
-    position: "top-end",
+    position: isCustomAuth ? "top-end" : position,
     title,
     text,
     icon,
     showConfirmButton: false,
     timer,
     timerProgressBar: true,
+    customClass: isCustomAuth ? { container: "swal2-top-end-auth" } : undefined,
   });
 };
 
@@ -50,3 +63,6 @@ export const showConfirmAlert = async (
 
   return result.isConfirmed;
 };
+
+// CSS esperado (ya añadido en globals.css):
+// .swal2-container.swal2-top-end.swal2-top-end-auth { top:32px !important; right:36px !important; }
