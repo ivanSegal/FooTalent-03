@@ -1,6 +1,6 @@
 import React from "react";
 import { Metadata } from "next";
-import Navbar from "@/components/Navbar";
+import Sidebar from "@/app/(main)/sidebar/page";
 
 interface FullPageLayoutProps {
   children: React.ReactNode;
@@ -14,8 +14,8 @@ export const metadata: Metadata = {
 export default function FullPageLayout({ children }: FullPageLayoutProps) {
   return (
     <React.Fragment>
-      <Navbar />
-      {children}
+      {/* <Navbar /> */}
+      <Sidebar />
     </React.Fragment>
   );
 }
