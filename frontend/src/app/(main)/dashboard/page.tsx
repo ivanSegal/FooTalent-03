@@ -12,7 +12,7 @@ import { showConfirmAlert, showAlert, showAutoAlert } from "@/utils/showAlert";
 
 export default function DashboardPage() {
   const [embarcaciones, setEmbarcaciones] = useState<Embarcacion[]>([]);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [editId, setEditId] = useState<number | null>(null);
@@ -24,16 +24,16 @@ export default function DashboardPage() {
   }, []);
 
   const fetchData = async () => {
-  try {
-    const data = await getAllEmbarcaciones();
-    setEmbarcaciones(Array.isArray(data) ? data : []);
-  } catch (err) {
-    console.error("Error al obtener embarcaciones", err);
-    setEmbarcaciones([]);
-  } finally {
-    setLoading(false);
-  }
-};
+    try {
+      const data = await getAllEmbarcaciones();
+      setEmbarcaciones(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error("Error al obtener embarcaciones", err);
+      setEmbarcaciones([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormValues({ ...formValues, [e.target.name]: e.target.value });
@@ -86,20 +86,19 @@ export default function DashboardPage() {
   };
 
   const filtered = useMemo(() => {
-  if (!Array.isArray(embarcaciones)) return [];
+    if (!Array.isArray(embarcaciones)) return [];
 
-  const searchLower = search.toLowerCase();
-  return embarcaciones
-    .filter((e) =>
-      e.nombre.toLowerCase().includes(searchLower) ||
-      e.capitan.toLowerCase().includes(searchLower) ||
-      e.modelo.toLowerCase().includes(searchLower) ||
-      e.npatente.toLowerCase().includes(searchLower)
-    )
-    .sort((a, b) => a.id - b.id);
-}, [search, embarcaciones]);
-
-
+    const searchLower = search.toLowerCase();
+    return embarcaciones
+      .filter(
+        (e) =>
+          e.nombre.toLowerCase().includes(searchLower) ||
+          e.capitan.toLowerCase().includes(searchLower) ||
+          e.modelo.toLowerCase().includes(searchLower) ||
+          e.npatente.toLowerCase().includes(searchLower),
+      )
+      .sort((a, b) => a.id - b.id);
+  }, [search, embarcaciones]);
 
   const totalPages = Math.ceil(filtered.length / pageSize);
   const currentItems = filtered.slice((page - 1) * pageSize, page * pageSize);

@@ -3,7 +3,7 @@ import React from "react";
 export type ButtonSize = "sm" | "md" | "lg" | "small" | "medium" | "large";
 
 // New API
-export type Severity = "primary" | "secondary" | "approved" | "neutral" | "error";
+export type Severity = "primary" | "secondary" | "tertiary" | "approved" | "neutral" | "error";
 export type Appearance = "solid" | "outlined";
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -33,10 +33,10 @@ const normalizeSize = (size: ButtonSize): "sm" | "md" | "lg" => {
 };
 
 const sizeStyles: Record<"sm" | "md" | "lg", string> = {
-  sm: "h-[40px] px-4 text-[14px] font-semibold rounded-[12px]",
+  sm: "h-[40px] px-4 text-[14px] font-semibold rounded-[2px]",
   // Figma spec: 159x52 with 13px 37px padding and 15px radius
-  md: "h-[52px] min-w-[159px] px-[37px] text-[18px] font-semibold rounded-[15px]",
-  lg: "h-[60px] px-8 text-[20px] font-semibold rounded-[18px]",
+  md: "py-[8px] min-w-[159px] px-[37px] text-[18px] font-semibold rounded-[3px]",
+  lg: "h-[60px] px-8 text-[20px] font-semibold rounded-[4px]",
 };
 
 const iconSpacing: Record<"sm" | "md" | "lg", string> = {
@@ -60,6 +60,12 @@ function getStyles(appearance: Appearance, severity: Severity): { button: string
           button:
             "bg-[#2F3167] text-white hover:bg-[#222457] disabled:bg-[#2F3167]/60 disabled:text-white/70",
           ring: "focus-visible:ring-[#2F3167]",
+        };
+      case "tertiary":
+        return {
+          button:
+            "bg-[#0065FF] text-white hover:brightness-90 disabled:bg-[var(--color-tertiary-500)]/60 disabled:text-white/70",
+          ring: "focus-visible:ring-[var(--color-tertiary-500)]",
         };
       case "approved":
         return {
@@ -93,6 +99,12 @@ function getStyles(appearance: Appearance, severity: Severity): { button: string
           button:
             "bg-transparent text-[#2F3167] border-2 border-[#2F3167] hover:bg-[#2F3167] hover:text-white disabled:text-[#2F3167]/60 disabled:border-[#2F3167]/40",
           ring: "focus-visible:ring-[#2F3167]",
+        };
+      case "tertiary":
+        return {
+          button:
+            "bg-transparent text-[var(--color-tertiary-500)] border-2 border-[var(--color-tertiary-500)] hover:bg-[var(--color-tertiary-500)] hover:text-white disabled:text-[var(--color-tertiary-500)]/60 disabled:border-[var(--color-tertiary-500)]/40",
+          ring: "focus-visible:ring-[var(--color-tertiary-500)]",
         };
       case "approved":
         return {
