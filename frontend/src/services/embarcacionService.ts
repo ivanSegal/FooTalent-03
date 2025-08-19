@@ -16,7 +16,6 @@ export const getAllEmbarcaciones = async (): Promise<Embarcacion[]> => {
   return embarcaciones;
 };
 
-
 // Crear nueva embarcación
 export const createEmbarcacion = async (data: Partial<Embarcacion>): Promise<Embarcacion> => {
   const response = await api.post<Embarcacion>("/api/embarcaciones", data);
