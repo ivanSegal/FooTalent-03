@@ -77,8 +77,7 @@ const Navbar: React.FC<NavbarProps> = ({
                 />
               </svg>
               {notificationCount && notificationCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-5 w-5 min-w-[20px] items-center 
-                justify-center rounded-full bg-red-500 text-xs font-bold text-white">
+                <span className="absolute -top-1 -right-1 flex h-5 w-5 min-w-[20px] items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">
                   {notificationCount > 99 ? "99+" : notificationCount}
                 </span>
               )}
@@ -87,8 +86,7 @@ const Navbar: React.FC<NavbarProps> = ({
             {/* Configuración */}
             <button
               onClick={onSettingsClick}
-              className={`p-2 ${iconStyles[variant]} rounded-lg focus:ring-2 focus:ring-blue-500 
-              focus:ring-offset-2 focus:outline-none`}
+              className={`p-2 ${iconStyles[variant]} rounded-lg focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none`}
               aria-label="Configuración"
             >
               <svg

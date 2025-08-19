@@ -8,8 +8,7 @@ const Card: React.FC<{ title: string; children: React.ReactNode; description?: s
   description,
   children,
 }) => (
-  <div className="flex min-h-[120px] flex-col justify-between rounded-2xl border
-  border-gray-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md">
+  <div className="flex min-h-[120px] flex-col justify-between rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md">
     <div className="mb-3">
       <h3 className="text-sm font-semibold text-[#0E1046]">{title}</h3>
       {description && <p className="mt-1 text-xs text-gray-600">{description}</p>}
@@ -43,15 +42,13 @@ const Modal: React.FC<{
       onClick={onClose}
     >
       <div
-        className="max-h-[80vh] w-full max-w-3xl overflow-hidden rounded-xl border
-        border-white/10 bg-white shadow-xl"
+        className="max-h-[80vh] w-full max-w-3xl overflow-hidden rounded-xl border border-white/10 bg-white shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between border-b px-4 py-3">
           <h3 className="text-base font-semibold text-[#0E1046]">{title}</h3>
           <button
-            className="rounded p-1 text-gray-500 transition hover:bg-gray-100
-            hover:text-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0E1046]"
+            className="rounded p-1 text-gray-500 transition hover:bg-gray-100 hover:text-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0E1046]"
             aria-label="Cerrar"
             onClick={onClose}
           >
@@ -260,7 +257,7 @@ export default function Example() {
                   <code className="font-mono">userName</code> - Nombre del usuario
                 </li>
                 <li>
-                  <code className="font-mono">variant</code> - 'default' | 'dark'
+                  <code className="font-mono">variant</code> - default | dark
                 </li>
                 <li>
                   <code className="font-mono">notificationCount</code> - Número de notificaciones

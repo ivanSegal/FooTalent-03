@@ -168,14 +168,14 @@ const defaultMenuItems: MenuItem[] = [
 ];
 
 const Sidebar: React.FC<ExtendedSidebarProps> = ({
-  title = "Dashboard admin",
+  // title = "Dashboard admin",
   menuItems = defaultMenuItems,
   activeItemId = "dashboard",
   onItemClick,
-  collapsed: collapsedProp = false,
+  // collapsed: collapsedProp = false,
   variant = "dark",
   onLogout,
-  onToggleCollapse,
+  // onToggleCollapse,
 }) => {
   const [collapsed, setCollapsed] = useState(false);
   const getVariantClasses = () => {

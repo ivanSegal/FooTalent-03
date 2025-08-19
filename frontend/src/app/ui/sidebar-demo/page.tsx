@@ -7,59 +7,99 @@ import logo from "@/assets/images/Logo.png";
 
 const DashboardIcon = () => (
   <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M9 19v-6a2 2 0 00-2-2H5a2 
     2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 
-    2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+    2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+    />
   </svg>
 );
 
 const MaintenanceIcon = () => (
   <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M10.325 4.317c.426-1.756 
     2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 
     2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 
     1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 
     00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 
     00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 
-    001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+    001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+    />
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+    />
   </svg>
 );
 
 const InventoryIcon = () => (
   <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 
-    1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M7 7h.01M7 3h5c.512 0 1.024.195 
+    1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+    />
   </svg>
 );
 
 const UsersIcon = () => (
   <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 
-    21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M12 4.354a4 4 0 110 5.292M15 
+    21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
+    />
   </svg>
 );
 
 const ConfigIcon = () => (
   <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M10.325 4.317c.426-1.756 
     2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 
     2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 
     1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 
     00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 
-    0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+    0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+    />
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+    />
   </svg>
 );
 
 const LogoutIcon = () => (
   <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 
-    4v1m0-10V5m0 14a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2h4a2 2 0 012 2v1" />
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M17 16l4-4m0 0l-4-4m4 4H7m6 
+    4v1m0-10V5m0 14a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2h4a2 2 0 012 2v1"
+    />
   </svg>
 );
 
-// Elementos de menú por defecto 
+// Elementos de menú por defecto
 const defaultMenuItems: MenuItem[] = [
   { id: "dashboard", label: "Dashboard", href: "/dashboard", icon: <DashboardIcon /> },
   { id: "users", label: "Usuarios", href: "/users", icon: <UsersIcon /> },
@@ -75,28 +115,28 @@ const Sidebar: React.FC<SidebarProps> = ({
   activeItemId,
   onItemClick,
   collapsed = false,
-  variant = 'default',
-  onLogout 
+  variant = "default",
+  onLogout,
 }) => {
   const getVariantClasses = () => {
     switch (variant) {
-      case 'dark':
+      case "dark":
         return {
-          container: 'bg-[#1E293B] text-gray-100 border-r border-gray-700',
-          title: 'text-gray-100',
-          menuItem: 'text-gray-300 hover:bg-gray-700 hover:text-white',
-          activeMenuItem: 'bg-gray-700 text-white font-medium border-2 border-[#2551A4]',
-          icon: 'text-gray-400',
-          logoutButton: 'text-gray-300 hover:bg-gray-700 hover:text-white'
+          container: "bg-[#1E293B] text-gray-100 border-r border-gray-700",
+          title: "text-gray-100",
+          menuItem: "text-gray-300 hover:bg-gray-700 hover:text-white",
+          activeMenuItem: "bg-gray-700 text-white font-medium border-2 border-[#2551A4]",
+          icon: "text-gray-400",
+          logoutButton: "text-gray-300 hover:bg-gray-700 hover:text-white",
         };
       default:
         return {
-          container: 'bg-white text-gray-900 border-r border-gray-200 shadow-sm',
-          title: 'text-gray-900',
-          menuItem: 'text-gray-700 hover:bg-gray-50 hover:text-gray-900',
-          activeMenuItem: 'bg-blue-50 text-[#3B82F6] font-medium border-2 border-[#2551A4]',
-          icon: 'text-gray-500',
-          logoutButton: 'text-gray-300 hover:bg-gray-700 hover:text-white'
+          container: "bg-white text-gray-900 border-r border-gray-200 shadow-sm",
+          title: "text-gray-900",
+          menuItem: "text-gray-700 hover:bg-gray-50 hover:text-gray-900",
+          activeMenuItem: "bg-blue-50 text-[#3B82F6] font-medium border-2 border-[#2551A4]",
+          icon: "text-gray-500",
+          logoutButton: "text-gray-300 hover:bg-gray-700 hover:text-white",
         };
     }
   };
@@ -104,10 +144,11 @@ const Sidebar: React.FC<SidebarProps> = ({
   const classes = getVariantClasses();
 
   return (
-    <div className={`${collapsed ? 'w-16' : 'w-64'} flex flex-col h-full 
-    transition-all duration-200 ${classes.container}`}>
+    <div
+      className={`${collapsed ? "w-16" : "w-64"} flex h-full flex-col transition-all duration-200 ${classes.container}`}
+    >
       {/* Header */}
-      <div className="p-4 border-b border-current/10 min-h-[64px] flex items-center justify-center">
+      <div className="flex min-h-[64px] items-center justify-center border-b border-current/10 p-4">
         {collapsed ? (
           <Image src={logo} alt="Logo" width={40} height={40} className="object-cover" />
         ) : (
@@ -124,13 +165,12 @@ const Sidebar: React.FC<SidebarProps> = ({
               <li key={item.id}>
                 <button
                   onClick={() => onItemClick?.(item)}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sm 
-                    transition-all duration-150 ${
+                  className={`flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-all duration-150 ${
                     isActive ? classes.activeMenuItem : classes.menuItem
                   }`}
                   title={collapsed ? item.label : undefined}
                 >
-                  <span className={`${classes.icon} ${isActive ? 'text-current' : ''}`}>
+                  <span className={`${classes.icon} ${isActive ? "text-current" : ""}`}>
                     {item.icon}
                   </span>
                   {!collapsed && <span>{item.label}</span>}
@@ -142,28 +182,25 @@ const Sidebar: React.FC<SidebarProps> = ({
       </nav>
 
       {/* Footer - Usuario y Logout */}
-      <div className="p-4 border-t border-current/10">
-        <div className={`flex items-center gap-2 ${collapsed ? 'justify-center' : ''}`}>
-        </div>
-        
+      <div className="border-t border-current/10 p-4">
+        <div className={`flex items-center gap-2 ${collapsed ? "justify-center" : ""}`}></div>
+
         {/* Botón de Cerrar Sesión */}
         {!collapsed && (
           <button
             onClick={onLogout}
-            className={`w-full flex items-center gap-3 px-3 py-2 mt-3 rounded-md 
-              text-sm transition-all duration-150 ${classes.logoutButton}`}
+            className={`mt-3 flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-150 ${classes.logoutButton}`}
           >
             <LogoutIcon />
             <span>Cerrar Sesión</span>
           </button>
         )}
-        
+
         {/* Botón de logout para sidebar colapsado */}
         {collapsed && (
           <button
             onClick={onLogout}
-            className={`w-full flex items-center justify-center p-2 mt-2 
-              rounded-md text-sm transition-all duration-150 ${classes.logoutButton}`}
+            className={`mt-2 flex w-full items-center justify-center rounded-md p-2 text-sm transition-all duration-150 ${classes.logoutButton}`}
             title="Cerrar Sesión"
           >
             <LogoutIcon />
@@ -182,15 +219,14 @@ const Card: React.FC<{
   onClick?: () => void;
 }> = ({ title, description, children, isSelected = false, onClick }) => (
   <div
-    className={`flex min-h-[400px] flex-col justify-between rounded-2xl bg-white shadow-sm 
-      transition-all cursor-pointer ${
-      isSelected ? 'border-2 border-[#2551A4]' : 'border border-gray-200 hover:shadow-md'
+    className={`flex min-h-[400px] cursor-pointer flex-col justify-between rounded-2xl bg-white shadow-sm transition-all ${
+      isSelected ? "border-2 border-[#2551A4]" : "border border-gray-200 hover:shadow-md"
     }`}
-    style={{ padding: '10px' }}
+    style={{ padding: "10px" }}
     onClick={onClick}
   >
     <div className="mb-3">
-      <h3 className={`text-sm font-semibold ${isSelected ? 'text-[#3B82F6]' : 'text-[#0E1046]'}`}>
+      <h3 className={`text-sm font-semibold ${isSelected ? "text-[#3B82F6]" : "text-[#0E1046]"}`}>
         {title}
       </h3>
       {description && <p className="mt-1 text-xs text-gray-600">{description}</p>}
@@ -218,23 +254,20 @@ const Modal: React.FC<{
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center
-      bg-black/40 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm"
       role="dialog"
       aria-modal
       aria-label={title}
       onClick={onClose}
     >
       <div
-        className="max-h-[80vh] w-full max-w-4xl overflow-hidden rounded-xl 
-        border border-white/10 bg-white shadow-xl"
+        className="max-h-[80vh] w-full max-w-4xl overflow-hidden rounded-xl border border-white/10 bg-white shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between border-b px-4 py-3">
           <h3 className="text-base font-semibold text-[#0E1046]">{title}</h3>
           <button
-            className="rounded p-1 text-gray-500 transition hover:bg-gray-100
-            hover:text-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0E1046]"
+            className="rounded p-1 text-gray-500 transition hover:bg-gray-100 hover:text-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0E1046]"
             aria-label="Cerrar"
             onClick={onClose}
           >
@@ -342,7 +375,7 @@ export default function Example() {
           onLogout={handleLogout}
           variant="default"
         />
-      )
+      ),
     },
     {
       id: "dark",
@@ -355,7 +388,7 @@ export default function Example() {
           onLogout={handleLogout}
           variant="dark"
         />
-      )
+      ),
     },
     {
       id: "collapsed-default",
@@ -369,7 +402,7 @@ export default function Example() {
           collapsed={true}
           variant="default"
         />
-      )
+      ),
     },
     {
       id: "collapsed-dark",
@@ -383,7 +416,7 @@ export default function Example() {
           collapsed={true}
           variant="dark"
         />
-      )
+      ),
     },
     {
       id: "interactive",
@@ -394,8 +427,7 @@ export default function Example() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setCollapsed(!collapsed)}
-              className="rounded bg-blue-500 px-2 py-1 text-xs text-white 
-              transition-colors hover:bg-blue-600"
+              className="rounded bg-blue-500 px-2 py-1 text-xs text-white transition-colors hover:bg-blue-600"
             >
               {collapsed ? "Expandir" : "Colapsar"}
             </button>
@@ -411,7 +443,7 @@ export default function Example() {
             variant="default"
           />
         </div>
-      )
+      ),
     },
     {
       id: "custom",
@@ -430,8 +462,8 @@ export default function Example() {
           onLogout={handleLogout}
           variant="dark"
         />
-      )
-    }
+      ),
+    },
   ];
 
   return (
@@ -440,9 +472,7 @@ export default function Example() {
         <h1 className="text-xl font-bold text-gray-900">Sidebar Demo - Modificado</h1>
         <div className="flex items-center gap-2">
           <button
-            className="rounded-md border border-gray-300 bg-white px-3 py-2 
-            text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 
-            focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
             onClick={() => setOpen(true)}
           >
             Guía de uso
@@ -450,7 +480,7 @@ export default function Example() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3" style={{ gap: '20px' }}>
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3" style={{ gap: "20px" }}>
         {cardData.map((card) => (
           <Card
             key={card.id}
@@ -471,16 +501,13 @@ export default function Example() {
           </p>
           <button
             onClick={handleCopy}
-            className="rounded-md border border-gray-300 bg-white px-3 py-1.5 
-            text-xs font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 
-            focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0E1046]"
+            className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0E1046]"
           >
             {copied ? "Copiado" : "Copiar"}
           </button>
         </div>
-        
-        <pre className="rounded-lg border bg-gray-50 p-3 text-[11px] leading-5 
-        whitespace-pre-wrap text-gray-900">
+
+        <pre className="rounded-lg border bg-gray-50 p-3 text-[11px] leading-5 whitespace-pre-wrap text-gray-900">
           {codeSample}
         </pre>
       </Modal>

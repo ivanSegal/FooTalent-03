@@ -16,6 +16,7 @@ export default function FullPageLayout({ children }: FullPageLayoutProps) {
     <React.Fragment>
       {/* <Navbar /> */}
       <Sidebar />
+      {children}
     </React.Fragment>
   );
 }
