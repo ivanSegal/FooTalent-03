@@ -33,47 +33,67 @@ import java.lang.annotation.*;
                         mediaType = "application/json",
                         schema = @Schema(example = """
                 {
-                  "content": [
-                    {
-                      "id": 1,
-                      "nombre": "Embarcación A",
-                      "nPatente": "ABC123",
-                      "modelo": "Modelo 2023",
-                      "capitan": "Juan Pérez"
+                  "success": true,
+                  "message": "Se visualizan exitosamente todas las embarcaciones.",
+                  "data": {
+                    "content": [
+                      {
+                        "id": 6,
+                        "name": "Titanic II",
+                        "registrationNumber": "ABC-1234",
+                        "ismm": "ISM-9087",
+                        "flagState": "Panamá",
+                        "callSign": "YYV-3742",
+                        "portOfRegistry": "Puerto Cabello",
+                        "rif": "J-12345678-9",
+                        "serviceType": "Carga",
+                        "constructionMaterial": "Acero",
+                        "sternType": "Popa abierta",
+                        "fuelType": "Diesel",
+                        "navigationHours": 12500.5
+                      },
+                      {
+                        "id": 7,
+                        "name": "Mar Caribe",
+                        "registrationNumber": "XYZ7890",
+                        "ismm": "ISM-2025",
+                        "flagState": "Venezuela",
+                        "callSign": "YYV-9999",
+                        "portOfRegistry": "La Guaira",
+                        "rif": "J-11223344-5",
+                        "serviceType": "Pesca",
+                        "constructionMaterial": "Acero",
+                        "sternType": "Popa Redonda",
+                        "fuelType": "Gasolina",
+                        "navigationHours": 500.25
+                      }
+                    ],
+                    "pageable": {
+                      "pageNumber": 0,
+                      "pageSize": 20,
+                      "sort": {
+                        "empty": true,
+                        "unsorted": true,
+                        "sorted": false
+                      },
+                      "offset": 0,
+                      "paged": true,
+                      "unpaged": false
                     },
-                    {
-                      "id": 2,
-                      "nombre": "Embarcación B",
-                      "nPatente": "DEF456",
-                      "modelo": "Modelo 2022",
-                      "capitan": "María López"
-                    }
-                  ],
-                  "pageable": {
+                    "last": true,
+                    "totalElements": 2,
+                    "totalPages": 1,
+                    "size": 20,
+                    "number": 0,
                     "sort": {
-                      "sorted": false,
+                      "empty": true,
                       "unsorted": true,
-                      "empty": true
+                      "sorted": false
                     },
-                    "pageNumber": 0,
-                    "pageSize": 10,
-                    "offset": 0,
-                    "paged": true,
-                    "unpaged": false
-                  },
-                  "totalElements": 2,
-                  "totalPages": 1,
-                  "last": true,
-                  "first": true,
-                  "sort": {
-                    "sorted": false,
-                    "unsorted": true,
-                    "empty": true
-                  },
-                  "numberOfElements": 2,
-                  "size": 10,
-                  "number": 0,
-                  "empty": false
+                    "first": true,
+                    "numberOfElements": 2,
+                    "empty": false
+                  }
                 }
                 """)
                 )
@@ -87,11 +107,11 @@ import java.lang.annotation.*;
                 {
                   "statusCode": 401,
                   "message": "Acceso no autorizado",
-                  "errorCode": "UNAUTHORIZED",
+                  "errorCode": "AUTH_ERROR",
                   "details": "...",
-                  "path": "/api/embarcaciones"
+                  "path": "/api/vassels"
                 }
-            """)
+                """)
                 )
         ),
         @ApiResponse(
@@ -105,25 +125,9 @@ import java.lang.annotation.*;
                   "message": "Acceso denegado",
                   "errorCode": "FORBIDDEN",
                   "details": "...",
-                  "path": "/api/embarcaciones"
+                  "path": "/api/vassels"
                 }
-            """)
-                )
-        ),
-        @ApiResponse(
-                responseCode = "404",
-                description = "Recurso no encontrado (en este contexto podría aplicarse si no hay embarcaciones registradas)",
-                content = @Content(
-                        mediaType = "application/json",
-                        schema = @Schema(example = """
-                {
-                  "statusCode": 404,
-                  "message": "No se encontraron embarcaciones registradas.",
-                  "errorCode": "NOT_FOUND",
-                  "details": "...",
-                  "path": "/api/embarcaciones"
-                }
-            """)
+                """)
                 )
         ),
         @ApiResponse(
@@ -137,9 +141,9 @@ import java.lang.annotation.*;
                   "message": "Error inesperado",
                   "errorCode": "INTERNAL_SERVER_ERROR",
                   "details": "...",
-                  "path": "/api/embarcaciones"
+                  "path": "/api/vassels"
                 }
-            """)
+                """)
                 )
         )
 })

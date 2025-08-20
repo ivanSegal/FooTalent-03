@@ -7,10 +7,10 @@ import com.Incamar.IncaCore.enums.Estado;
 import com.Incamar.IncaCore.enums.TipoMantenimiento;
 import com.Incamar.IncaCore.exceptions.ResourceNotFoundException;
 import com.Incamar.IncaCore.mappers.OrdenMantenimientoMapper;
-import com.Incamar.IncaCore.models.Embarcacion;
+import com.Incamar.IncaCore.models.Vessel;
 import com.Incamar.IncaCore.models.OrdenMantenimiento;
 import com.Incamar.IncaCore.models.User;
-import com.Incamar.IncaCore.repositories.EmbarcacionRepository;
+import com.Incamar.IncaCore.repositories.VesselRepository;
 import com.Incamar.IncaCore.repositories.OrdenMantenimientoRepository;
 import com.Incamar.IncaCore.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class OrdenMantenimientoService implements IOrdenMantenimientoService {
     private final OrdenMantenimientoRepository ordenMantenimientoRepository;
-    private final EmbarcacionRepository embarcacionRepository;
+    private final VesselRepository embarcacionRepository;
     private final UserRepository userRepository;
     private final OrdenMantenimientoMapper mapper;
 
@@ -41,13 +41,13 @@ public class OrdenMantenimientoService implements IOrdenMantenimientoService {
 
     @Override
     public OrdenMantenimientoResponseDto createOrdenMantenimiento(OrdenMantenimientoRequestDto dto, JwtDataDto jwtDataDto) {
-        Embarcacion embarcacion = embarcacionRepository.findById(dto.getEmbarcacionId())
+        Vessel vessel = embarcacionRepository.findById(dto.getEmbarcacionId())
                 .orElseThrow(() -> new ResourceNotFoundException("Embarcación no encontrada con ID: " + dto.getEmbarcacionId()));
 
         User usuarioLogueado = userRepository.findById(jwtDataDto.getUuid())
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
-        OrdenMantenimiento orden = mapper.toEntity(dto, embarcacion, usuarioLogueado);
+        OrdenMantenimiento orden = mapper.toEntity(dto, vessel, usuarioLogueado);
 
         return mapper.toDTO(ordenMantenimientoRepository.save(orden));
     }
@@ -65,11 +65,11 @@ public class OrdenMantenimientoService implements IOrdenMantenimientoService {
         OrdenMantenimiento auxOrdenMantenimiento = ordenMantenimientoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Orden de mantenimiento no encontrada con ID: " + id));
 
-        Embarcacion embarcacion = embarcacionRepository.findById(dto.getEmbarcacionId())
+        Vessel vessel = embarcacionRepository.findById(dto.getEmbarcacionId())
                 .orElseThrow(() -> new ResourceNotFoundException("Embarcación no encontrada con ID: " + dto.getEmbarcacionId()));
 
         // Actualizo campos
-        auxOrdenMantenimiento.setEmbarcacion(embarcacion);
+        auxOrdenMantenimiento.setVessel(vessel);
         if (dto.getEstado() != null) auxOrdenMantenimiento.setEstado(Estado.valueOf(dto.getEstado()));
         if (dto.getTipoMantenimiento() != null) auxOrdenMantenimiento.setTipoMantenimiento(TipoMantenimiento.valueOf(dto.getTipoMantenimiento()));
         if (dto.getDescripcion() != null) auxOrdenMantenimiento.setDescripcion(dto.getDescripcion());
@@ -80,6 +80,6 @@ public class OrdenMantenimientoService implements IOrdenMantenimientoService {
 
     @Override
     public Page<OrdenMantenimientoResponseDto> searchOrdenMantenimientoPorEmbarcacion(String nombre, Pageable pageable) {
-        return ordenMantenimientoRepository.findByEmbarcacion_NombreContainingIgnoreCase(nombre, pageable).map(mapper::toDTO);
+        return ordenMantenimientoRepository.findByVessel_NameContainingIgnoreCase(nombre, pageable).map(mapper::toDTO);
     }
 }
