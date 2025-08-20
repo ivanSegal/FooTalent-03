@@ -20,8 +20,9 @@ public class VesselService implements IVesselService {
     private VesselMapper vesselMapper;
 
     @Override
-    public Page<Vessel> getAllVessels(Pageable pageable) {
-        return vesselRepository.findAll(pageable);
+    public Page<VesselResponseDto> getAllVessels(Pageable pageable) {
+        Page<Vessel> vessels = vesselRepository.findAll(pageable);
+        return vessels.map(vesselMapper::toResponseDTO);
     }
 
     @Override

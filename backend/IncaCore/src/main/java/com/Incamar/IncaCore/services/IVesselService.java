@@ -7,7 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface IVesselService {
-    Page<Vessel> getAllVessels(Pageable pageable);
+    Page<VesselResponseDto> getAllVessels(Pageable pageable);
     VesselResponseDto getVesselById(Long id);
     VesselResponseDto createVessel(VesselRequestDto vesselRequestDto);
     void deleteVesselById(Long id);
