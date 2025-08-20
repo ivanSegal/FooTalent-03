@@ -23,8 +23,8 @@ public class OrdenMantenimiento {
 
     // Relación con Embarcación (fk embarcacion_id)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "embarcacion_id", nullable = false)
-    private Embarcacion embarcacion;
+    @JoinColumn(name = "vessel_id", nullable = false)
+    private Vessel vessel;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_mantenimiento", nullable = false)

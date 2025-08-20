@@ -10,17 +10,16 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.lang.annotation.*;
 
-/**
- * Swagger documentation for POST /api/embarcaciones.
- */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Operation(
-        summary = "Crear nueva embarcación",
+        summary = "Crear una embarcación",
         description = """
-        Crea una nueva embarcación en el sistema especificando nombre, número de patente, capitán y modelo. \
-        Requiere autenticación de usuarios con rol <strong>ADMIN.</strong>
+        Crea una nueva embarcación especificando nombre, número de registro (matricula), ISMM, \
+        estado de bandera, distintivo, puerto de registro, RIF, tipo de servicio, \
+        material de construcción, tipo de popa, tipo de combustible y horas de navegación. \
+        Requiere autenticación de usuarios con rol <strong>ADMIN</strong>.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )
@@ -37,10 +36,18 @@ import java.lang.annotation.*;
                       "message": "Embarcación creada correctamente.",
                       "data": {
                         "id": 101,
-                        "nombre": "Titanic II",
-                        "patente": "ABC1234",
-                        "capitan": "Juan Pérez",
-                        "modelo": "Modelo 2025"
+                        "name": "Titanic II Renovado",
+                        "registrationNumber": "ABC1234",
+                        "ismm": "ISM-9087",
+                        "flagState": "Panamá",
+                        "callSign": "YYV-3742",
+                        "portOfRegistry": "Puerto Cabello",
+                        "rif": "J-12345678-9",
+                        "serviceType": "Carga",
+                        "constructionMaterial": "Acero",
+                        "sternType": "Popa abierta",
+                        "fuelType": "Diesel",
+                        "navigationHours": 13000.0
                       }
                     }
                 """
@@ -49,35 +56,35 @@ import java.lang.annotation.*;
         ),
         @ApiResponse(
                 responseCode = "400",
-                description = "Solicitud inválida: error de validación o datos incorrectos",
+                description = "Solicitud inválida: credenciales incorrectas o error de validación",
                 content = @Content(
                         mediaType = "application/json",
                         examples = {
                                 @ExampleObject(
-                                        name = "Campos requeridos faltantes",
-                                        summary = "Cuando falta el campo nombre, patente o capitán",
+                                        name = "Campos inválidas",
+                                        summary = "Cuando el nombre de la embarcacion ya existe",
                                         value = """
-                        {
-                          "statusCode": 400,
-                          "message": "Error validation with data",
-                          "errorCode": "VALIDATION_ERROR",
-                          "detailsError": "nombre: no puede estar vacío",
-                          "path": "/api/embarcaciones"
-                        }
-                    """
+                                            {
+                                              "statusCode": 400,
+                                              "message": "El nombre de la embarcacion ya existe.",
+                                              "errorCode": "BAD_REQUEST",
+                                              "detailsError": "...",
+                                              "path": "/api/vessels/create"
+                                            }
+                                        """
                                 ),
                                 @ExampleObject(
-                                        name = "Patente duplicada",
-                                        summary = "Cuando se intenta registrar una patente ya existente",
+                                        name = "Error de validación",
+                                        summary = "Cuando faltan campos requeridos o tienen formato incorrecto",
                                         value = """
-                        {
-                          "statusCode": 400,
-                          "message": "La patente ya está registrada",
-                          "errorCode": "DUPLICATE_ENTRY",
-                          "detailsError": "patente: ABC1234",
-                          "path": "/api/embarcaciones"
-                        }
-                    """
+                                            {
+                                              "statusCode": 400,
+                                              "message": "Error de validación en los datos",
+                                              "errorCode": "VALIDATION_ERROR",
+                                              "detailsError": "name: no puede estar vacío, registrationNumber: formato inválido",
+                                              "path": "/api/vessels/create"
+                                            }
+                                        """
                                 )
                         }
                 )
@@ -92,9 +99,9 @@ import java.lang.annotation.*;
                     {
                       "statusCode": 401,
                       "message": "Acceso no autorizado",
-                      "errorCode": "UNAUTHORIZED",
+                      "errorCode": "AUTH_ERROR",
                       "details": "...",
-                      "path": "/api/embarcaciones"
+                      "path": "/error"
                     }
                 """
                         )
@@ -112,7 +119,25 @@ import java.lang.annotation.*;
                       "message": "Acceso denegado",
                       "errorCode": "FORBIDDEN",
                       "details": "...",
-                      "path": "/api/embarcaciones"
+                      "path": "/api/vessels/create"
+                    }
+                """
+                        )
+                )
+        ),
+        @ApiResponse(
+                responseCode = "404",
+                description = "Embarcación no encontrada con el ID especificado",
+                content = @Content(
+                        mediaType = "application/json",
+                        schema = @Schema(
+                                example = """
+                    {
+                      "statusCode": 404,
+                      "message": "Embarcación no encontrada con ID: 101",
+                      "errorCode": "RESOURCE_NOT_FOUND",
+                      "detailsError": "...",
+                      "path": "/api/vessels/create"
                     }
                 """
                         )
@@ -130,7 +155,7 @@ import java.lang.annotation.*;
                       "message": "Internal Error Server",
                       "errorCode": "INTERNAL_ERROR",
                       "detailsError": "NullPointerException...",
-                      "path": "/api/embarcaciones"
+                      "path": "/api/vessels/create"
                     }
                 """
                         )

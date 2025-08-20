@@ -33,13 +33,21 @@ import java.lang.annotation.*;
                         schema = @Schema(example = """
                 {
                   "success": true,
-                  "message": "Embarcación encontrada exitosamente.",
+                  "message": "Embarcación obtenida exitosamente.",
                   "data": {
                     "id": 1,
-                    "nombre": "Embarcación A",
-                    "patente": "ABC123",
-                    "modelo": "Modelo 2023",
-                    "capitan": "Juan Pérez"
+                    "name": "Embarcación A",
+                    "registrationNumber": "ABC123",
+                    "ismm": "123456",
+                    "flagState": "ARG",
+                    "callSign": "LXYZ",
+                    "portOfRegistry": "Puerto Buenos Aires",
+                    "rif": "RIF123456",
+                    "serviceType": "Lanchaje",
+                    "constructionMaterial": "Fibra de vidrio",
+                    "sternType": "Cuadrada",
+                    "fuelType": "Diesel",
+                    "navigationHours": 120.5
                   }
                 }
                 """)
@@ -54,9 +62,9 @@ import java.lang.annotation.*;
                 {
                   "statusCode": 404,
                   "message": "Embarcación no encontrada con ID: ...",
-                  "errorCode": "NOT_FOUND",
+                  "errorCode": "RESOURCE_NOT_FOUND",
                   "details": "...",
-                  "path": "/api/embarcaciones/{id}"
+                  "path": "/api/vessels/{id}"
                 }
             """)
                 )
@@ -72,7 +80,7 @@ import java.lang.annotation.*;
                   "message": "Acceso denegado",
                   "errorCode": "FORBIDDEN",
                   "details": "...",
-                  "path": "/api/embarcaciones/{id}"
+                  "path": "/api/vessels/{id}"
                 }
             """)
                 )
@@ -86,9 +94,9 @@ import java.lang.annotation.*;
                 {
                   "statusCode": 401,
                   "message": "Acceso no autorizado",
-                  "errorCode": "UNAUTHORIZED",
+                  "errorCode": "AUTH_ERROR",
                   "details": "...",
-                  "path": "/api/embarcaciones/{id}"
+                  "path": "/error"
                 }
             """)
                 )
@@ -104,7 +112,7 @@ import java.lang.annotation.*;
                   "message": "Error inesperado",
                   "errorCode": "INTERNAL_SERVER_ERROR",
                   "details": "...",
-                  "path": "/api/embarcaciones/{id}"
+                  "path": "/api/vessels/{id}"
                 }
             """)
                 )

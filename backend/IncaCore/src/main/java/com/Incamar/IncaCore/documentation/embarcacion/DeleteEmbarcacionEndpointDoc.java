@@ -27,8 +27,17 @@ import java.lang.annotation.*;
 @ApiResponses(value = {
         @ApiResponse(
                 responseCode = "204",
-                description = "Embarcación eliminada correctamente",
-                content = @Content(mediaType = "application/json")
+                description = "Embarcación eliminada exitosamente",
+                content = @Content(
+                        mediaType = "application/json",
+                        schema = @Schema(example = """
+                {
+                  "success": true,
+                  "message": "Embarcación eliminada exitosamente.",
+                  "data": null
+                }
+                """)
+                )
         ),
         @ApiResponse(
                 responseCode = "401",
@@ -39,9 +48,9 @@ import java.lang.annotation.*;
                         {
                           "statusCode": 401,
                           "message": "Acceso no autorizado",
-                          "errorCode": "UNAUTHORIZED",
+                          "errorCode": "AUTH_ERROR",
                           "details": "Token inválido o expirado",
-                          "path": "/api/embarcaciones/{id}"
+                          "path": "/error"
                         }
                         """)
                 )
@@ -57,7 +66,7 @@ import java.lang.annotation.*;
                           "message": "Acceso denegado",
                           "errorCode": "FORBIDDEN",
                           "details": "El usuario no tiene permisos para eliminar esta embarcación",
-                          "path": "/api/embarcaciones/{id}"
+                          "path": "/api/vessels"
                         }
                         """)
                 )
@@ -70,10 +79,10 @@ import java.lang.annotation.*;
                         schema = @Schema(example = """
                         {
                           "statusCode": 404,
-                          "message": "Embarcación no encontrada con id: {id}",
-                          "errorCode": "NOT_FOUND",
+                          "message": "Embarcación no encontrada con ID: {id}",
+                          "errorCode": "RESOURCE_NOT_FOUND",
                           "details": "No existe una embarcación con el ID proporcionado",
-                          "path": "/api/embarcaciones/{id}"
+                          "path": "/api/vessels"
                         }
                         """)
                 )
@@ -89,7 +98,7 @@ import java.lang.annotation.*;
                           "message": "Error inesperado",
                           "errorCode": "INTERNAL_SERVER_ERROR",
                           "details": "NullPointerException at line ...",
-                          "path": "/api/embarcaciones/{id}"
+                          "path": "/api/vessels"
                         }
                         """)
                 )
