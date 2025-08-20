@@ -5,8 +5,9 @@ import { MenuItem } from "@/types/menu_Item";
 import { SidebarProps } from "@/types/sidebar_props";
 import Image from "next/image";
 import logo from "@/assets/images/Logo.png";
+import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
-// Iconos por defecto
 const DashboardIcon = () => (
   <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
     <path
@@ -178,6 +179,8 @@ const Sidebar: React.FC<ExtendedSidebarProps> = ({
   // onToggleCollapse,
 }) => {
   const [collapsed, setCollapsed] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname(); // current route
   const getVariantClasses = () => {
     switch (variant) {
       case "dark":
@@ -203,6 +206,11 @@ const Sidebar: React.FC<ExtendedSidebarProps> = ({
   };
 
   const classes = getVariantClasses();
+
+  const handleItemClick = (item: MenuItem) => {
+    onItemClick?.(item);
+    if (item.href) router.push(item.href);
+  };
 
   return (
     <div
@@ -241,15 +249,18 @@ const Sidebar: React.FC<ExtendedSidebarProps> = ({
       <nav className="flex-1 p-2">
         <ul className="space-y-1">
           {menuItems.map((item) => {
-            const isActive = activeItemId === item.id || item.active;
+            const isActive = item.href
+              ? pathname === item.href || pathname.startsWith(item.href + "/")
+              : activeItemId === item.id || item.active; // derive active by URL
             return (
               <li key={item.id}>
                 <button
-                  onClick={() => onItemClick?.(item)}
+                  onClick={() => handleItemClick(item)}
                   className={`flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-all duration-150 ${
                     isActive ? classes.activeMenuItem : classes.menuItem
                   }`}
                   title={collapsed ? item.label : undefined}
+                  aria-current={isActive ? "page" : undefined}
                 >
                   <span className={`${classes.icon} ${isActive ? "text-current" : ""}`}>
                     {item.icon}
