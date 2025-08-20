@@ -1,13 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import {
-  MantenimientoList,
-  type MantenimientoItem,
-} from "@/components/mantenimiento/MantenimientoList";
-import {
-  MantenimientoForm,
-  type MantenimientoFormValues,
-} from "@/components/mantenimiento/MantenimientoForm";
+import { MantenimientoList } from "@/components/mantenimiento/MantenimientoList";
+import { MantenimientoForm } from "@/components/mantenimiento/MantenimientoForm";
+import type { MantenimientoItem, MantenimientoFormValues } from "@/features/mantenimiento";
 import { Modal, message } from "antd";
 
 // Mock inicial (luego se reemplazará por fetch a la API)
@@ -80,10 +75,8 @@ export default function MantenimientoPage() {
               Gestión y registro de órdenes de mantenimiento preventivo y correctivo.
             </p>
           </div>
-          {/* Botón eliminado: ahora se usa el botón dentro de la cabecera de la tabla */}
         </header>
         <section className="space-y-4">
-          <h2 className="text-lg font-semibold text-gray-800">Listado</h2>
           <MantenimientoList
             items={items}
             onSelect={(itm) => setViewing(itm)}

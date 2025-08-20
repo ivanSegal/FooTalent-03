@@ -10,17 +10,7 @@ import {
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import type { Dayjs } from "dayjs"; // use only Dayjs type
-
-export interface MantenimientoItem {
-  id: number;
-  embarcacion: string;
-  tarea: string;
-  responsable?: string;
-  fechaProgramada?: string; // ISO date
-  fechaReal?: string; // ISO date
-  estado?: "pendiente" | "en_progreso" | "completado";
-  costo?: number;
-}
+import type { MantenimientoItem } from "@/features/mantenimiento";
 
 interface Props {
   items: MantenimientoItem[];
