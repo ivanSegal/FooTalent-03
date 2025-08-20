@@ -29,7 +29,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         HttpServletResponse.SC_UNAUTHORIZED,
         "Acceso no autorizado",
         "AUTH_ERROR",
-        authException.getMessage(),
+        "Token invalido",
         request.getRequestURI()
     );
 

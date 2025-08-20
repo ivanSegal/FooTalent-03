@@ -1,4 +1,4 @@
-package com.Incamar.IncaCore.documentation.embarcacion;
+package com.Incamar.IncaCore.documentation.ordenMantenimiento;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -10,33 +10,57 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.lang.annotation.*;
 
 /**
- * Swagger documentation for DELETE /api/embarcaciones.
+ * Swagger documentation for PUT /api/ordenes-mantenimiento.
  */
+
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Operation(
-        summary = "Eliminar embarcación",
+        summary = "Actualizar orden de mantenimiento",
         description = """
-        Elimina una embarcación existente del sistema por su ID único. \
-        Solo usuarios con rol <strong>ADMIN</strong> pueden realizar esta operación.
+        Actualiza la información de una orden de mantenimiento existente identificada por su ID. \
+        Accesible solo para usuarios autorizados con rol <strong>ADMIN.</strong>
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )
 @ApiResponses(value = {
         @ApiResponse(
-                responseCode = "204",
-                description = "Embarcación eliminada exitosamente",
+                responseCode = "200",
+                description = "Orden de Mantenimiento actualizada correctamente",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(example = """
-                {
-                  "success": true,
-                  "message": "Embarcación eliminada exitosamente.",
-                  "data": null
-                }
-                """)
+                        {
+                          "success": true,
+                          "message": "Orden de Mantenimiento actualizada correctamente.",
+                          "data": {
+                            "embarcacion_id": 101,
+                            "tipo_mantenimiento": "PREVENTIVO",
+                            "estado": "SOLICITADO",
+                            "usuario_peticion_username": "juan.perez_94",
+                            "descripcion": "...",
+                            "fecha_mantenimiento":"...",
+                          }
+                        }
+                        """)
+                )
+        ),
+        @ApiResponse(
+                responseCode = "400",
+                description = "Solicitud inválida: datos malformados o violaciones de validación",
+                content = @Content(
+                        mediaType = "application/json",
+                        schema = @Schema(example = """
+                        {
+                          "statusCode": 400,
+                          "message": "Error de validación",
+                          "errorCode": "VALIDATION_ERROR",
+                          "details": "tipo_mantenimiento: no puede estar vacío",
+                          "path": "/api/ordenes-mantenimiento/{id}"
+                        }
+                        """)
                 )
         ),
         @ApiResponse(
@@ -49,8 +73,8 @@ import java.lang.annotation.*;
                           "statusCode": 401,
                           "message": "Acceso no autorizado",
                           "errorCode": "AUTH_ERROR",
-                          "details": "Token inválido o expirado",
-                          "path": "/error"
+                          "details": "...",
+                          "path": "/api/ordenes-mantenimiento/{id}"
                         }
                         """)
                 )
@@ -65,24 +89,24 @@ import java.lang.annotation.*;
                           "statusCode": 403,
                           "message": "Acceso denegado",
                           "errorCode": "FORBIDDEN",
-                          "details": "El usuario no tiene permisos para eliminar esta embarcación",
-                          "path": "/api/vessels"
+                          "details": "...",
+                          "path": "/api/ordenes-mantenimiento/{id}"
                         }
                         """)
                 )
         ),
         @ApiResponse(
                 responseCode = "404",
-                description = "Embarcación no encontrada",
+                description = "Orden de Mantenimiento no encontrada",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(example = """
                         {
                           "statusCode": 404,
-                          "message": "Embarcación no encontrada con ID: {id}",
-                          "errorCode": "RESOURCE_NOT_FOUND",
-                          "details": "No existe una embarcación con el ID proporcionado",
-                          "path": "/api/vessels"
+                          "message": "Orden de Mantenimiento no encontrada con id: 12",
+                          "errorCode": "NOT_FOUND",
+                          "details": "...",
+                          "path": "/api/ordenes-mantenimiento/{id}"
                         }
                         """)
                 )
@@ -97,11 +121,11 @@ import java.lang.annotation.*;
                           "statusCode": 500,
                           "message": "Error inesperado",
                           "errorCode": "INTERNAL_SERVER_ERROR",
-                          "details": "NullPointerException at line ...",
-                          "path": "/api/vessels"
+                          "details": "NullPointerException ...",
+                          "path": "/api/ordenes-mantenimiento/{id}"
                         }
                         """)
                 )
         )
 })
-public @interface DeleteEmbarcacionEndpointDoc {}
+public @interface UpdateOrdenMantenimientoEndpointDoc {}

@@ -1,4 +1,4 @@
-package com.Incamar.IncaCore.documentation.embarcacion;
+package com.Incamar.IncaCore.documentation.ordenMantenimiento;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,9 +13,9 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Operation(
-        summary = "Buscar embarcaciones por nombre con paginación",
+        summary = "Buscar ordenes de mantenimiento por nombre de embarcación con paginación",
         description = """
-        Retorna una lista paginada de embarcaciones cuyo nombre coincida parcialmente \
+        Retorna una lista paginada de ordenes de mantenimiento cuyo nombre de embarcación coincida parcialmente \
         (ignorando mayúsculas) con el valor proporcionado en el parámetro `nombre`. \
         <strong>Solo accesible para usuarios con rol ADMIN.</strong>
         """,
@@ -24,57 +24,56 @@ import java.lang.annotation.*;
 @ApiResponses(value = {
         @ApiResponse(
                 responseCode = "200",
-                description = "Embarcaciones encontradas exitosamente",
+                description = "Ordenes de Mantenimiento encontradas exitosamente",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(example = """
                 {
-                  "success": true,
-                  "message": "Embarcaciones obtenidas exitosamente.",
-                  "data": {
-                    "content": [
-                      {
-                        "id": 6,
-                        "name": "Titanic II",
-                        "registrationNumber": "ABC-1234",
-                        "ismm": "ISM-9087",
-                        "flagState": "Panamá",
-                        "callSign": "YYV-3742",
-                        "portOfRegistry": "Puerto Cabello",
-                        "rif": "J-12345678-9",
-                        "serviceType": "Carga",
-                        "constructionMaterial": "Acero",
-                        "sternType": "Popa abierta",
-                        "fuelType": "Diesel",
-                        "navigationHours": 12500.5
-                      }
-                    ],
-                    "pageable": {
-                      "pageNumber": 0,
-                      "pageSize": 20,
-                      "sort": {
-                        "empty": true,
-                        "unsorted": true,
-                        "sorted": false
-                      },
-                      "offset": 0,
-                      "paged": true,
-                      "unpaged": false
+                  "content": [
+                    {
+                       "id": 1,
+                       "embarcacionNombre": "Marinera",
+                       "tipo_mantenimiento": "PREVENTIVO",
+                       "estado": "SOLICITADO",
+                       "usuarioPeticionUsername": "juan.perez_94",
+                       "descripcion": "...",
+                       "fechaMantenimiento":"...",
                     },
-                    "last": true,
-                    "totalElements": 1,
-                    "totalPages": 1,
-                    "size": 20,
-                    "number": 0,
+                    {
+                       "id": 2,
+                       "embarcacionNombre": "Marinera",
+                       "tipoMantenimiento": "CORRECTIVO",
+                       "estado": "FINALIZADO",
+                       "usuarioPeticionUsername": "juan.perez_94",
+                       "descripcion": "...",
+                       "fechaMantenimiento":"...",
+                    }
+                  ],
+                  "pageable": {
                     "sort": {
-                      "empty": true,
+                      "sorted": false,
                       "unsorted": true,
-                      "sorted": false
+                      "empty": true
                     },
-                    "first": true,
-                    "numberOfElements": 1,
-                    "empty": false
-                  }
+                    "pageNumber": 0,
+                    "pageSize": 10,
+                    "offset": 0,
+                    "paged": true,
+                    "unpaged": false
+                  },
+                  "totalElements": 2,
+                  "totalPages": 1,
+                  "last": true,
+                  "first": true,
+                  "sort": {
+                    "sorted": false,
+                    "unsorted": true,
+                    "empty": true
+                  },
+                  "numberOfElements": 2,
+                  "size": 10,
+                  "number": 0,
+                  "empty": false
                 }
                 """)
                 )
@@ -90,9 +89,9 @@ import java.lang.annotation.*;
                   "message": "Acceso denegado",
                   "errorCode": "FORBIDDEN",
                   "details": "...",
-                  "path": "/api/embarcaciones/search"
+                  "path": "/api/ordenes-mantenimiento/search"
                 }
-                """)
+            """)
                 )
         ),
         @ApiResponse(
@@ -106,9 +105,9 @@ import java.lang.annotation.*;
                   "message": "Acceso no autorizado",
                   "errorCode": "AUTH_ERROR",
                   "details": "...",
-                  "path": "/api/embarcaciones/search"
+                  "path": "/api/ordenes-mantenimiento/search"
                 }
-                """)
+            """)
                 )
         ),
         @ApiResponse(
@@ -122,11 +121,11 @@ import java.lang.annotation.*;
                   "message": "Error inesperado",
                   "errorCode": "INTERNAL_SERVER_ERROR",
                   "details": "...",
-                  "path": "/api/embarcaciones/search"
+                  "path": "/api/ordenes-mantenimiento/search"
                 }
                 """)
                 )
         )
 })
-public @interface SearchEmbarcacionesEndpointDoc {}
+public @interface SearchOrdenesMantenimientoEndpointDoc {}
 

@@ -9,11 +9,10 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.lang.annotation.*;
 
+
 /**
  * Swagger documentation for PUT /api/embarcaciones.
  */
-
-
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
@@ -37,10 +36,18 @@ import java.lang.annotation.*;
                           "message": "Embarcación actualizada correctamente.",
                           "data": {
                             "id": 101,
-                            "nombre": "Nuevo Nombre",
-                            "patente": "XYZ9876",
-                            "capitan": "Carlos Sánchez",
-                            "modelo": "Modelo 2026"
+                            "name": "Nuevo Nombre",
+                            "registrationNumber": "XYZ9876",
+                            "ismm": "ISM-2025-001",
+                            "flagState": "Panamá",
+                            "callSign": "YYV-3742",
+                            "portOfRegistry": "Puerto Cabello",
+                            "rif": "J-12345678-9",
+                            "serviceType": "Lanchaje",
+                            "constructionMaterial": "Acero",
+                            "sternType": "Popa Cuadrada",
+                            "fuelType": "Diesel",
+                            "navigationHours": 1520.75
                           }
                         }
                         """)
@@ -56,8 +63,8 @@ import java.lang.annotation.*;
                           "statusCode": 400,
                           "message": "Error de validación",
                           "errorCode": "VALIDATION_ERROR",
-                          "details": "patente: no puede estar vacío",
-                          "path": "/api/embarcaciones/{id}"
+                          "details": "registrationNumber: no puede estar vacío",
+                          "path": "/api/vessels/{id}"
                         }
                         """)
                 )
@@ -73,7 +80,7 @@ import java.lang.annotation.*;
                           "message": "Acceso no autorizado",
                           "errorCode": "AUTH_ERROR",
                           "details": "...",
-                          "path": "/api/embarcaciones/{id}"
+                          "path": "/error"
                         }
                         """)
                 )
@@ -89,7 +96,7 @@ import java.lang.annotation.*;
                           "message": "Acceso denegado",
                           "errorCode": "FORBIDDEN",
                           "details": "...",
-                          "path": "/api/embarcaciones/{id}"
+                          "path": "/api/vessels/{id}"
                         }
                         """)
                 )
@@ -103,9 +110,9 @@ import java.lang.annotation.*;
                         {
                           "statusCode": 404,
                           "message": "Embarcación no encontrada con id: 101",
-                          "errorCode": "NOT_FOUND",
+                          "errorCode": "RESOURCE_NOT_FOUND",
                           "details": "...",
-                          "path": "/api/embarcaciones/{id}"
+                          "path": "/api/vessels/{id}"
                         }
                         """)
                 )
@@ -121,7 +128,7 @@ import java.lang.annotation.*;
                           "message": "Error inesperado",
                           "errorCode": "INTERNAL_SERVER_ERROR",
                           "details": "NullPointerException ...",
-                          "path": "/api/embarcaciones/{id}"
+                          "path": "/api/vessels/{id}"
                         }
                         """)
                 )

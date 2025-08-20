@@ -1,4 +1,4 @@
-package com.Incamar.IncaCore.documentation.embarcacion;
+package com.Incamar.IncaCore.documentation.ordenMantenimiento;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -10,16 +10,16 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.lang.annotation.*;
 
 /**
- * Swagger documentation for GET /api/embarcaciones/{id}.
+ * Swagger documentation for GET /api/ordenes-mantenimiento/{id}.
  */
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Operation(
-        summary = "Obtener embarcación por ID",
+        summary = "Obtener orden de mantenimiento por ID",
         description = """
-        Devuelve los detalles de una embarcación específica mediante su ID. \
+        Devuelve los detalles de una orden de mantenimiento específica mediante su ID. \
         Accesible para usuarios con roles: <strong>WAREHOUSE_STAFF, OPERATIONS_MANAGER o ADMIN.</strong>
         """,
         security = @SecurityRequirement(name = "bearer-key")
@@ -27,27 +27,21 @@ import java.lang.annotation.*;
 @ApiResponses(value = {
         @ApiResponse(
                 responseCode = "200",
-                description = "Embarcación encontrada exitosamente",
+                description = "Orden de Mantenimiento encontrada exitosamente",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(example = """
                 {
                   "success": true,
-                  "message": "Embarcación obtenida exitosamente.",
+                  "message": "Orden de Mantenimiento encontrada exitosamente.",
                   "data": {
-                    "id": 1,
-                    "name": "Embarcación A",
-                    "registrationNumber": "ABC123",
-                    "ismm": "123456",
-                    "flagState": "ARG",
-                    "callSign": "LXYZ",
-                    "portOfRegistry": "Puerto Buenos Aires",
-                    "rif": "RIF123456",
-                    "serviceType": "Lanchaje",
-                    "constructionMaterial": "Fibra de vidrio",
-                    "sternType": "Cuadrada",
-                    "fuelType": "Diesel",
-                    "navigationHours": 120.5
+                     "id": 2,
+                     "embarcacionNombre": "Marinera",
+                     "tipoMantenimiento": "PREVENTIVO",
+                     "estado": "SOLICITADO",
+                     "usuarioPeticionUsername": "juan.perez_94",
+                     "descripcion": "...",
+                     "fechaMantenimiento":"...",
                   }
                 }
                 """)
@@ -55,16 +49,16 @@ import java.lang.annotation.*;
         ),
         @ApiResponse(
                 responseCode = "404",
-                description = "Embarcación no encontrada",
+                description = "Orden de Mantenimiento no encontrada",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(example = """
                 {
                   "statusCode": 404,
-                  "message": "Embarcación no encontrada con ID: ...",
-                  "errorCode": "RESOURCE_NOT_FOUND",
+                  "message": "Orden de Mantenimiento no encontrada con ID: ...",
+                  "errorCode": "NOT_FOUND",
                   "details": "...",
-                  "path": "/api/vessels/{id}"
+                  "path": "/api/ordenes-mantenimiento/{id}"
                 }
             """)
                 )
@@ -80,7 +74,7 @@ import java.lang.annotation.*;
                   "message": "Acceso denegado",
                   "errorCode": "FORBIDDEN",
                   "details": "...",
-                  "path": "/api/vessels/{id}"
+                  "path": "/api/ordenes-mantenimiento/{id}"
                 }
             """)
                 )
@@ -94,9 +88,9 @@ import java.lang.annotation.*;
                 {
                   "statusCode": 401,
                   "message": "Acceso no autorizado",
-                  "errorCode": "AUTH_ERROR",
+                  "errorCode": "UNAUTHORIZED",
                   "details": "...",
-                  "path": "/error"
+                  "path": "/api/ordenes-mantenimiento/{id}"
                 }
             """)
                 )
@@ -112,10 +106,10 @@ import java.lang.annotation.*;
                   "message": "Error inesperado",
                   "errorCode": "INTERNAL_SERVER_ERROR",
                   "details": "...",
-                  "path": "/api/vessels/{id}"
+                  "path": "/api/ordenes-mantenimiento/{id}"
                 }
             """)
                 )
         )
 })
-public @interface GetEmbarcacionByIdEndpointDoc {}
+public @interface GetOrdenMantenimientoByIdEndpointDoc {}

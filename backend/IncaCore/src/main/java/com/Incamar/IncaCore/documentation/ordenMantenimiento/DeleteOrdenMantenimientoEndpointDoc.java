@@ -1,4 +1,4 @@
-package com.Incamar.IncaCore.documentation.embarcacion;
+package com.Incamar.IncaCore.documentation.ordenMantenimiento;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -10,16 +10,16 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.lang.annotation.*;
 
 /**
- * Swagger documentation for DELETE /api/embarcaciones.
+ * Swagger documentation for DELETE /api/ordenes-mantenimiento.
  */
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Operation(
-        summary = "Eliminar embarcación",
+        summary = "Eliminar orden de mantenimiento",
         description = """
-        Elimina una embarcación existente del sistema por su ID único. \
+        Elimina una orden de mantenimiento existente del sistema por su ID único. \
         Solo usuarios con rol <strong>ADMIN</strong> pueden realizar esta operación.
         """,
         security = @SecurityRequirement(name = "bearer-key")
@@ -27,17 +27,8 @@ import java.lang.annotation.*;
 @ApiResponses(value = {
         @ApiResponse(
                 responseCode = "204",
-                description = "Embarcación eliminada exitosamente",
-                content = @Content(
-                        mediaType = "application/json",
-                        schema = @Schema(example = """
-                {
-                  "success": true,
-                  "message": "Embarcación eliminada exitosamente.",
-                  "data": null
-                }
-                """)
-                )
+                description = "Orden de Mantenimiento eliminada correctamente",
+                content = @Content(mediaType = "application/json")
         ),
         @ApiResponse(
                 responseCode = "401",
@@ -48,9 +39,9 @@ import java.lang.annotation.*;
                         {
                           "statusCode": 401,
                           "message": "Acceso no autorizado",
-                          "errorCode": "AUTH_ERROR",
+                          "errorCode": "UNAUTHORIZED",
                           "details": "Token inválido o expirado",
-                          "path": "/error"
+                          "path": "/api/ordenes-mantenimiento/{id}"
                         }
                         """)
                 )
@@ -65,24 +56,24 @@ import java.lang.annotation.*;
                           "statusCode": 403,
                           "message": "Acceso denegado",
                           "errorCode": "FORBIDDEN",
-                          "details": "El usuario no tiene permisos para eliminar esta embarcación",
-                          "path": "/api/vessels"
+                          "details": "El usuario no tiene permisos para eliminar esta orden de mantenimiento",
+                          "path": "/api/ordenes-mantenimiento/{id}"
                         }
                         """)
                 )
         ),
         @ApiResponse(
                 responseCode = "404",
-                description = "Embarcación no encontrada",
+                description = "Orden de Mantenimiento no encontrada",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(example = """
                         {
                           "statusCode": 404,
-                          "message": "Embarcación no encontrada con ID: {id}",
-                          "errorCode": "RESOURCE_NOT_FOUND",
-                          "details": "No existe una embarcación con el ID proporcionado",
-                          "path": "/api/vessels"
+                          "message": "Orden de Mantenimiento no encontrada con id: {id}",
+                          "errorCode": "NOT_FOUND",
+                          "details": "No existe una orden de mantenimiento con el ID proporcionado",
+                          "path": "/api/ordenes-mantenimiento/{id}"
                         }
                         """)
                 )
@@ -98,10 +89,10 @@ import java.lang.annotation.*;
                           "message": "Error inesperado",
                           "errorCode": "INTERNAL_SERVER_ERROR",
                           "details": "NullPointerException at line ...",
-                          "path": "/api/vessels"
+                          "path": "/api/ordenes-mantenimiento/{id}"
                         }
                         """)
                 )
         )
 })
-public @interface DeleteEmbarcacionEndpointDoc {}
+public @interface DeleteOrdenMantenimientoEndpointDoc {}
