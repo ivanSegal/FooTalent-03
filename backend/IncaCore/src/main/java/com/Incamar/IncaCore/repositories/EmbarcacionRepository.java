@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EmbarcacionRepository extends JpaRepository<Embarcacion,Long> {
 
-    Page<Embarcacion> findByNombreContainingIgnoreCase(String nombreParcial, Pageable pageable);
+    Page<Embarcacion> findByNameContainingIgnoreCase(String nombreParcial, Pageable pageable);
 
 }

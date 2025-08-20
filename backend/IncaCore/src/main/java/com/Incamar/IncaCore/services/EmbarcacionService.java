@@ -30,7 +30,7 @@ public class EmbarcacionService implements  IEmbarcacionService{
     public void createEmbarcacion(String nombre, String nPatente, String capitan, String modelo) {
         Embarcacion newEmbarcacion = new Embarcacion();
 
-        newEmbarcacion.setNombre(nombre);
+        newEmbarcacion.setName(nombre);
         newEmbarcacion.setNPatente(nPatente);
         newEmbarcacion.setCapitan(capitan);
         newEmbarcacion.setModelo(modelo);
@@ -51,7 +51,7 @@ public class EmbarcacionService implements  IEmbarcacionService{
         Embarcacion auxEmbarcacion = embarcacionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Embarcación no encontrada con ID: " + id));
 
-        auxEmbarcacion.setNombre(embarcacion.getNombre());
+        auxEmbarcacion.setName(embarcacion.getName());
         auxEmbarcacion.setNPatente(embarcacion.getNPatente());
         auxEmbarcacion.setCapitan(embarcacion.getCapitan());
         auxEmbarcacion.setModelo(embarcacion.getModelo());
@@ -61,6 +61,6 @@ public class EmbarcacionService implements  IEmbarcacionService{
 
     @Override
     public Page<Embarcacion> searchEmbarcacionesByName(String nombre, Pageable pageable) {
-        return embarcacionRepository.findByNombreContainingIgnoreCase(nombre,pageable);
+        return embarcacionRepository.findByNameContainingIgnoreCase(nombre,pageable);
     }
 }

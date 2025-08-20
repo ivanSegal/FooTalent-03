@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -18,7 +20,7 @@ public class Embarcacion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotBlank(message = "El nombre es obligatorio")
-    private String nombre;
+    private String name;
     @NotBlank(message = "La patente es obligatoria")
     private String nPatente;
     @NotBlank(message = "El capitán es obligatorio")
@@ -26,4 +28,7 @@ public class Embarcacion {
 
     @NotBlank(message = "El modelo es obligatorio")
     private String modelo;
+
+    @OneToMany(mappedBy = "boat")
+    private List<BoletaServicio> boletasServicios;
 }

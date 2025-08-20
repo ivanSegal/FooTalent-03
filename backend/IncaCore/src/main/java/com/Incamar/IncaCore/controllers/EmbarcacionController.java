@@ -51,7 +51,7 @@ public class EmbarcacionController {
     @PostMapping
     public ResponseEntity<String> createEmbarcacion(@Valid @RequestBody Embarcacion embarcacion) {
         embarcacionService.createEmbarcacion(
-                embarcacion.getNombre(),
+                embarcacion.getName(),
                 embarcacion.getNPatente(),
                 embarcacion.getCapitan(),
                 embarcacion.getModelo()
@@ -72,8 +72,8 @@ public class EmbarcacionController {
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Embarcacion> editEmbarcacion(@PathVariable Long id,
-                                                       @Valid @RequestBody Embarcacion embarcacion) {
-        Embarcacion updatedEmbarcacion = embarcacionService.editEmbarcacion(id, embarcacion);
+                                                       @Valid @RequestBody Embarcacion boat) {
+        Embarcacion updatedEmbarcacion = embarcacionService.editEmbarcacion(id, boat);
         return ResponseEntity.ok(updatedEmbarcacion);
     }
 
