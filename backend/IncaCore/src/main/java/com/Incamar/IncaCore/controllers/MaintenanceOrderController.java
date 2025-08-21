@@ -4,7 +4,7 @@ import com.Incamar.IncaCore.documentation.maintenanceOrder.*;
 import com.Incamar.IncaCore.dtos.maintenanceOrder.MaintenanceOrderRequestDto;
 import com.Incamar.IncaCore.dtos.maintenanceOrder.MaintenanceOrderResponseDto;
 import com.Incamar.IncaCore.dtos.users.JwtDataDto;
-import com.Incamar.IncaCore.services.IMaintenanceOrderService;
+import com.Incamar.IncaCore.services.MaintenanceOrderService;
 import com.Incamar.IncaCore.utils.ApiResult;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "04 - Ordenes de Mantenimiento", description = "Endpoints para la gestión de órdenes de mantenimiento de " +
         "embarcaciones")
 public class MaintenanceOrderController {
-    private final IMaintenanceOrderService maintenanceOrderService;
+    private final MaintenanceOrderService maintenanceOrderService;
 
     @GetAllMaintenanceOrdersEndpointDoc
     @PreAuthorize("hasAnyRole('SUPERVISOR', 'PATRON', 'ADMINISTRATIVO', 'ADMIN')")

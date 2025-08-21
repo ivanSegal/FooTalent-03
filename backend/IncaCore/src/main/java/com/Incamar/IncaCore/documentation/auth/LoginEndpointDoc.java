@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.lang.annotation.*;
 
 /**
- * Swagger documentation for POST /auth/login.
+ * Documentación Swagger para POST /api/auth/login.
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
@@ -18,8 +18,8 @@ import java.lang.annotation.*;
 @Operation(
         summary = "Login de usuario",
         description = """
-         Autentica al usuario con nombre de usuario y contraseña. \s
-         Devuelve un token JWT en el header <code>Authorization</code> y en el cuerpo con estado <b>200 OK</b>.
+         Autentica al usuario con email y contraseña. \s
+         Devuelve un token JWT en el cuerpo con estado <b>200 OK</b>.
         \s"""
 )
 @ApiResponses(value = {
@@ -53,7 +53,9 @@ import java.lang.annotation.*;
                                               "statusCode": 400,
                                               "message": "Credenciales inválidas",
                                               "errorCode": "BAD_REQUEST",
-                                              "detailsError": "...",
+                                              "details": [
+                                                "username: no puede estar vacío"
+                                              ],
                                               "path": "/auth/login"
                                             }
                                         """
@@ -64,9 +66,11 @@ import java.lang.annotation.*;
                                         value = """
                                             {
                                               "statusCode": 400,
-                                              "message": "Error validation with data",
+                                              "message": "Falló la validación de los campos",
                                               "errorCode": "VALIDATION_ERROR",
-                                              "detailsError": "username: no puede estar vacío",
+                                              "details": [
+                                                "password: La contraseña es requerida"
+                                              ],
                                               "path": "/auth/login"
                                             }
                                         """
@@ -75,17 +79,19 @@ import java.lang.annotation.*;
                 )
         ),
         @ApiResponse(
-                responseCode = "404",
-                description = "Usuario no encontrado",
+                responseCode = "401",
+                description = "Credenciales inválidas",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(
                                 example = """
                                     {
-                                      "statusCode": 404,
-                                      "message": "Usuario no encontrado",
-                                      "errorCode": "NOT_FOUND",
-                                      "detailsError": "...",
+                                      "statusCode": 401,
+                                      "errorCode": "BAD_CREDENTIALS",
+                                      "message": "Credenciales inválidas",
+                                      "details": [
+                                        "El nombre de usuario o la contraseña son incorrectos."
+                                      ],
                                       "path": "/auth/login"
                                     }
                                 """
@@ -101,10 +107,10 @@ import java.lang.annotation.*;
                                 example = """
                                     {
                                       "statusCode": 500,
-                                      "message": "Internal Error Server",
+                                      "message": "Ocurrió un error interno en el servidor",
                                       "errorCode": "INTERNAL_ERROR",
-                                      "detailsError": "...",
-                                      "path": "/auth/login"
+                                      "details": ["java.lang.NullPointerException: ..."],
+                                      "path": "/api/auth/login"
                                     }
                                 """
                         )
