@@ -76,9 +76,9 @@ public class MaintenanceOrderController {
     @PreAuthorize("hasAnyRole('SUPERVISOR', 'PATRON', 'ADMINISTRATIVO', 'ADMIN')")
     @SearchMaintenanceOrdersEndpointDoc
     @GetMapping("/search")
-    public ResponseEntity<Page<?>> searchMaintenanceOrderByEmbarcacion(@RequestParam("nombre") String nombreEmbarcacion,
-                                                                       @ParameterObject Pageable pageable) {
-        Page<MaintenanceOrderResponseDto> result = maintenanceOrderService.searchMaintenanceOrderByEmbarcacion(nombreEmbarcacion, pageable);
+    public ResponseEntity<Page<?>> searchMaintenanceOrderByVessel(@RequestParam("nombre") String vesselName,
+                                                                  @ParameterObject Pageable pageable) {
+        Page<MaintenanceOrderResponseDto> result = maintenanceOrderService.searchMaintenanceOrderByVessel(vesselName, pageable);
         return ResponseEntity.ok(result);
     }
 

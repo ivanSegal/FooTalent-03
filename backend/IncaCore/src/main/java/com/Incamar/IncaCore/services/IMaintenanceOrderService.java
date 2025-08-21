@@ -13,5 +13,5 @@ public interface IMaintenanceOrderService {
     void deleteMaintenanceOrderById(Long id);
     MaintenanceOrderResponseDto editMaintenanceOrder(Long id,
                                                      MaintenanceOrderRequestDto maintenanceOrderRequestDto);
-    Page<MaintenanceOrderResponseDto> searchMaintenanceOrderByEmbarcacion(String nombreEmbarcacion, Pageable pageable);
+    Page<MaintenanceOrderResponseDto> searchMaintenanceOrderByVessel(String vesselName, Pageable pageable);
 }

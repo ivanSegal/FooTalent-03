@@ -21,10 +21,10 @@ public class MaintenanceOrder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Relación con Embarcacion (fk embarcacion_id)
+    // Relación con Embarcacion (fk vessel_id)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "embarcacion_id", nullable = false)
-    private Embarcacion embarcacion;
+    @JoinColumn(name = "vessel_id", nullable = false)
+    private Vessel vessel;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "maintenance_type", nullable = false)

@@ -10,7 +10,8 @@ import java.time.LocalDateTime;
 @Data
 public class MaintenanceOrderResponseDto {
     private Long id;
-    private String embarcacionNombre;
+    @JsonProperty("embarcacionNombre")
+    private String vesselName;
     @JsonProperty("tipoMantenimiento")
     private MaintenanceType maintenanceType;
     @JsonProperty("estado")
