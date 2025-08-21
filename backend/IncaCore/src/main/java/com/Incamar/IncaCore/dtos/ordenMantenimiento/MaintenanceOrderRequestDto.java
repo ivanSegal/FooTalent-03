@@ -1,19 +1,19 @@
 package com.Incamar.IncaCore.dtos.ordenMantenimiento;
 
-import com.Incamar.IncaCore.enums.Estado;
-import com.Incamar.IncaCore.enums.TipoMantenimiento;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Data
-public class OrdenMantenimientoRequestDto {
+public class MaintenanceOrderRequestDto {
 
-    @NotNull
+    @NotNull(groups = Create.class)
+    //@JsonProperty("embarcacionId")
     private Long embarcacionId;
 
     @Pattern(
@@ -39,9 +39,16 @@ public class OrdenMantenimientoRequestDto {
     )
     private String estado;
 
-    private String descripcion;
 
-    private LocalDateTime fechaMantenimiento;
+    private LocalDateTime fechaEmision;
+    //@Schema(hidden = true)
+    private LocalDateTime fechaProgramada;
+    //@Schema(hidden = true)
+    private LocalDateTime fechaInicio;
+    //@Schema(hidden = true)
+    private LocalDateTime fechaFin;
+
+    private String motivoMantenimiento;
 
     public interface Create {}
     public interface Edit {}

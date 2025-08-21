@@ -39,9 +39,13 @@ import java.lang.annotation.*;
                      "embarcacionNombre": "Marinera",
                      "tipoMantenimiento": "PREVENTIVO",
                      "estado": "SOLICITADO",
-                     "usuarioPeticionUsername": "juan.perez_94",
-                     "descripcion": "...",
-                     "fechaMantenimiento":"...",
+                     "encargadoMantenimientoUsername": "juan.perez_94",
+                     "fechaEmision":"...",
+                     "fechaProgramada":"...",
+                     "fechaInicio":"...",
+                     "fechaFin":"...",
+                     "motivoMantenimiento": "...",
+
                   }
                 }
                 """)
@@ -112,4 +116,4 @@ import java.lang.annotation.*;
                 )
         )
 })
-public @interface GetOrdenMantenimientoByIdEndpointDoc {}
+public @interface GetMaintenanceOrderByIdEndpointDoc {}

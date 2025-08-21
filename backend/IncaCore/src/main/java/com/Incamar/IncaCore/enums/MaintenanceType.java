@@ -1,6 +1,6 @@
 package com.Incamar.IncaCore.enums;
 
-public enum TipoMantenimiento {
+public enum MaintenanceType {
     PREVENTIVO,
     CORRECTIVO;
 }

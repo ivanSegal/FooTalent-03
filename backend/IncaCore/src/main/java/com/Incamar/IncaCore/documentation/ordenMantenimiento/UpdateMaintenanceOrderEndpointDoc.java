@@ -39,9 +39,11 @@ import java.lang.annotation.*;
                             "embarcacion_id": 101,
                             "tipo_mantenimiento": "PREVENTIVO",
                             "estado": "SOLICITADO",
-                            "usuario_peticion_username": "juan.perez_94",
-                            "descripcion": "...",
-                            "fecha_mantenimiento":"...",
+                            "encargadoMantenimientoUsername": "juan.perez_94",
+                            "fechaEmision":"...",
+                            "fechaProgramada":"...",
+                            "fechaInicio":"...",
+                            "fechaFin":"...",
                           }
                         }
                         """)
@@ -128,4 +130,4 @@ import java.lang.annotation.*;
                 )
         )
 })
-public @interface UpdateOrdenMantenimientoEndpointDoc {}
+public @interface UpdateMaintenanceOrderEndpointDoc {}

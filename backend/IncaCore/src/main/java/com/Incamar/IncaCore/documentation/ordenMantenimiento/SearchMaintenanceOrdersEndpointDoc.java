@@ -35,18 +35,24 @@ import java.lang.annotation.*;
                        "embarcacionNombre": "Marinera",
                        "tipo_mantenimiento": "PREVENTIVO",
                        "estado": "SOLICITADO",
-                       "usuarioPeticionUsername": "juan.perez_94",
-                       "descripcion": "...",
-                       "fechaMantenimiento":"...",
+                       "encargadoMantenimientoUsername": "juan.perez_94",
+                       "fechaEmision":"...",
+                       "fechaProgramada":"...",
+                       "fechaInicio":"...",
+                       "fechaFin":"...",
+                       "motivoMantenimiento": "...",
                     },
                     {
                        "id": 2,
                        "embarcacionNombre": "Marinera",
                        "tipoMantenimiento": "CORRECTIVO",
                        "estado": "FINALIZADO",
-                       "usuarioPeticionUsername": "juan.perez_94",
-                       "descripcion": "...",
-                       "fechaMantenimiento":"...",
+                       "encargadoMantenimientoUsername": "juan.perez_94",
+                       "fechaEmision":"...",
+                       "fechaProgramada":"...",
+                       "fechaInicio":"...",
+                       "fechaFin":"...",
+                       "motivoMantenimiento": "..."
                     }
                   ],
                   "pageable": {
@@ -127,5 +133,5 @@ import java.lang.annotation.*;
                 )
         )
 })
-public @interface SearchOrdenesMantenimientoEndpointDoc {}
+public @interface SearchMaintenanceOrdersEndpointDoc {}
 
