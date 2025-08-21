@@ -3,7 +3,7 @@ package com.Incamar.IncaCore.controllers;
 import com.Incamar.IncaCore.documentation.vessel.*;
 import com.Incamar.IncaCore.dtos.vessels.VesselRequestDto;
 import com.Incamar.IncaCore.dtos.vessels.VesselResponseDto;
-import com.Incamar.IncaCore.services.vessel.IVesselService;
+import com.Incamar.IncaCore.services.vessel.VesselService;
 import com.Incamar.IncaCore.utils.ApiResult;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
         description = "Endpoints para gestión de embarcaciones")
 public class VesselController {
 
-    private final IVesselService vesselService;
+    private final VesselService vesselService;
 
     @GetAllEmbarcacionesEndpointDoc
     @PreAuthorize("hasAnyRole('WAREHOUSE_STAFF', 'OPERATIONS_MANAGER', 'ADMIN')")

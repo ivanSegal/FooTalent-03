@@ -5,7 +5,7 @@ import com.Incamar.IncaCore.documentation.serviceTicket.*;
 import com.Incamar.IncaCore.dtos.serviceTicket.ServiceTicketRequestDto;
 import com.Incamar.IncaCore.dtos.serviceTicket.ServiceTicketResponseDto;
 import com.Incamar.IncaCore.dtos.users.JwtDataDto;
-import com.Incamar.IncaCore.services.ServiceTicketService;
+import com.Incamar.IncaCore.services.impl.ServiceTicketServiceImpl;
 import com.Incamar.IncaCore.utils.ApiResult;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ServiceTicketController {
 
-    private final ServiceTicketService boleta;
+    private final ServiceTicketServiceImpl boleta;
 
     @GetAllServiceTicketEndpointDoc
     @PreAuthorize("hasAnyRole('ADMIN','PATRON','SUPERVISOR','ADMINISTRATIVO')")
