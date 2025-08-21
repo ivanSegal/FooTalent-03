@@ -35,7 +35,7 @@ public class MaintenanceOrderMapper {
         dto.setVesselName(maintenanceOrder.getVessel().getName());
         dto.setMaintenanceType(maintenanceOrder.getMaintenanceType());
         dto.setMaintenanceOrderStatus(maintenanceOrder.getMaintenanceOrderStatus());
-        dto.setMaintenanceManagerUsername(maintenanceOrder.getMaintenanceManager().getUsername());
+        dto.setMaintenanceManagerUsername(maintenanceOrder.getMaintenanceManager().getEmployee().getFirstName());
         dto.setIssuedAt(maintenanceOrder.getIssuedAt());
         dto.setScheduledAt(maintenanceOrder.getScheduledAt());
         dto.setStartedAt(maintenanceOrder.getStartedAt());

@@ -1,4 +1,4 @@
-package com.Incamar.IncaCore.security;
+package com.Incamar.IncaCore.security.exeption;
 
 import com.Incamar.IncaCore.exceptions.ErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,30 +9,25 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
-public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
+public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
   @Override
   public void commence(HttpServletRequest request,
                        HttpServletResponse response,
                        AuthenticationException authException) throws IOException {
-
-    String origin = request.getHeader("Origin");
-    if (origin != null) {
-      response.setHeader("Access-Control-Allow-Origin", origin);
-      response.setHeader("Accees-Control-Allow-Credentials", "true");
-    }
+    ErrorResponse error = new ErrorResponse(
+            HttpServletResponse.SC_UNAUTHORIZED,
+            "AUTH_ERROR",
+            "Acceso no autorizado. Token inválido o ausente.",
+            List.of(authException.getMessage()),
+            request.getRequestURI()
+    );
     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     response.setContentType("application/json");
-    ErrorResponse error = new ErrorResponse(
-        HttpServletResponse.SC_UNAUTHORIZED,
-        "Acceso no autorizado",
-        "AUTH_ERROR",
-        "Token invalido",
-        request.getRequestURI()
-    );
-
     new ObjectMapper().writeValue(response.getWriter(), error);
   }
+
 }
