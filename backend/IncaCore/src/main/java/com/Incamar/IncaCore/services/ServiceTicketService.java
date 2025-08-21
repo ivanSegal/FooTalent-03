@@ -1,15 +1,15 @@
 package com.Incamar.IncaCore.services;
 
-import com.Incamar.IncaCore.dtos.boletaServicio.BoletaServicioRequestDto;
-import com.Incamar.IncaCore.dtos.boletaServicio.BoletaServicioResponseDto;
+import com.Incamar.IncaCore.dtos.serviceTicket.ServiceTicketRequestDto;
+import com.Incamar.IncaCore.dtos.serviceTicket.ServiceTicketResponseDto;
 import com.Incamar.IncaCore.dtos.users.JwtDataDto;
 import com.Incamar.IncaCore.exceptions.ResourceNotFoundException;
-import com.Incamar.IncaCore.mappers.BoletaServicioMapper;
-import com.Incamar.IncaCore.models.BoletaServicio;
-import com.Incamar.IncaCore.models.Embarcacion;
+import com.Incamar.IncaCore.mappers.ServiceTicketMapper;
+import com.Incamar.IncaCore.models.ServiceTicket;
+import com.Incamar.IncaCore.models.Vessel;
 import com.Incamar.IncaCore.models.User;
-import com.Incamar.IncaCore.repositories.BoletaServicioRepository;
-import com.Incamar.IncaCore.repositories.EmbarcacionRepository;
+import com.Incamar.IncaCore.repositories.ServiceTicketRepository;
+import com.Incamar.IncaCore.repositories.VesselRepository;
 import com.Incamar.IncaCore.repositories.UserRepository;
 import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,33 +21,35 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-public class BoletaServicioService implements IBoletaServicioService {
+public class ServiceTicketService implements IServiceTicketService {
 
-    @Autowired BoletaServicioRepository boletaServicioRepository;
+    @Autowired
+    ServiceTicketRepository serviceTicketRepository;
     @Autowired UserRepository userRepository;
-    @Autowired EmbarcacionRepository embarcacionRepository;
-    @Autowired BoletaServicioMapper mapper;
+    @Autowired VesselRepository vesselRepository;
+    @Autowired
+    ServiceTicketMapper mapper;
 
     // Regex para AAA-00-0 .. AAAA-00-0000, capturando el último bloque numérico
     private static final Pattern REPORT_TRAVEL_PATTERN =
             Pattern.compile("^[A-Z]{3,4}-\\d{2}-(\\d{1,4})$");
 
     @Override
-    public Page<BoletaServicioResponseDto> getAllBoletasServicio(Pageable pageable) {
-        return boletaServicioRepository.findAll(pageable).map(mapper::toDTO);
+    public Page<ServiceTicketResponseDto> getAllBoletasServicio(Pageable pageable) {
+        return serviceTicketRepository.findAll(pageable).map(mapper::toDTO);
     }
 
     @Override
-    public BoletaServicioResponseDto getBoletaServicioById(Long id) {
-        BoletaServicio entity = boletaServicioRepository.findById(id)
+    public ServiceTicketResponseDto getBoletaServicioById(Long id) {
+        ServiceTicket entity = serviceTicketRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Boleta de servicio no encontrada. Id = " + id));
         return mapper.toDTO(entity);
     }
 
     @Override
-    public BoletaServicioResponseDto createBoletaServicio(BoletaServicioRequestDto requestDto, JwtDataDto jwtDataDto) {
+    public ServiceTicketResponseDto createBoletaServicio(ServiceTicketRequestDto requestDto, JwtDataDto jwtDataDto) {
 
-        Embarcacion boat = embarcacionRepository.findById(requestDto.getBoatId())
+        Vessel boat = vesselRepository.findById(requestDto.getBoatId())
                 .orElseThrow(() -> new ResourceNotFoundException("Embarcación asociada a la boleta de servicio no encontrada."));
         User responsible = userRepository.findById(jwtDataDto.getUuid())
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario asociado a la boleta de servicio no encontrado."));
@@ -55,17 +57,17 @@ public class BoletaServicioService implements IBoletaServicioService {
 
         validateTravelConsistency(requestDto.getTravelNro(), requestDto.getReportTravelNro());
 
-        BoletaServicio entity = mapper.toEntity(requestDto, boat, responsible);
-        return mapper.toDTO(boletaServicioRepository.save(entity));
+        ServiceTicket entity = mapper.toEntity(requestDto, boat, responsible);
+        return mapper.toDTO(serviceTicketRepository.save(entity));
     }
 
     @Override
-    public BoletaServicioResponseDto editBoletaServicio(Long id, BoletaServicioRequestDto requestDto) {
-        BoletaServicio entity = boletaServicioRepository.findById(id)
+    public ServiceTicketResponseDto editBoletaServicio(Long id, ServiceTicketRequestDto requestDto) {
+        ServiceTicket entity = serviceTicketRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Boleta de servicio no encontrada."));
 
         if (requestDto.getBoatId() != null) {
-            Embarcacion boat = embarcacionRepository.findById(requestDto.getBoatId())
+            Vessel boat = vesselRepository.findById(requestDto.getBoatId())
                     .orElseThrow(() -> new ResourceNotFoundException("Embarcación no encontrada."));
             entity.setBoat(boat);
         }
@@ -82,20 +84,20 @@ public class BoletaServicioService implements IBoletaServicioService {
         if (requestDto.getReportTravelNro() != null) entity.setReportTravelNro(requestDto.getReportTravelNro());
         if (requestDto.getCode() != null)            entity.setCode(requestDto.getCode());
 
-        return mapper.toDTO(boletaServicioRepository.save(entity));
+        return mapper.toDTO(serviceTicketRepository.save(entity));
     }
 
     @Override
     public void deleteBoletaServicioById(Long id) {
-        if (!boletaServicioRepository.existsById(id)) {
+        if (!serviceTicketRepository.existsById(id)) {
             throw new ResourceNotFoundException("Boleta de servicio no encontrada. Id = " + id);
         }
-        boletaServicioRepository.deleteById(id);
+        serviceTicketRepository.deleteById(id);
     }
 
     @Override
-    public Page<BoletaServicioResponseDto> searchBoletaServicioByBoat(String boatName, Pageable pageable) {
-        return boletaServicioRepository.findByBoat_NameContainingIgnoreCase(boatName, pageable)
+    public Page<ServiceTicketResponseDto> searchBoletaServicioByBoat(String boatName, Pageable pageable) {
+        return serviceTicketRepository.findByBoat_NameContainingIgnoreCase(boatName, pageable)
                 .map(mapper::toDTO);
     }
 

@@ -1,4 +1,4 @@
-package com.Incamar.IncaCore.documentation.boletaServicio;
+package com.Incamar.IncaCore.documentation.serviceTicket;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -93,6 +93,6 @@ import java.lang.annotation.*;
                 )
         )
 })
-public @interface DeleteBoletaServicioEndpointDoc {}
+public @interface DeleteServiceTicketEndpointDoc {}
 
 

@@ -1,4 +1,4 @@
-package com.Incamar.IncaCore.dtos.boletaServicio;
+package com.Incamar.IncaCore.dtos.serviceTicket;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 
 @Data
-public class BoletaServicioResponseDto {
+public class ServiceTicketResponseDto {
 
     private Long id;
     private Long travelNro;

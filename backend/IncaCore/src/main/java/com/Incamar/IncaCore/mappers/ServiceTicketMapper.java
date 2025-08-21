@@ -1,43 +1,39 @@
 package com.Incamar.IncaCore.mappers;
 
-import com.Incamar.IncaCore.dtos.boletaServicio.BoletaServicioRequestDto;
-import com.Incamar.IncaCore.dtos.boletaServicio.BoletaServicioResponseDto;
-import com.Incamar.IncaCore.models.BoletaServicio;
-import com.Incamar.IncaCore.models.Embarcacion;
+import com.Incamar.IncaCore.dtos.serviceTicket.ServiceTicketRequestDto;
+import com.Incamar.IncaCore.dtos.serviceTicket.ServiceTicketResponseDto;
+import com.Incamar.IncaCore.models.ServiceTicket;
 import com.Incamar.IncaCore.models.User;
+import com.Incamar.IncaCore.models.Vessel;
 import org.mapstruct.*;
-import org.springframework.stereotype.Component;
 
-import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.ERROR)
-public interface BoletaServicioMapper {
+public interface ServiceTicketMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "boat", source = "boat")
     @Mapping(target = "responsible", source = "responsible")
-    BoletaServicio toEntity(BoletaServicioRequestDto dto,
-                            Embarcacion boat,
-                            User responsible);
+    ServiceTicket toEntity(ServiceTicketRequestDto dto,
+                           Vessel boat,
+                           User responsible);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "boat", ignore = true)
     @Mapping(target = "responsible", ignore = true)
-    void updateFromDto(BoletaServicioRequestDto dto, @MappingTarget BoletaServicio target);
+    void updateFromDto(ServiceTicketRequestDto dto, @MappingTarget ServiceTicket target);
 
     @Mapping(target = "boatName", source = "boat.name")
     @Mapping(target = "responsibleUsername", source = "responsible.username")
-    BoletaServicioResponseDto toDTO(BoletaServicio entity);
+    ServiceTicketResponseDto toDTO(ServiceTicket entity);
 /*
     // Regex para AAA-00-0 .. AAAA-00-0000 y capturar el bloque final
     private static final Pattern REPORT_TRAVEL_PATTERN =
             Pattern.compile("[A-Z]{3,4}-\\d{2}-(\\d{1,4})");
 
 
-    public BoletaServicio toEntity(BoletaServicioRequestDto dto, User responsable, Embarcacion embarcacion) {
-        BoletaServicio e = new BoletaServicio();
+    public ServiceTicket toEntity(ServiceTicketRequestDto dto, User responsable, Embarcacion embarcacion) {
+        ServiceTicket e = new ServiceTicket();
         e.setEmbarcacion(embarcacion);
         e.setResponsable(responsable);
 
@@ -53,7 +49,7 @@ public interface BoletaServicioMapper {
     }
 
 
-    public void updateEntityFromDto(BoletaServicioRequestDto dto, BoletaServicio target) {
+    public void updateEntityFromDto(ServiceTicketRequestDto dto, ServiceTicket target) {
         if (dto.getTravelDate() != null)       target.setTravelDate(dto.getTravelDate());
         if (dto.getTravelNro() != null)        target.setTravelNro(dto.getTravelNro());
         if (dto.getVesselAttended() != null)   target.setVesselAttended(dto.getVesselAttended());
@@ -65,8 +61,8 @@ public interface BoletaServicioMapper {
     }
 
 
-    public BoletaServicioResponseDto toDTO(BoletaServicio e) {
-        BoletaServicioResponseDto dto = new BoletaServicioResponseDto();
+    public ServiceTicketResponseDto toDTO(ServiceTicket e) {
+        ServiceTicketResponseDto dto = new ServiceTicketResponseDto();
         dto.setId(e.getId());
         dto.setTravelNro(e.getTravelNro());
         dto.setTravelDate(e.getTravelDate());
@@ -95,9 +91,9 @@ public interface BoletaServicioMapper {
     }
     */
 /*
-    public BoletaServicio toEntity(BoletaServicioRequestDto boletaServicioRequestDto, User responsable, Embarcacion embarcacion){
+    public ServiceTicket toEntity(ServiceTicketRequestDto boletaServicioRequestDto, User responsable, Embarcacion embarcacion){
 
-        BoletaServicio boleta = new BoletaServicio();
+        ServiceTicket boleta = new ServiceTicket();
 
         boleta.setEmbarcacion(embarcacion);
         boleta.setResponsable(responsable);
@@ -112,9 +108,9 @@ public interface BoletaServicioMapper {
 
     }
 
-    public BoletaServicioResponseDto toDTO (BoletaServicio boletaServicio){
+    public ServiceTicketResponseDto toDTO (ServiceTicket boletaServicio){
 
-        BoletaServicioResponseDto boletaDto = new BoletaServicioResponseDto();
+        ServiceTicketResponseDto boletaDto = new ServiceTicketResponseDto();
 
         boletaDto.setId(boletaServicio.getId());
         boletaDto.setTravelNro(boletaServicio.getTravelNro());

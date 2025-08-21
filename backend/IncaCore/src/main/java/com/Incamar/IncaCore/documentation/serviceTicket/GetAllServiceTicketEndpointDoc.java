@@ -1,4 +1,4 @@
-package com.Incamar.IncaCore.documentation.boletaServicio;
+package com.Incamar.IncaCore.documentation.serviceTicket;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -10,24 +10,23 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.lang.annotation.*;
 
 /**
- * Swagger documentation for GET /api/boleta-servicio/search
+ * Swagger documentation for GET /api/boleta-servicio
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Operation(
-        summary = "Buscar boletas de servicio por nombre de embarcación (paginado)",
+        summary = "Obtener todas las boletas de servicio",
         description = """
-        Retorna una lista paginada de boletas de servicio cuyo nombre de embarcación coincida parcialmente \
-        (ignorando mayúsculas) con el valor del parámetro `boatName`. \
-        Accesible para usuarios con rol <strong>ADMIN, ADMINISTRATIVO, PATRON o SUPERVISOR</strong>.
+        Retorna una lista paginada de boletas de servicio registradas en el sistema. \
+        Accesible para usuarios con roles: <strong>ADMIN, ADMINISTRATIVO, PATRON o SUPERVISOR</strong>.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )
 @ApiResponses(value = {
         @ApiResponse(
                 responseCode = "200",
-                description = "Boletas de servicio encontradas exitosamente",
+                description = "Lista paginada de boletas de servicio obtenida exitosamente",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(example = """
@@ -35,27 +34,27 @@ import java.lang.annotation.*;
                   "content": [
                     {
                       "id": 12,
-                      "travelNro": 125,
-                      "travelDate": "20-08-2025",
-                      "vesselAttended": "Coral Star",
-                      "solicitedBy": "Oceanic S.A.",
-                      "reportTravelNro": "AAA-05-0125",
-                      "code": "COD-ZQ45",
-                      "checkingNro": 990,
-                      "boatName": "Libertad",
-                      "responsibleUsername": "j.perez"
+                      "travelNro": 123,
+                      "travelDate": "18-08-2025",
+                      "vesselAttended": "Varada Blessing",
+                      "solicitedBy": "Kronos",
+                      "reportTravelNro": "AAA-05-0123",
+                      "code": "COD-AB12",
+                      "checkingNro": 987,
+                      "boatName": "Atlántida",
+                      "responsibleUsername": "a.garcia"
                     },
                     {
                       "id": 13,
-                      "travelNro": 126,
-                      "travelDate": "25-08-2025",
-                      "vesselAttended": "Pacific Queen",
-                      "solicitedBy": "Naviera Sur",
-                      "reportTravelNro": "AAA-05-0126",
-                      "code": "COD-ZQ46",
-                      "checkingNro": 991,
-                      "boatName": "Libertad",
-                      "responsibleUsername": "m.ramos"
+                      "travelNro": 124,
+                      "travelDate": "19-08-2025",
+                      "vesselAttended": "Orca IX",
+                      "solicitedBy": "Poseidon Ltd.",
+                      "reportTravelNro": "AAA-05-0124",
+                      "code": "COD-XY34",
+                      "checkingNro": 988,
+                      "boatName": "Marinera",
+                      "responsibleUsername": "l.martinez"
                     }
                   ],
                   "pageable": {
@@ -76,12 +75,12 @@ import java.lang.annotation.*;
                   "number": 0,
                   "empty": false
                 }
-                """)
+            """)
                 )
         ),
         @ApiResponse(
                 responseCode = "401",
-                description = "No autorizado (token ausente o inválido).",
+                description = "No autorizado (token ausente o inválido)",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(example = """
@@ -90,14 +89,14 @@ import java.lang.annotation.*;
                   "message": "Acceso no autorizado",
                   "errorCode": "UNAUTHORIZED",
                   "details": "...",
-                  "path": "/api/boleta-servicio/search"
+                  "path": "/api/boleta-servicio"
                 }
-                """)
+            """)
                 )
         ),
         @ApiResponse(
                 responseCode = "403",
-                description = "Acceso denegado por falta de permisos.",
+                description = "Acceso denegado por falta de permisos",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(example = """
@@ -106,9 +105,25 @@ import java.lang.annotation.*;
                   "message": "Acceso denegado",
                   "errorCode": "FORBIDDEN",
                   "details": "...",
-                  "path": "/api/boleta-servicio/search"
+                  "path": "/api/boleta-servicio"
                 }
-                """)
+            """)
+                )
+        ),
+        @ApiResponse(
+                responseCode = "404",
+                description = "Recurso no encontrado (aplica si no hay boletas registradas)",
+                content = @Content(
+                        mediaType = "application/json",
+                        schema = @Schema(example = """
+                {
+                  "statusCode": 404,
+                  "message": "No se encontraron boletas de servicio registradas.",
+                  "errorCode": "NOT_FOUND",
+                  "details": "...",
+                  "path": "/api/boleta-servicio"
+                }
+            """)
                 )
         ),
         @ApiResponse(
@@ -122,12 +137,10 @@ import java.lang.annotation.*;
                   "message": "Error inesperado",
                   "errorCode": "INTERNAL_SERVER_ERROR",
                   "details": "...",
-                  "path": "/api/boleta-servicio/search"
+                  "path": "/api/boleta-servicio"
                 }
-                """)
+            """)
                 )
         )
 })
-public @interface SearchBoletaServicioByBoatEndpointDoc {}
-
-
+public @interface GetAllServiceTicketEndpointDoc {}

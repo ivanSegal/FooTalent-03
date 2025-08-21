@@ -1,4 +1,4 @@
-package com.Incamar.IncaCore.dtos.boletaServicio;
+package com.Incamar.IncaCore.dtos.serviceTicket;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -12,7 +12,7 @@ import java.time.LocalDate;
 
 
 @Data
-public class BoletaServicioRequestDto {
+public class ServiceTicketRequestDto {
 
     @NotNull(groups = {Create.class, Update.class})
     private Long boatId;

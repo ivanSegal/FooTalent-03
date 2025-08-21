@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @Setter
 @Entity
 @Table(name = "boletaServicio")
-public class BoletaServicio {
+public class ServiceTicket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -51,10 +51,10 @@ public class BoletaServicio {
     private Long checkingNro;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "embarcacion_id", nullable = false)
-    private Embarcacion boat;
+    @JoinColumn(name = "vessel_id", nullable = false)
+    private Vessel boat;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "responsable_id", nullable = false)
+    @JoinColumn(name = "responsible_id", nullable = false)
     private User responsible;
 }
