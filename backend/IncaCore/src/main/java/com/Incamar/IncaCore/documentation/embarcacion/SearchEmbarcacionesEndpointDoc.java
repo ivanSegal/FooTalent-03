@@ -29,31 +29,52 @@ import java.lang.annotation.*;
                         mediaType = "application/json",
                         schema = @Schema(example = """
                 {
-                  "content": [
-                    {
-                      "id": 1,
-                      "nombre": "Santa María",
-                      "nPatente": "ABC123",
-                      "capitan": "Juan Pérez",
-                      "modelo": "Pesquero"
+                  "success": true,
+                  "message": "Embarcaciones obtenidas exitosamente.",
+                  "data": {
+                    "content": [
+                      {
+                        "id": 6,
+                        "name": "Titanic II",
+                        "registrationNumber": "ABC-1234",
+                        "ismm": "ISM-9087",
+                        "flagState": "Panamá",
+                        "callSign": "YYV-3742",
+                        "portOfRegistry": "Puerto Cabello",
+                        "rif": "J-12345678-9",
+                        "serviceType": "Carga",
+                        "constructionMaterial": "Acero",
+                        "sternType": "Popa abierta",
+                        "fuelType": "Diesel",
+                        "navigationHours": 12500.5
+                      }
+                    ],
+                    "pageable": {
+                      "pageNumber": 0,
+                      "pageSize": 20,
+                      "sort": {
+                        "empty": true,
+                        "unsorted": true,
+                        "sorted": false
+                      },
+                      "offset": 0,
+                      "paged": true,
+                      "unpaged": false
                     },
-                    {
-                      "id": 2,
-                      "nombre": "Mar Azul",
-                      "nPatente": "XYZ456",
-                      "capitan": "Pedro López",
-                      "modelo": "Velero"
-                    }
-                  ],
-                  "pageable": {
-                    "pageNumber": 0,
-                    "pageSize": 10
-                  },
-                  "totalElements": 2,
-                  "totalPages": 1,
-                  "last": true,
-                  "first": true,
-                  "empty": false
+                    "last": true,
+                    "totalElements": 1,
+                    "totalPages": 1,
+                    "size": 20,
+                    "number": 0,
+                    "sort": {
+                      "empty": true,
+                      "unsorted": true,
+                      "sorted": false
+                    },
+                    "first": true,
+                    "numberOfElements": 1,
+                    "empty": false
+                  }
                 }
                 """)
                 )
@@ -71,7 +92,7 @@ import java.lang.annotation.*;
                   "details": "...",
                   "path": "/api/embarcaciones/search"
                 }
-            """)
+                """)
                 )
         ),
         @ApiResponse(
@@ -87,7 +108,7 @@ import java.lang.annotation.*;
                   "details": "...",
                   "path": "/api/embarcaciones/search"
                 }
-            """)
+                """)
                 )
         ),
         @ApiResponse(

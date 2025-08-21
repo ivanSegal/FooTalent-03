@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Rubik } from "next/font/google";
 import "./globals.css";
 import ReactQueryProvider from "@/contexts/ReactQueryProvider";
-import Navbar from "@/components/Navbar";
 import { AuthProvider } from "@/contexts/AuthContext";
 
 const rubik = Rubik({
@@ -21,7 +20,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={`${rubik.variable} antialiased`}>
         <AuthProvider>
-          <Navbar />
           <ReactQueryProvider>{children}</ReactQueryProvider>
         </AuthProvider>
       </body>
