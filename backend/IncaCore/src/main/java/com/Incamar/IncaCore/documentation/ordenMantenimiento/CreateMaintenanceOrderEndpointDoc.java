@@ -40,9 +40,12 @@ import java.lang.annotation.*;
                         "embarcacionNombre": Atlántida,
                         "tipo_mantenimiento": "PREVENTIVO",
                         "estado": "SOLICITADO",
-                        "usuarioPeticionUsername": "juan.perez_94",
-                        "descripcion": "...",
-                        "fechaMantenimiento":"...",
+                        "encargadoMantenimientoUsername": "juan.perez_94",
+                        "fechaEmision":"...",
+                        "fechaProgramada":"...",
+                        "fechaInicio":"...",
+                        "fechaFin":"...",
+                        "motivoMantenimiento": "...",
                       }
                     }
                 """
@@ -57,30 +60,30 @@ import java.lang.annotation.*;
                         examples = {
                                 @ExampleObject(
                                         name = "Campos requeridos faltantes",
-                                        summary = "Cuando falta el campo embarcacion_id, tipo_mantenimiento o estado",
+                                        summary = "Cuando falta el campo embarcacion_id o tipo_mantenimiento",
                                         value = """
-                        {
-                          "statusCode": 400,
-                          "message": "Error validation with data",
-                          "errorCode": "VALIDATION_ERROR",
-                          "detailsError": "tipo_mantenimiento: no puede estar vacío",
-                          "path": "/api/ordenes-mantenimiento"
-                        }
-                    """
+                                            {
+                                              "statusCode": 400,
+                                              "message": "Error validation with data",
+                                              "errorCode": "VALIDATION_ERROR",
+                                              "detailsError": "tipo_mantenimiento: no puede estar vacío",
+                                              "path": "/api/ordenes-mantenimiento"
+                                            }
+                                        """
                                 ),
                                 @ExampleObject(
                                         name = "Estado y/o Tipo de Mantenimiento incorrectos",
                                         summary = "Cuando se ingresa un valor en estado y/o tipo de mantenimiento " +
                                                 "fuera de los permitidos",
                                         value = """
-                        {
-                          "statusCode": 400,
-                          "errorCode": "VALIDATION_ERROR",
-                          "message": "...",
-                          "detailsError": "tipoMantenimiento: El tipo de mantenimiento debe ser uno de los siguientes: PREVENTIVO o CORRECTIVO",
-                          "path": "/api/ordenes-mantenimiento"
-                        }
-                    """
+                                            {
+                                              "statusCode": 400,
+                                              "errorCode": "VALIDATION_ERROR",
+                                              "message": "...",
+                                              "detailsError": "tipoMantenimiento: El tipo de mantenimiento debe ser uno de los siguientes: PREVENTIVO o CORRECTIVO",
+                                              "path": "/api/ordenes-mantenimiento"
+                                            }
+                                        """
                                 )
                         }
                 )
@@ -156,4 +159,4 @@ import java.lang.annotation.*;
                 )
         )
 })
-public @interface CreateOrdenMantenimientoEndpointDoc {}
+public @interface CreateMaintenanceOrderEndpointDoc {}

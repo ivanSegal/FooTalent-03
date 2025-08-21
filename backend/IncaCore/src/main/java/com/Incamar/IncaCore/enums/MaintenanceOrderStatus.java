@@ -1,6 +1,6 @@
 package com.Incamar.IncaCore.enums;
 
-public enum Estado {
+public enum MaintenanceOrderStatus {
     FINALIZADO,
     EN_PROCESO,
     ANULADO,

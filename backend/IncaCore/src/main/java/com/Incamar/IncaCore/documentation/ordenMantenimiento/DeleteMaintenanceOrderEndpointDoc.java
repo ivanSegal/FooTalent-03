@@ -95,4 +95,4 @@ import java.lang.annotation.*;
                 )
         )
 })
-public @interface DeleteOrdenMantenimientoEndpointDoc {}
+public @interface DeleteMaintenanceOrderEndpointDoc {}
