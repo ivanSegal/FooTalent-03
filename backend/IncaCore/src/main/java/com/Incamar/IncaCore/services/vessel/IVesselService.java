@@ -1,8 +1,7 @@
-package com.Incamar.IncaCore.services;
+package com.Incamar.IncaCore.services.vessel;
 
 import com.Incamar.IncaCore.dtos.vessels.VesselRequestDto;
 import com.Incamar.IncaCore.dtos.vessels.VesselResponseDto;
-import com.Incamar.IncaCore.models.Vessel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
