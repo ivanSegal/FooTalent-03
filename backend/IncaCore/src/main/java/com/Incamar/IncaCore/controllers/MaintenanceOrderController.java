@@ -1,8 +1,8 @@
 package com.Incamar.IncaCore.controllers;
 
-import com.Incamar.IncaCore.documentation.ordenMantenimiento.*;
-import com.Incamar.IncaCore.dtos.ordenMantenimiento.MaintenanceOrderRequestDto;
-import com.Incamar.IncaCore.dtos.ordenMantenimiento.MaintenanceOrderResponseDto;
+import com.Incamar.IncaCore.documentation.maintenanceOrder.*;
+import com.Incamar.IncaCore.dtos.maintenanceOrder.MaintenanceOrderRequestDto;
+import com.Incamar.IncaCore.dtos.maintenanceOrder.MaintenanceOrderResponseDto;
 import com.Incamar.IncaCore.dtos.users.JwtDataDto;
 import com.Incamar.IncaCore.services.IMaintenanceOrderService;
 import com.Incamar.IncaCore.utils.ApiResult;

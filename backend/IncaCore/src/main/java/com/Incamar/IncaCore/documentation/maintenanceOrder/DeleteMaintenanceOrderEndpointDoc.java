@@ -1,4 +1,4 @@
-package com.Incamar.IncaCore.documentation.ordenMantenimiento;
+package com.Incamar.IncaCore.documentation.maintenanceOrder;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

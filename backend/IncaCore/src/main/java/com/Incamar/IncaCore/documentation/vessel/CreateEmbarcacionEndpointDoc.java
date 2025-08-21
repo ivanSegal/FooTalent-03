@@ -1,4 +1,4 @@
-package com.Incamar.IncaCore.documentation.ordenMantenimiento;
+package com.Incamar.IncaCore.documentation.vessel;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -10,42 +10,44 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.lang.annotation.*;
 
-/**
- * Swagger documentation for POST /api/ordenes-mantenimiento.
- */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Operation(
-        summary = "Crear nueva orden mantenimiento",
+        summary = "Crear una embarcación",
         description = """
-        Crea una nueva orden de mantenimiento en el sistema especificando id de Embarcacion, tipo de mantenimiento, estado y descripcion. \
-        Requiere autenticación de usuarios con rol <strong>ADMIN.</strong>
+        Crea una nueva embarcación especificando nombre, número de registro (matricula), ISMM, \
+        estado de bandera, distintivo, puerto de registro, RIF, tipo de servicio, \
+        material de construcción, tipo de popa, tipo de combustible y horas de navegación. \
+        Requiere autenticación de usuarios con rol <strong>ADMIN</strong>.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )
 @ApiResponses(value = {
         @ApiResponse(
                 responseCode = "201",
-                description = "Orden de Mantenimiento creada correctamente",
+                description = "Embarcación creada correctamente",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(
                                 example = """
                     {
                       "success": true,
-                      "message": "Orden de Mantenimiento creada correctamente.",
+                      "message": "Embarcación creada correctamente.",
                       "data": {
-                        "id": 1,
-                        "embarcacionNombre": Atlántida,
-                        "tipo_mantenimiento": "PREVENTIVO",
-                        "estado": "SOLICITADO",
-                        "encargadoMantenimientoUsername": "juan.perez_94",
-                        "fechaEmision":"...",
-                        "fechaProgramada":"...",
-                        "fechaInicio":"...",
-                        "fechaFin":"...",
-                        "motivoMantenimiento": "...",
+                        "id": 101,
+                        "name": "Titanic II Renovado",
+                        "registrationNumber": "ABC1234",
+                        "ismm": "ISM-9087",
+                        "flagState": "Panamá",
+                        "callSign": "YYV-3742",
+                        "portOfRegistry": "Puerto Cabello",
+                        "rif": "J-12345678-9",
+                        "serviceType": "Carga",
+                        "constructionMaterial": "Acero",
+                        "sternType": "Popa abierta",
+                        "fuelType": "Diesel",
+                        "navigationHours": 13000.0
                       }
                     }
                 """
@@ -54,34 +56,33 @@ import java.lang.annotation.*;
         ),
         @ApiResponse(
                 responseCode = "400",
-                description = "Solicitud inválida: error de validación o datos incorrectos",
+                description = "Solicitud inválida: credenciales incorrectas o error de validación",
                 content = @Content(
                         mediaType = "application/json",
                         examples = {
                                 @ExampleObject(
-                                        name = "Campos requeridos faltantes",
-                                        summary = "Cuando falta el campo embarcacion_id o tipo_mantenimiento",
+                                        name = "Campos inválidas",
+                                        summary = "Cuando el nombre de la embarcacion ya existe",
                                         value = """
                                             {
                                               "statusCode": 400,
-                                              "message": "Error validation with data",
-                                              "errorCode": "VALIDATION_ERROR",
-                                              "detailsError": "tipo_mantenimiento: no puede estar vacío",
-                                              "path": "/api/ordenes-mantenimiento"
+                                              "message": "El nombre de la embarcacion ya existe.",
+                                              "errorCode": "BAD_REQUEST",
+                                              "detailsError": "...",
+                                              "path": "/api/vessels/create"
                                             }
                                         """
                                 ),
                                 @ExampleObject(
-                                        name = "Estado y/o Tipo de Mantenimiento incorrectos",
-                                        summary = "Cuando se ingresa un valor en estado y/o tipo de mantenimiento " +
-                                                "fuera de los permitidos",
+                                        name = "Error de validación",
+                                        summary = "Cuando faltan campos requeridos o tienen formato incorrecto",
                                         value = """
                                             {
                                               "statusCode": 400,
+                                              "message": "Error de validación en los datos",
                                               "errorCode": "VALIDATION_ERROR",
-                                              "message": "...",
-                                              "detailsError": "tipoMantenimiento: El tipo de mantenimiento debe ser uno de los siguientes: PREVENTIVO o CORRECTIVO",
-                                              "path": "/api/ordenes-mantenimiento"
+                                              "detailsError": "name: no puede estar vacío, registrationNumber: formato inválido",
+                                              "path": "/api/vessels/create"
                                             }
                                         """
                                 )
@@ -98,9 +99,9 @@ import java.lang.annotation.*;
                     {
                       "statusCode": 401,
                       "message": "Acceso no autorizado",
-                      "errorCode": "UNAUTHORIZED",
+                      "errorCode": "AUTH_ERROR",
                       "details": "...",
-                      "path": "/api/ordenes-mantenimiento"
+                      "path": "/error"
                     }
                 """
                         )
@@ -118,7 +119,7 @@ import java.lang.annotation.*;
                       "message": "Acceso denegado",
                       "errorCode": "FORBIDDEN",
                       "details": "...",
-                      "path": "/api/ordenes-mantenimiento"
+                      "path": "/api/vessels/create"
                     }
                 """
                         )
@@ -126,18 +127,20 @@ import java.lang.annotation.*;
         ),
         @ApiResponse(
                 responseCode = "404",
-                description = "Embarcación no encontrada",
+                description = "Embarcación no encontrada con el ID especificado",
                 content = @Content(
                         mediaType = "application/json",
-                        schema = @Schema(example = """
-                        {
-                          "statusCode": 404,
-                          "errorCode": "NOT_FOUND",
-                          "message": "Embarcación no encontrada con id: {id}",
-                          "details": "...",
-                          "path": "/api/ordenes-mantenimiento"
-                        }
-                        """)
+                        schema = @Schema(
+                                example = """
+                    {
+                      "statusCode": 404,
+                      "message": "Embarcación no encontrada con ID: 101",
+                      "errorCode": "RESOURCE_NOT_FOUND",
+                      "detailsError": "...",
+                      "path": "/api/vessels/create"
+                    }
+                """
+                        )
                 )
         ),
         @ApiResponse(
@@ -152,11 +155,11 @@ import java.lang.annotation.*;
                       "message": "Internal Error Server",
                       "errorCode": "INTERNAL_ERROR",
                       "detailsError": "NullPointerException...",
-                      "path": "/api/ordenes-mantenimiento"
+                      "path": "/api/vessels/create"
                     }
                 """
                         )
                 )
         )
 })
-public @interface CreateMaintenanceOrderEndpointDoc {}
+public @interface CreateEmbarcacionEndpointDoc {}

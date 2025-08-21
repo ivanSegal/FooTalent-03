@@ -1,8 +1,8 @@
 package com.Incamar.IncaCore.mappers;
 
 
-import com.Incamar.IncaCore.dtos.ordenMantenimiento.MaintenanceOrderRequestDto;
-import com.Incamar.IncaCore.dtos.ordenMantenimiento.MaintenanceOrderResponseDto;
+import com.Incamar.IncaCore.dtos.maintenanceOrder.MaintenanceOrderRequestDto;
+import com.Incamar.IncaCore.dtos.maintenanceOrder.MaintenanceOrderResponseDto;
 import com.Incamar.IncaCore.enums.MaintenanceOrderStatus;
 import com.Incamar.IncaCore.enums.MaintenanceType;
 import com.Incamar.IncaCore.models.Vessel;

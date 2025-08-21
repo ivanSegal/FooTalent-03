@@ -1,4 +1,4 @@
-package com.Incamar.IncaCore.documentation.embarcacion;
+package com.Incamar.IncaCore.documentation.maintenanceOrder;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -9,17 +9,18 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.lang.annotation.*;
 
-
 /**
- * Swagger documentation for PUT /api/embarcaciones.
+ * Swagger documentation for PUT /api/ordenes-mantenimiento.
  */
+
+
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Operation(
-        summary = "Actualizar embarcación",
+        summary = "Actualizar orden de mantenimiento",
         description = """
-        Actualiza la información de una embarcación existente identificada por su ID. \
+        Actualiza la información de una orden de mantenimiento existente identificada por su ID. \
         Accesible solo para usuarios autorizados con rol <strong>ADMIN.</strong>
         """,
         security = @SecurityRequirement(name = "bearer-key")
@@ -27,27 +28,22 @@ import java.lang.annotation.*;
 @ApiResponses(value = {
         @ApiResponse(
                 responseCode = "200",
-                description = "Embarcación actualizada correctamente",
+                description = "Orden de Mantenimiento actualizada correctamente",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(example = """
                         {
                           "success": true,
-                          "message": "Embarcación actualizada correctamente.",
+                          "message": "Orden de Mantenimiento actualizada correctamente.",
                           "data": {
-                            "id": 101,
-                            "name": "Nuevo Nombre",
-                            "registrationNumber": "XYZ9876",
-                            "ismm": "ISM-2025-001",
-                            "flagState": "Panamá",
-                            "callSign": "YYV-3742",
-                            "portOfRegistry": "Puerto Cabello",
-                            "rif": "J-12345678-9",
-                            "serviceType": "Lanchaje",
-                            "constructionMaterial": "Acero",
-                            "sternType": "Popa Cuadrada",
-                            "fuelType": "Diesel",
-                            "navigationHours": 1520.75
+                            "embarcacion_id": 101,
+                            "tipo_mantenimiento": "PREVENTIVO",
+                            "estado": "SOLICITADO",
+                            "encargadoMantenimientoUsername": "juan.perez_94",
+                            "fechaEmision":"...",
+                            "fechaProgramada":"...",
+                            "fechaInicio":"...",
+                            "fechaFin":"...",
                           }
                         }
                         """)
@@ -63,8 +59,8 @@ import java.lang.annotation.*;
                           "statusCode": 400,
                           "message": "Error de validación",
                           "errorCode": "VALIDATION_ERROR",
-                          "details": "registrationNumber: no puede estar vacío",
-                          "path": "/api/vessels/{id}"
+                          "details": "tipo_mantenimiento: no puede estar vacío",
+                          "path": "/api/ordenes-mantenimiento/{id}"
                         }
                         """)
                 )
@@ -80,7 +76,7 @@ import java.lang.annotation.*;
                           "message": "Acceso no autorizado",
                           "errorCode": "AUTH_ERROR",
                           "details": "...",
-                          "path": "/error"
+                          "path": "/api/ordenes-mantenimiento/{id}"
                         }
                         """)
                 )
@@ -96,23 +92,23 @@ import java.lang.annotation.*;
                           "message": "Acceso denegado",
                           "errorCode": "FORBIDDEN",
                           "details": "...",
-                          "path": "/api/vessels/{id}"
+                          "path": "/api/ordenes-mantenimiento/{id}"
                         }
                         """)
                 )
         ),
         @ApiResponse(
                 responseCode = "404",
-                description = "Embarcación no encontrada",
+                description = "Orden de Mantenimiento no encontrada",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(example = """
                         {
                           "statusCode": 404,
-                          "message": "Embarcación no encontrada con id: 101",
-                          "errorCode": "RESOURCE_NOT_FOUND",
+                          "message": "Orden de Mantenimiento no encontrada con id: 12",
+                          "errorCode": "NOT_FOUND",
                           "details": "...",
-                          "path": "/api/vessels/{id}"
+                          "path": "/api/ordenes-mantenimiento/{id}"
                         }
                         """)
                 )
@@ -128,10 +124,10 @@ import java.lang.annotation.*;
                           "message": "Error inesperado",
                           "errorCode": "INTERNAL_SERVER_ERROR",
                           "details": "NullPointerException ...",
-                          "path": "/api/vessels/{id}"
+                          "path": "/api/ordenes-mantenimiento/{id}"
                         }
                         """)
                 )
         )
 })
-public @interface UpdateEmbarcacionEndpointDoc {}
+public @interface UpdateMaintenanceOrderEndpointDoc {}

@@ -114,5 +114,5 @@ import java.lang.annotation.*;
                 )
         )
 })
-public @interface GetBoletaServicioByIdEndpointDoc {}
+public @interface GetServiceTicketByIdEndpointDoc {}
 

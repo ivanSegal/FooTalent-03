@@ -34,7 +34,7 @@ public class ServiceTicketController {
         return ResponseEntity.ok(boleta.getAllBoletasServicio(pageable));
     }
 
-    @GetBoletaServicioByIdEndpointDoc
+    @GetServiceTicketByIdEndpointDoc
     @PreAuthorize("hasAnyRole('ADMIN','PATRON','SUPERVISOR','ADMINISTRATIVO')")
     @GetMapping("/{id}")
     public ResponseEntity<ServiceTicketResponseDto> getById(@PathVariable Long id) {

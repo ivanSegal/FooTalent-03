@@ -1,4 +1,4 @@
-package com.Incamar.IncaCore.dtos.ordenMantenimiento;
+package com.Incamar.IncaCore.dtos.maintenanceOrder;
 
 import com.Incamar.IncaCore.enums.MaintenanceOrderStatus;
 import com.Incamar.IncaCore.enums.MaintenanceType;
