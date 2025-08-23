@@ -8,6 +8,7 @@ public record UserSearchRes(
         String fullName,
         String email,
         String role,
+        String department,
         String accountStatus
 ) {
 }
