@@ -12,30 +12,30 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MaintenanceOrderMapper {
-
     public MaintenanceOrder toEntity(MaintenanceOrderRequestDto dto, Vessel vessel, User user) {
         MaintenanceOrder maintenanceOrder = new MaintenanceOrder();
         maintenanceOrder.setVessel(vessel);
-        maintenanceOrder.setMaintenanceType(MaintenanceType.valueOf(dto.getTipoMantenimiento()));
-        if (dto.getEstado() != null) {
-            maintenanceOrder.setMaintenanceOrderStatus(MaintenanceOrderStatus.valueOf(dto.getEstado()));// Se pone Solicitado si no se envió el estado
+        maintenanceOrder.setMaintenanceType(MaintenanceType.valueOf(dto.getMaintenanceType()));
+        if (dto.getStatus() != null) {
+            maintenanceOrder.setStatus(MaintenanceOrderStatus.valueOf(dto.getStatus()));// Se pone Solicitado si no se envió el estado
         }
         maintenanceOrder.setMaintenanceManager(user);
-        maintenanceOrder.setIssuedAt(dto.getFechaEmision() != null ? dto.getFechaEmision() : maintenanceOrder.getIssuedAt());
-        maintenanceOrder.setScheduledAt(dto.getFechaProgramada());
-        maintenanceOrder.setStartedAt(dto.getFechaInicio());
-        maintenanceOrder.setFinishedAt(dto.getFechaFin());
-        maintenanceOrder.setMaintenanceReason(dto.getMotivoMantenimiento());
+        maintenanceOrder.setIssuedAt(dto.getIssuedAt() != null ? dto.getIssuedAt() : maintenanceOrder.getIssuedAt());
+        maintenanceOrder.setScheduledAt(dto.getScheduledAt());
+        maintenanceOrder.setStartedAt(dto.getStartedAt());
+        maintenanceOrder.setFinishedAt(dto.getFinishedAt());
+        maintenanceOrder.setMaintenanceReason(dto.getMaintenanceReason());
         return maintenanceOrder;
     }
+
 
     public MaintenanceOrderResponseDto toDTO(MaintenanceOrder maintenanceOrder) {
         MaintenanceOrderResponseDto dto = new MaintenanceOrderResponseDto();
         dto.setId(maintenanceOrder.getId());
         dto.setVesselName(maintenanceOrder.getVessel().getName());
         dto.setMaintenanceType(maintenanceOrder.getMaintenanceType());
-        dto.setMaintenanceOrderStatus(maintenanceOrder.getMaintenanceOrderStatus());
-        dto.setMaintenanceManagerUsername(maintenanceOrder.getMaintenanceManager().getEmployee().getFirstName());
+        dto.setStatus(maintenanceOrder.getStatus());
+        dto.setMaintenanceManager(maintenanceOrder.getMaintenanceManager().getEmployee().getFirstName());
         dto.setIssuedAt(maintenanceOrder.getIssuedAt());
         dto.setScheduledAt(maintenanceOrder.getScheduledAt());
         dto.setStartedAt(maintenanceOrder.getStartedAt());

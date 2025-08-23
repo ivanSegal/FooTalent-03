@@ -17,10 +17,21 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Operation(
-        summary = "Crear nueva orden mantenimiento",
+        summary = "Crear nueva orden de mantenimiento",
         description = """
-        Crea una nueva orden de mantenimiento en el sistema especificando id de Embarcacion, tipo de mantenimiento, estado y descripcion. \
-        Requiere autenticación de usuarios con rol <strong>ADMIN.</strong>
+        Crea una nueva orden de mantenimiento asociada a una <strong>embarcación</strong> y al <strong>usuario responsable</strong> \
+        (tomado del JWT).<br/><br/>
+        <strong>Reglas/validaciones relevantes:</strong>
+        <ul>
+          <li><code>vesselId</code> es obligatorio y debe existir.</li>
+          <li><code>maintenanceType</code> Solo puede ser PREVENTIVO o CORRECTIVO </li>
+          <li><code>status</code> EN_PROCESO, ANULADO, ESPERANDO_INSUMOS, SOLICITADO o RECHAZADO </li>
+          <li>Requeridos además: <code>issuedAt (dd-MM-yyyy)</code>, <code>scheduledAt (dd-MM-yyyy)</code>, \
+          <code>startedAt (dd-MM-yyyy)</code>,<code>finishedAt (dd-MM-yyyy)</code>,<code>maintenanceReason</code>.</li>
+        </ul>
+        Crea una nueva orden de mantenimiento en el sistema especificando id de Embarcacion, tipo de mantenimiento, estado y descripcion.\s
+        Requiere autenticación de usuarios con rol <strong>ADMIN, SUPERVISOR o OPERADOR</strong> y \
+        pertenecientes al departamento <strong>MANTENIMIENTO</strong>
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )
@@ -37,15 +48,15 @@ import java.lang.annotation.*;
                       "message": "Orden de Mantenimiento creada correctamente.",
                       "data": {
                         "id": 1,
-                        "embarcacionNombre": Atlántida,
-                        "tipo_mantenimiento": "PREVENTIVO",
-                        "estado": "SOLICITADO",
-                        "encargadoMantenimientoUsername": "juan.perez_94",
-                        "fechaEmision":"...",
-                        "fechaProgramada":"...",
-                        "fechaInicio":"...",
-                        "fechaFin":"...",
-                        "motivoMantenimiento": "...",
+                        "vesselId": "2",
+                        "maintenanceType": "PREVENTIVO",
+                        "status": "SOLICITADO",
+                        "maintenanceManager": "Juan Perez",
+                        "maintenanceReason":"...",
+                        "issuedAt":"...",
+                        "scheduledAt":"...",
+                        "startedAt":"...",
+                        "finishedAt": "...",
                       }
                     }
                 """
@@ -117,7 +128,7 @@ import java.lang.annotation.*;
                       "statusCode": 403,
                       "message": "Acceso denegado",
                       "errorCode": "FORBIDDEN",
-                      "details": "...",
+                      "details": "Se requiere rol ADMIN, SUPERVISOR o OPERADOR y ser del departamento MANTENIMIENTO",
                       "path": "/api/ordenes-mantenimiento"
                     }
                 """

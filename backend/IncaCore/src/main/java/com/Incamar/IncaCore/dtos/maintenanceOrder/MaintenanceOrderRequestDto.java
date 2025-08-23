@@ -1,18 +1,21 @@
 package com.Incamar.IncaCore.dtos.maintenanceOrder;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 public class MaintenanceOrderRequestDto {
 
     @NotNull(groups = Create.class)
-    //@JsonProperty("embarcacionId")
-    private Long embarcacionId;
+    private Long vesselId;
+    /*@Schema(description = "Nombre de la embarcación", example = "Varada Blessing")
+    @NotBlank(groups = Create.class)
+    private String vesselAttended;*/
 
     @Pattern(
             regexp = "PREVENTIVO|CORRECTIVO",
@@ -23,7 +26,7 @@ public class MaintenanceOrderRequestDto {
             example = "PREVENTIVO"
     )
     @NotNull(groups = Create.class)
-    private String tipoMantenimiento;
+    private String maintenanceType;
 
     @Pattern(
             regexp = "FINALIZADO|EN_PROCESO|ANULADO|ESPERANDO_INSUMOS|SOLICITADO|RECHAZADO",
@@ -35,19 +38,26 @@ public class MaintenanceOrderRequestDto {
                     "ESPERANDO_INSUMOS, SOLICITADO o RECHAZADO",
             example = "SOLICITADO"
     )
-    private String estado;
+    private String status;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @Schema(example = "dd-MM-yyyy")
+    private LocalDate issuedAt;
+    //@Schema(hidden = true)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @Schema(example = "dd-MM-yyyy")
+    private LocalDate scheduledAt;
+    //@Schema(hidden = true)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @Schema(example = "dd-MM-yyyy")
+    private LocalDate startedAt;
+    //@Schema(hidden = true)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @Schema(example = "dd-MM-yyyy")
+    private LocalDate finishedAt;
 
-    private LocalDateTime fechaEmision;
-    //@Schema(hidden = true)
-    private LocalDateTime fechaProgramada;
-    //@Schema(hidden = true)
-    private LocalDateTime fechaInicio;
-    //@Schema(hidden = true)
-    private LocalDateTime fechaFin;
-
-    private String motivoMantenimiento;
+    private String maintenanceReason;
 
     public interface Create {}
-    public interface Edit {}
+    public interface Update {}
 }

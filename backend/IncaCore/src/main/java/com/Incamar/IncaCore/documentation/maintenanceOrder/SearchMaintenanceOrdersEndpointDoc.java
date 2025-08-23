@@ -16,8 +16,8 @@ import java.lang.annotation.*;
         summary = "Buscar ordenes de mantenimiento por nombre de embarcación con paginación",
         description = """
         Retorna una lista paginada de ordenes de mantenimiento cuyo nombre de embarcación coincida parcialmente \
-        (ignorando mayúsculas) con el valor proporcionado en el parámetro `nombre`. \
-        <strong>Solo accesible para usuarios con rol ADMIN.</strong>
+        (ignorando mayúsculas) con el valor proporcionado en el parámetro `nombre`. \s
+        Accesible para usuarios con roles: <strong>ADMIN, SUPERVISOR o OPERADOR</strong>
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )
@@ -32,27 +32,27 @@ import java.lang.annotation.*;
                   "content": [
                     {
                        "id": 1,
-                       "embarcacionNombre": "Marinera",
-                       "tipo_mantenimiento": "PREVENTIVO",
-                       "estado": "SOLICITADO",
-                       "encargadoMantenimientoUsername": "juan.perez_94",
-                       "fechaEmision":"...",
-                       "fechaProgramada":"...",
-                       "fechaInicio":"...",
-                       "fechaFin":"...",
-                       "motivoMantenimiento": "...",
+                       "vesselName": "Marinera",
+                       "maintenanceType": "PREVENTIVO",
+                       "status": "SOLICITADO",
+                       "maintenanceManager": "Juan Perez",
+                       "maintenanceReason":"...",
+                       "issuedAt":"...",
+                       "scheduledAt":"...",
+                       "startedAt":"...",
+                       "finishedAt": "...",
                     },
                     {
                        "id": 2,
-                       "embarcacionNombre": "Marinera",
-                       "tipoMantenimiento": "CORRECTIVO",
-                       "estado": "FINALIZADO",
-                       "encargadoMantenimientoUsername": "juan.perez_94",
-                       "fechaEmision":"...",
-                       "fechaProgramada":"...",
-                       "fechaInicio":"...",
-                       "fechaFin":"...",
-                       "motivoMantenimiento": "..."
+                       "vesselName": "Marinera",
+                       "maintenanceType": "CORRECTIVO",
+                       "status": "FINALIZADO",
+                       "maintenanceManager": "Juan Perez",
+                       "maintenanceReason":"...",
+                       "issuedAt":"...",
+                       "scheduledAt":"...",
+                       "startedAt":"...",
+                       "finishedAt": "..."
                     }
                   ],
                   "pageable": {
@@ -109,7 +109,7 @@ import java.lang.annotation.*;
                 {
                   "statusCode": 401,
                   "message": "Acceso no autorizado",
-                  "errorCode": "AUTH_ERROR",
+                  "errorCode": "UNAUTHORIZED",
                   "details": "...",
                   "path": "/api/ordenes-mantenimiento/search"
                 }

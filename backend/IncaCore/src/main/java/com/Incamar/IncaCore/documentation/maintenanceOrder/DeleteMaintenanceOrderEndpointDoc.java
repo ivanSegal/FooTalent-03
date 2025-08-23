@@ -19,8 +19,9 @@ import java.lang.annotation.*;
 @Operation(
         summary = "Eliminar orden de mantenimiento",
         description = """
-        Elimina una orden de mantenimiento existente del sistema por su ID único. \
-        Solo usuarios con rol <strong>ADMIN</strong> pueden realizar esta operación.
+        Elimina definitivamente una orden de mantenimiento por su ID único. \s
+        Requiere autenticación de usuarios con rol <strong>ADMIN</strong> y\
+        pertenecientes al departamento <strong>MANTENIMIENTO</strong>
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )
@@ -28,7 +29,7 @@ import java.lang.annotation.*;
         @ApiResponse(
                 responseCode = "204",
                 description = "Orden de Mantenimiento eliminada correctamente",
-                content = @Content(mediaType = "application/json")
+                content = @Content // sin body (no content)
         ),
         @ApiResponse(
                 responseCode = "401",
@@ -48,7 +49,7 @@ import java.lang.annotation.*;
         ),
         @ApiResponse(
                 responseCode = "403",
-                description = "Acceso denegado por falta de permisos",
+                description = "Acceso denegado: el rol del usuario no tiene permisos para eliminar",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(example = """
@@ -56,7 +57,7 @@ import java.lang.annotation.*;
                           "statusCode": 403,
                           "message": "Acceso denegado",
                           "errorCode": "FORBIDDEN",
-                          "details": "El usuario no tiene permisos para eliminar esta orden de mantenimiento",
+                          "details": "Se requiere rol ADMIN y ser del departamento de MANTENIMIENTO",
                           "path": "/api/ordenes-mantenimiento/{id}"
                         }
                         """)
@@ -70,8 +71,8 @@ import java.lang.annotation.*;
                         schema = @Schema(example = """
                         {
                           "statusCode": 404,
-                          "message": "Orden de Mantenimiento no encontrada con id: {id}",
                           "errorCode": "NOT_FOUND",
+                          "message": "Orden de Mantenimiento no encontrada con id: {id}",
                           "details": "No existe una orden de mantenimiento con el ID proporcionado",
                           "path": "/api/ordenes-mantenimiento/{id}"
                         }
@@ -88,7 +89,7 @@ import java.lang.annotation.*;
                           "statusCode": 500,
                           "message": "Error inesperado",
                           "errorCode": "INTERNAL_SERVER_ERROR",
-                          "details": "NullPointerException at line ...",
+                          "details": "NullPointerException ...",
                           "path": "/api/ordenes-mantenimiento/{id}"
                         }
                         """)
