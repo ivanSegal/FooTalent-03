@@ -6,18 +6,25 @@ import { useRouter } from "next/navigation";
 import { register } from "@/services/authService";
 import { showAutoAlert, showAlert } from "@/utils/showAlert";
 
+import { RegisterRequest } from "@/types/auth";
+
 export default function RegisterPage() {
   const router = useRouter();
-  const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-    confirmPassword: "",
+  const DEPARTMENTS = ["INVENTORY", "MAINTENANCE", "VESSEL"] as const;
+  type Department = (typeof DEPARTMENTS)[number];
+  const [formData, setFormData] = useState<RegisterRequest>({
+    email: "",
     role: "",
+    firstName: "",
+    lastName: "",
+    department: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
-  const usernameRegex = /^[a-zA-Z0-9._]{4,20}$/;
+  const emailRegex =
+    /^(?:[a-zA-Z0-9_'^&\/+-])+(?:\.(?:[a-zA-Z0-9_'^&\/+-])+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
+  const nameRegex = /^[A-Za-zñáéíóúÁÉÍÓÚ]+(?: [A-Za-zñáéíóúÁÉÍÓÚ]+)*$/;
 
   useEffect(() => {
     setSuccessMessage("");
@@ -28,26 +35,21 @@ export default function RegisterPage() {
   const validate = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!usernameRegex.test(formData.username)) {
-      newErrors.username = "Usuario: 4–20 caracteres (letras, números, puntos o _).";
+    if (!formData.firstName || !nameRegex.test(formData.firstName)) {
+      newErrors.firstName = "Nombre requerido. Solo letras y espacios.";
     }
-
-    if (formData.password.length < 8 || formData.password.length > 30) {
-      newErrors.password = "Contraseña: entre 8 y 30 caracteres.";
-    } else if (
-      !/[A-Z]/.test(formData.password) ||
-      !/[0-9]/.test(formData.password) ||
-      !/[!@#$%^&*]/.test(formData.password)
-    ) {
-      newErrors.password = "Debe incluir mayúscula, número y carácter especial.";
+    if (!formData.lastName || !nameRegex.test(formData.lastName)) {
+      newErrors.lastName = "Apellido requerido. Solo letras y espacios.";
     }
-
-    if (formData.confirmPassword !== formData.password) {
-      newErrors.confirmPassword = "Las contraseñas no coinciden.";
+    if (!formData.email || !emailRegex.test(formData.email)) {
+      newErrors.email = "Debe ingresar un correo válido.";
     }
 
     if (!formData.role) {
       newErrors.role = "Debes seleccionar un rol.";
+    }
+    if (!formData.department || !DEPARTMENTS.includes(formData.department as Department)) {
+      newErrors.department = "Debes seleccionar un departamento válido.";
     }
 
     return newErrors;
@@ -66,7 +68,13 @@ export default function RegisterPage() {
 
     try {
       await register(formData);
-      await showAutoAlert("¡Registro exitoso!", "Ahora puedes iniciar sesión", "success", 2000);
+      await showAutoAlert(
+        "¡Registro exitoso!",
+        "Hemos enviado la contraseña a tu correo. Revisa tu bandeja de entrada.",
+        "success",
+        2200,
+        "top-end-auth",
+      );
       router.push("/login");
     } catch {
       const message = "Ha ocurrido un error inesperado. Intenta nuevamente.";
@@ -94,32 +102,30 @@ export default function RegisterPage() {
 
         <input
           type="text"
-          name="username"
-          placeholder="Nombre de usuario"
+          name="firstName"
+          placeholder="Nombre"
           onChange={handleChange}
-          className={`mb-1 w-full rounded-lg border px-4 py-2 focus:ring-2 focus:ring-[#2375AC] focus:outline-none ${errors.username ? "border-red-500" : "border-gray-300"}`}
+          className={`mb-1 w-full rounded-lg border px-4 py-2 focus:ring-2 focus:ring-[#2375AC] focus:outline-none ${errors.firstName ? "border-red-500" : "border-gray-300"}`}
         />
-        {errors.username && <p className="mb-3 text-xs text-red-500">{errors.username}</p>}
+        {errors.firstName && <p className="mb-3 text-xs text-red-500">{errors.firstName}</p>}
 
         <input
-          type="password"
-          name="password"
-          placeholder="Contraseña"
+          type="text"
+          name="lastName"
+          placeholder="Apellido"
           onChange={handleChange}
-          className={`mb-1 w-full rounded-lg border px-4 py-2 focus:ring-2 focus:ring-[#2375AC] focus:outline-none ${errors.password ? "border-red-500" : "border-gray-300"}`}
+          className={`mb-1 w-full rounded-lg border px-4 py-2 focus:ring-2 focus:ring-[#2375AC] focus:outline-none ${errors.lastName ? "border-red-500" : "border-gray-300"}`}
         />
-        {errors.password && <p className="mb-3 text-xs text-red-500">{errors.password}</p>}
+        {errors.lastName && <p className="mb-3 text-xs text-red-500">{errors.lastName}</p>}
 
         <input
-          type="password"
-          name="confirmPassword"
-          placeholder="Confirmar contraseña"
+          type="email"
+          name="email"
+          placeholder="Correo electrónico"
           onChange={handleChange}
-          className={`mb-4 w-full rounded-lg border px-4 py-2 focus:ring-2 focus:ring-[#2375AC] focus:outline-none ${errors.confirmPassword ? "border-red-500" : "border-gray-300"}`}
+          className={`mb-1 w-full rounded-lg border px-4 py-2 focus:ring-2 focus:ring-[#2375AC] focus:outline-none ${errors.email ? "border-red-500" : "border-gray-300"}`}
         />
-        {errors.confirmPassword && (
-          <p className="mb-3 text-xs text-red-500">{errors.confirmPassword}</p>
-        )}
+        {errors.email && <p className="mb-3 text-xs text-red-500">{errors.email}</p>}
 
         <select
           name="role"
@@ -133,6 +139,21 @@ export default function RegisterPage() {
           <option value="WAREHOUSE_STAFF">WAREHOUSE_STAFF</option>
         </select>
         {errors.role && <p className="mb-3 text-xs text-red-500">{errors.role}</p>}
+
+        <select
+          name="department"
+          value={formData.department}
+          onChange={handleChange}
+          className={`mb-4 w-full rounded-lg border bg-white px-4 py-2 focus:ring-2 focus:ring-[#2375AC] focus:outline-none ${errors.department ? "border-red-500" : "border-gray-300"}`}
+        >
+          <option value="">Selecciona un departamento</option>
+          {DEPARTMENTS.map((d) => (
+            <option key={d} value={d}>
+              {d}
+            </option>
+          ))}
+        </select>
+        {errors.department && <p className="mb-3 text-xs text-red-500">{errors.department}</p>}
 
         <button
           type="submit"

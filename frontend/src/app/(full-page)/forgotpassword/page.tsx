@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import { ForgotPasswordRequest } from "@/types/auth";
+import { forgotPassword } from "@/services/authService";
 import { useRouter } from "next/navigation";
 import Button from "@/components/UI/Button";
 import Image from "next/image";
@@ -10,7 +12,7 @@ import { motion, useReducedMotion } from "framer-motion";
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
+  const [form, setForm] = useState<ForgotPasswordRequest>({ email: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const reduceMotion = useReducedMotion();
@@ -25,7 +27,7 @@ export default function ForgotPasswordPage() {
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
-    const emailError = validateEmail(email);
+    const emailError = validateEmail(form.email);
     if (emailError) newErrors.email = emailError;
     return newErrors;
   };
@@ -40,15 +42,18 @@ export default function ForgotPasswordPage() {
     setErrors({});
     setIsSubmitting(true);
     try {
-      await new Promise((r) => setTimeout(r, 1200));
+      const res = await forgotPassword(form);
       await showAutoAlert(
-        "Correo enviado",
-        "Se ha enviado un correo de recuperación. Revisa tu bandeja de entrada.",
-        "success",
+        res.success ? "Correo enviado" : "Error",
+        res.message ||
+          (res.success
+            ? "Se ha enviado un correo de recuperación. Revisa tu bandeja de entrada."
+            : "No se pudo enviar el correo de recuperación."),
+        res.success ? "success" : "error",
         2200,
         "top-end-auth",
       );
-      router.push("/login");
+      if (res.success) router.push("/login");
     } catch {
       setIsSubmitting(false);
       alert("Ocurrió un error. Intenta nuevamente.");
@@ -113,10 +118,8 @@ export default function ForgotPasswordPage() {
               type="email"
               name="email"
               autoComplete="email"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-              }}
+              value={form.email}
+              onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))}
               aria-invalid={errors.email ? true : undefined}
               aria-errormessage={errors.email ? "email-error" : undefined}
               aria-describedby={errors.email ? "email-error" : undefined}

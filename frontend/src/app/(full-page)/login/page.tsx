@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { LoginRequest } from "@/types/auth";
 import { useRouter } from "next/navigation";
 import { login } from "@/services/authService";
 import { showAlert, showAutoAlert } from "@/utils/showAlert";
@@ -13,20 +14,21 @@ import { motion, useReducedMotion } from "framer-motion";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { setUsername } = useAuth();
-  const [formData, setFormData] = useState({ username: "", password: "" });
+  const { setEmail } = useAuth();
+  const [formData, setFormData] = useState<LoginRequest>({ email: "", password: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [remember, setRemember] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const usernameRegex = /^[a-zA-Z0-9._]{4,20}$/;
+  const emailRegex =
+    /^(?:[a-zA-Z0-9_'^&\/+-])+(?:\.(?:[a-zA-Z0-9_'^&\/+-])+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     try {
-      const stored = localStorage.getItem("rememberedUsername");
+      const stored = localStorage.getItem("rememberedEmail");
       if (stored) {
-        setFormData((d) => ({ ...d, username: stored }));
+        setFormData((d) => ({ ...d, email: stored }));
         setRemember(true);
       }
     } catch {}
@@ -35,13 +37,13 @@ export default function LoginPage() {
   useEffect(() => {
     if (remember) {
       try {
-        const stored = localStorage.getItem("rememberedUsername");
+        const stored = localStorage.getItem("rememberedEmail");
         if (stored) {
-          setFormData((d) => ({ ...d, username: stored }));
+          setFormData((d) => ({ ...d, email: stored }));
         }
       } catch {}
     } else {
-      setFormData((d) => ({ ...d, username: "", password: "" }));
+      setFormData((d) => ({ ...d, email: "", password: "" }));
     }
   }, [remember]);
 
@@ -51,10 +53,10 @@ export default function LoginPage() {
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
-    if (!formData.username.trim()) {
-      newErrors.username = "El username es obligatorio.";
-    } else if (!usernameRegex.test(formData.username)) {
-      newErrors.username = "El username no tiene un formato válido.";
+    if (!formData.email.trim()) {
+      newErrors.email = "El correo es obligatorio.";
+    } else if (!emailRegex.test(formData.email)) {
+      newErrors.email = "El correo no tiene un formato válido.";
     }
     if (!formData.password.trim()) {
       newErrors.password = "La contraseña es obligatoria.";
@@ -76,18 +78,18 @@ export default function LoginPage() {
     setIsSubmitting(true);
 
     try {
-      const { username } = await login(formData);
+      const { email } = await login(formData);
       if (remember) {
         try {
-          localStorage.setItem("rememberedUsername", formData.username);
+          localStorage.setItem("rememberedEmail", formData.email);
         } catch {}
       } else {
-        // Remove stored username on submit if not remembering
+        // Remove stored email on submit if not remembering
         try {
-          localStorage.removeItem("rememberedUsername");
+          localStorage.removeItem("rememberedEmail");
         } catch {}
       }
-      setUsername(username ?? null);
+      setEmail(email ?? null);
       document.cookie = "loggedIn=true; path=/;";
       await showAutoAlert(
         "¡Bienvenido!",
@@ -104,7 +106,7 @@ export default function LoginPage() {
 
       if ((err as AxiosError).response?.status === 400) {
         // const backendMessage = (err as AxiosError<{ message?: string }>)?.response?.data?.message;
-        message = "Nombre de usuario o contraseña incorrectos.";
+        message = "Correo o contraseña incorrectos.";
       } else if (err instanceof Error && err.message) {
         message = err.message;
       }
@@ -133,7 +135,7 @@ export default function LoginPage() {
         <h1 className="text-center text-[34px] leading-[44px] font-normal text-[color:var(--color-primary-500)]">
           Bienvenido
         </h1>
-        {/* Usuario */}
+        {/* Correo */}
         <div className="flex w-full flex-col gap-2">
           <div className="relative w-full">
             <span className="pointer-events-none absolute top-1/2 left-3 inline-flex -translate-y-1/2 items-center justify-center">
@@ -160,25 +162,25 @@ export default function LoginPage() {
               </svg>
             </span>
             <input
-              id="username"
-              type="text"
-              name="username"
-              autoComplete="off"
+              id="email"
+              type="email"
+              name="email"
+              autoComplete="email"
               autoCorrect="off"
               autoCapitalize="none"
-              value={formData.username}
+              value={formData.email}
               onChange={handleChange}
-              aria-invalid={!!errors.username || undefined}
-              aria-describedby={errors.username ? "username-error" : undefined}
+              aria-invalid={!!errors.email || undefined}
+              aria-describedby={errors.email ? "email-error" : undefined}
               className={`box-border h-[36px] w-full rounded-[3px] border bg-[#FAFBFC] pr-3 pl-[38px] text-[14px] leading-[20px] font-normal text-[color:var(--color-primary-500)] outline-none placeholder:leading-[20px] placeholder:font-[var(--font-secondary)] placeholder:text-[#97A0AF] focus:ring-2 focus:ring-[color:var(--color-primary-500)] ${
-                errors.username ? "border-red-500" : "border-[#DFE1E6]"
+                errors.email ? "border-red-500" : "border-[#DFE1E6]"
               }`}
-              placeholder="Ingresa tu usuario"
+              placeholder="Ingresa tu correo"
             />
           </div>
-          {errors.username && (
-            <p id="username-error" className="text-xs font-medium text-red-500" role="alert">
-              {errors.username}
+          {errors.email && (
+            <p id="email-error" className="text-xs font-medium text-red-500" role="alert">
+              {errors.email}
             </p>
           )}
         </div>
