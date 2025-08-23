@@ -5,6 +5,9 @@ import com.Incamar.IncaCore.documentation.serviceTicket.*;
 import com.Incamar.IncaCore.dtos.serviceTicket.ServiceTicketRequestDto;
 import com.Incamar.IncaCore.dtos.serviceTicket.ServiceTicketResponseDto;
 import com.Incamar.IncaCore.dtos.users.JwtDataDto;
+import com.Incamar.IncaCore.exceptions.ResourceNotFoundException;
+import com.Incamar.IncaCore.models.User;
+import com.Incamar.IncaCore.repositories.UserRepository;
 import com.Incamar.IncaCore.services.impl.ServiceTicketServiceImpl;
 import com.Incamar.IncaCore.utils.ApiResult;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -41,7 +44,7 @@ public class ServiceTicketController {
         return ResponseEntity.ok(boleta.getBoletaServicioById(id));
     }
 
-    @CreateServiceTicketEndpointDoc
+/*    @CreateServiceTicketEndpointDoc
     @PreAuthorize("hasAnyRole('ADMIN','PATRON','SUPERVISOR')")
     @PostMapping
     public ResponseEntity<ApiResult<?>> create(
@@ -49,6 +52,18 @@ public class ServiceTicketController {
             Authentication authentication
     ) {
         JwtDataDto jwtDataDto = (JwtDataDto) authentication.getPrincipal();
+        ServiceTicketResponseDto created = boleta.createBoletaServicio(dto, jwtDataDto);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResult.success(created, "Boleta de servicio creada correctamente."));
+    }*/
+
+    @CreateServiceTicketEndpointDoc
+    @PreAuthorize("hasAnyRole('ADMIN','PATRON','SUPERVISOR')")
+    @PostMapping
+    public ResponseEntity<ApiResult<?>> create(
+            @Validated(ServiceTicketRequestDto.Create.class) @RequestBody ServiceTicketRequestDto dto,
+            JwtDataDto jwtDataDto) {
+
         ServiceTicketResponseDto created = boleta.createBoletaServicio(dto, jwtDataDto);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResult.success(created, "Boleta de servicio creada correctamente."));
