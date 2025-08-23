@@ -19,8 +19,8 @@ import java.lang.annotation.*;
 @Operation(
         summary = "Obtener orden de mantenimiento por ID",
         description = """
-        Devuelve los detalles de una orden de mantenimiento específica mediante su ID. \
-        Accesible para usuarios con roles: <strong>WAREHOUSE_STAFF, OPERATIONS_MANAGER o ADMIN.</strong>
+        Devuelve los detalles de una orden de mantenimiento específica mediante su ID. \s
+        Accesible para usuarios con roles: <strong>ADMIN, SUPERVISOR o OPERADOR</strong>
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )
@@ -36,16 +36,15 @@ import java.lang.annotation.*;
                   "message": "Orden de Mantenimiento encontrada exitosamente.",
                   "data": {
                      "id": 2,
-                     "embarcacionNombre": "Marinera",
-                     "tipoMantenimiento": "PREVENTIVO",
-                     "estado": "SOLICITADO",
-                     "encargadoMantenimientoUsername": "juan.perez_94",
-                     "fechaEmision":"...",
-                     "fechaProgramada":"...",
-                     "fechaInicio":"...",
-                     "fechaFin":"...",
-                     "motivoMantenimiento": "...",
-
+                     "vesselName": "Marinera",
+                     "maintenanceType": "PREVENTIVO",
+                     "status": "SOLICITADO",
+                     "maintenanceManager": "Juan Perez",
+                     "maintenanceReason": "...",
+                     "issuedAt":"...",
+                     "scheduledAt":"...",
+                     "startedAt":"...",
+                     "finishedAt":"...",
                   }
                 }
                 """)

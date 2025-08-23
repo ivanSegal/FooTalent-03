@@ -19,8 +19,8 @@ import java.lang.annotation.*;
 @Operation(
         summary = "Obtener todas las ordenes de mantenimiento",
         description = """
-        Retorna una lista completa de ordenes de mantenimiento registradas en el sistema. \
-        Accesible para usuarios con roles: <strong>WAREHOUSE_STAFF, OPERATIONS_MANAGER, o ADMIN.</strong>
+        Retorna una lista completa de ordenes de mantenimiento registradas en el sistema. \s
+        Accesible para usuarios con roles: <strong>ADMIN, SUPERVISOR o OPERADOR</strong>
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )
@@ -35,27 +35,27 @@ import java.lang.annotation.*;
                   "content": [
                     {
                        "id": 1,
-                       "embarcacionNombre": "Marinera",
-                       "tipo_mantenimiento": "PREVENTIVO",
-                       "estado": "SOLICITADO",
-                       "encargadoMantenimientoUsername": "juan.perez_94",
-                       "fechaEmision":"...",
-                       "fechaProgramada":"...",
-                       "fechaInicio":"...",
-                       "fechaFin":"...",
-                       "motivoMantenimiento": "...",
+                       "vesselName": "Marinera",
+                       "maintenanceType": "PREVENTIVO",
+                       "status": "SOLICITADO",
+                       "maintenanceManager": "Juan Perez",
+                       "maintenanceReason": "...",
+                       "issuedAt":"...",
+                       "scheduledAt":"...",
+                       "startedAt":"...",
+                       "finishedAt":"...",
                     },
                     {
                        "id": 2,
-                       "embarcacionNombre": "Marinera",
-                       "tipoMantenimiento": "CORRECTIVO",
-                       "estado": "FINALIZADO",
-                       "encargadoMantenimientoUsername": "juan.perez_94",
-                       "fechaEmision":"...",
-                       "fechaProgramada":"...",
-                       "fechaInicio":"...",
-                       "fechaFin":"...",
-                       "motivoMantenimiento": "...",
+                       "vesselName": "Marinera",
+                       "maintenanceType": "CORRECTIVO",
+                       "status": "FINALIZADO",
+                       "maintenanceManager": "Juan Perez",
+                       "maintenanceReason":"...",
+                       "issuedAt":"...",
+                       "scheduledAt":"...",
+                       "startedAt":"...",
+                       "finishedAt": "...",
                     }
                   ],
                   "pageable": {
@@ -121,8 +121,7 @@ import java.lang.annotation.*;
         ),
         @ApiResponse(
                 responseCode = "404",
-                description = "Recurso no encontrado (en este contexto podría aplicarse si no hay ordenes de " +
-                        "mantenimiento registradas)",
+                description = "Recurso no encontrado (aplica si no hay ordenes registradas)",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(example = """
