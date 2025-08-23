@@ -4,8 +4,10 @@ import React, { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { resetPassword } from "@/services/authService";
 import { ResetPasswordRequest } from "@/types/auth";
-import Button from "@/components/UI/Button";
 import { showAlert, showAutoAlert } from "@/utils/showAlert";
+import { Button, Card, Form, Input, Typography } from "antd";
+import Image from "next/image";
+import LogoLogin from "@/assets/images/LogoLogin.png";
 
 export default function VerifyEmailResetPasswordPage() {
   const router = useRouter();
@@ -35,8 +37,7 @@ export default function VerifyEmailResetPasswordPage() {
     return e;
   };
 
-  const onSubmit = async (ev: React.FormEvent) => {
-    ev.preventDefault();
+  const onSubmit = async () => {
     const e = validate();
     if (Object.keys(e).length) {
       setErrors(e);
@@ -63,53 +64,91 @@ export default function VerifyEmailResetPasswordPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4 py-12">
-      <form
-        onSubmit={onSubmit}
-        className="w-full max-w-md rounded-xl bg-white p-6 shadow"
-        noValidate
-      >
-        <h1 className="mb-4 text-center text-2xl font-semibold text-[color:var(--color-primary-500)]">
-          Restablecer contraseña
-        </h1>
+    <div className="flex min-h-screen w-full items-center justify-center p-4 sm:p-10">
+      <Card className="w-[520px] max-w-full" styles={{ body: { padding: 32 } }}>
+        <div className="mb-4 flex w-full flex-col items-center gap-2 text-center">
+          <Image src={LogoLogin} alt="Logo IncaCore" className="h-[96px] w-auto" priority />
+          <Typography.Title level={1} style={{ margin: 0, color: "var(--color-primary-500)" }}>
+            Restablecer contraseña
+          </Typography.Title>
+        </div>
+
         {!token && (
-          <p className="mb-4 text-sm text-red-600">El enlace es inválido o no incluye token.</p>
+          <Typography.Text type="danger" style={{ marginBottom: 12, display: "block" }}>
+            El enlace es inválido o no incluye token.
+          </Typography.Text>
         )}
 
-        <div className="mb-3">
-          <input
-            type="password"
-            name="newPassword"
-            placeholder="Nueva contraseña"
-            value={form.newPassword}
-            onChange={(e) => setForm((p) => ({ ...p, newPassword: e.target.value }))}
-            className={`w-full rounded border px-3 py-2 ring-2 focus:outline-none ${
-              errors.newPassword ? "border-red-500" : "border-gray-300"
-            }`}
-          />
-          {errors.newPassword && <p className="mt-1 text-xs text-red-600">{errors.newPassword}</p>}
-        </div>
+        <Form layout="vertical" onFinish={onSubmit} requiredMark={false} autoComplete="off">
+          <Form.Item
+            label="Nueva contraseña"
+            validateStatus={errors.newPassword ? "error" : ""}
+            help={errors.newPassword}
+          >
+            <Input.Password
+              name="newPassword"
+              placeholder="Nueva contraseña"
+              value={form.newPassword}
+              onChange={(e) => setForm((p) => ({ ...p, newPassword: e.target.value }))}
+              size="large"
+              prefix={
+                <svg
+                  width="17"
+                  height="17"
+                  viewBox="0 0 17 17"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden
+                >
+                  <path
+                    d="M7.82421 9.17291V9.17291C6.57957 7.92774 4.56056 7.92822 3.31592 9.17339V9.17339C2.0715 10.4183 2.07102 12.4367 3.31544 13.6817V13.6817C4.56062 14.9274 6.58 14.9274 7.82517 13.6817V13.6817C9.06959 12.4367 9.06863 10.4179 7.82421 9.17291V9.17291ZM7.82421 9.17291L12.332 4.66319M14.5859 2.40833L13.8346 3.15995M13.8346 3.15995L14.8364 4.16211M13.8346 3.15995L12.332 4.66319M12.332 4.66319L14.085 6.41697"
+                    stroke="#49649B"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              }
+            />
+          </Form.Item>
 
-        <div className="mb-6">
-          <input
-            type="password"
-            name="confirmPassword"
-            placeholder="Confirmar contraseña"
-            value={form.confirmPassword}
-            onChange={(e) => setForm((p) => ({ ...p, confirmPassword: e.target.value }))}
-            className={`w-full rounded border px-3 py-2 ring-2 focus:outline-none ${
-              errors.confirmPassword ? "border-red-500" : "border-gray-300"
-            }`}
-          />
-          {errors.confirmPassword && (
-            <p className="mt-1 text-xs text-red-600">{errors.confirmPassword}</p>
-          )}
-        </div>
+          <Form.Item
+            label="Confirmar contraseña"
+            validateStatus={errors.confirmPassword ? "error" : ""}
+            help={errors.confirmPassword}
+          >
+            <Input.Password
+              name="confirmPassword"
+              placeholder="Confirmar contraseña"
+              value={form.confirmPassword}
+              onChange={(e) => setForm((p) => ({ ...p, confirmPassword: e.target.value }))}
+              size="large"
+              prefix={
+                <svg
+                  width="17"
+                  height="17"
+                  viewBox="0 0 17 17"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden
+                >
+                  <path
+                    d="M7.82421 9.17291V9.17291C6.57957 7.92774 4.56056 7.92822 3.31592 9.17339V9.17339C2.0715 10.4183 2.07102 12.4367 3.31544 13.6817V13.6817C4.56062 14.9274 6.58 14.9274 7.82517 13.6817V13.6817C9.06959 12.4367 9.06863 10.4179 7.82421 9.17291V9.17291ZM7.82421 9.17291L12.332 4.66319M14.5859 2.40833L13.8346 3.15995M13.8346 3.15995L14.8364 4.16211M13.8346 3.15995L12.332 4.66319M12.332 4.66319L14.085 6.41697"
+                    stroke="#49649B"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              }
+            />
+          </Form.Item>
 
-        <Button type="submit" severity="tertiary" appearance="solid" loading={submitting} fullWidth>
-          {submitting ? "Enviando..." : "Restablecer contraseña"}
-        </Button>
-      </form>
+          <Button type="primary" htmlType="submit" loading={submitting} block size="large">
+            {submitting ? "Enviando..." : "Restablecer contraseña"}
+          </Button>
+        </Form>
+      </Card>
     </div>
   );
 }
