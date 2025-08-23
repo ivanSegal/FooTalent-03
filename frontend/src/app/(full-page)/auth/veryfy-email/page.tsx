@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { resetPassword } from "@/services/authService";
 import { ResetPasswordRequest } from "@/types/auth";
 import { showAlert, showAutoAlert } from "@/utils/showAlert";
+import type { NormalizedApiError } from "@/types/api";
 import { Button, Card, Form, Input, Typography } from "antd";
 import Image from "next/image";
 import LogoLogin from "@/assets/images/LogoLogin.png";
@@ -56,8 +57,21 @@ export default function VerifyEmailResetPasswordPage() {
         "top-end-auth",
       );
       if (res.success) router.push("/login");
-    } catch {
-      showAlert("Error", "Ocurrió un error inesperado. Intenta nuevamente.", "error");
+    } catch (err: unknown) {
+      const apiErr = err as NormalizedApiError;
+      if (apiErr?.fieldErrors) {
+        const map: Record<string, string> = {};
+        for (const [key, msg] of Object.entries(apiErr.fieldErrors)) {
+          const localKey = key === "password" ? "newPassword" : key;
+          if (localKey === "newPassword" || localKey === "confirmPassword") map[localKey] = msg;
+        }
+        if (Object.keys(map).length) setErrors(map);
+      }
+      showAlert(
+        "Error",
+        apiErr?.message || "Ocurrió un error inesperado. Intenta nuevamente.",
+        "error",
+      );
     } finally {
       setSubmitting(false);
     }

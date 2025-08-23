@@ -5,7 +5,7 @@ import { LoginRequest } from "@/types/auth";
 import { useRouter } from "next/navigation";
 import { login } from "@/services/authService";
 import { showAlert, showAutoAlert } from "@/utils/showAlert";
-import { AxiosError } from "axios";
+import type { NormalizedApiError } from "@/types/api";
 import { useAuth } from "@/contexts/AuthContext";
 import Image from "next/image";
 import LogoLogin from "@/assets/images/LogoLogin.png";
@@ -98,16 +98,18 @@ export default function LoginPage() {
       );
       router.push("/dashboard?logged=true");
     } catch (err: unknown) {
-      setIsSubmitting(false);
-
-      let message = "Ha ocurrido un error inesperado. Intenta nuevamente.";
-
-      if ((err as AxiosError).response?.status === 400) {
-        message = "Correo o contraseña incorrectos.";
-      } else if (err instanceof Error && err.message) {
-        message = err.message;
+      const apiErr = err as NormalizedApiError;
+      // Map field-level errors if provided by backend
+      if (apiErr?.fieldErrors) {
+        const map: Record<string, string> = {};
+        for (const [key, msg] of Object.entries(apiErr.fieldErrors)) {
+          const localKey =
+            key === "username" || key === "user" ? "email" : key === "pass" ? "password" : key;
+          if (localKey === "email" || localKey === "password") map[localKey] = msg;
+        }
+        if (Object.keys(map).length) setErrors(map);
       }
-
+      const message = apiErr?.message || "Ha ocurrido un error inesperado. Intenta nuevamente.";
       showAlert("Error al iniciar sesión", message, "error");
       return;
     } finally {

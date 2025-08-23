@@ -6,7 +6,8 @@ import { forgotPassword } from "@/services/authService";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import LogoLogin from "@/assets/images/LogoLogin.png";
-import { showAutoAlert } from "@/utils/showAlert";
+import { showAlert, showAutoAlert } from "@/utils/showAlert";
+import type { NormalizedApiError } from "@/types/api";
 import { motion, useReducedMotion } from "framer-motion";
 import { Button, Card, Form, Input, Typography } from "antd";
 
@@ -53,9 +54,16 @@ export default function ForgotPasswordPage() {
         "top-end-auth",
       );
       if (res.success) router.push("/login");
-    } catch {
-      setIsSubmitting(false);
-      alert("Ocurrió un error. Intenta nuevamente.");
+    } catch (err: unknown) {
+      const apiErr = err as NormalizedApiError;
+      if (apiErr?.fieldErrors?.email) {
+        setErrors({ email: apiErr.fieldErrors.email });
+      }
+      showAlert(
+        "No se pudo enviar el correo",
+        apiErr?.message || "Ocurrió un error. Intenta nuevamente.",
+        "error",
+      );
     } finally {
       setIsSubmitting(false);
     }

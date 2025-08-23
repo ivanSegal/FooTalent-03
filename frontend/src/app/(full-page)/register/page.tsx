@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 // import fondo from "@/assets/images/fondo.png";
 import { register } from "@/services/authService";
 import { showAutoAlert, showAlert } from "@/utils/showAlert";
+import type { NormalizedApiError } from "@/types/api";
 
 import { RegisterRequest } from "@/types/auth";
 import { Button, Card, Form, Input, Select, Typography } from "antd";
@@ -88,9 +89,29 @@ export default function RegisterPage() {
         "top-end-auth",
       );
       router.push("/login");
-    } catch {
-      const message = "Ha ocurrido un error inesperado. Intenta nuevamente.";
-      showAlert("Registro fallido", message, "error");
+    } catch (err: unknown) {
+      const apiErr = err as NormalizedApiError;
+      if (apiErr?.fieldErrors) {
+        const map: Record<string, string> = {};
+        for (const [key, msg] of Object.entries(apiErr.fieldErrors)) {
+          // Map backend fields to local state keys if needed
+          const localKey =
+            key === "username"
+              ? "email"
+              : key === "first_name"
+                ? "firstName"
+                : key === "last_name"
+                  ? "lastName"
+                  : key;
+          if (localKey in formData) map[localKey as keyof typeof formData] = msg;
+        }
+        if (Object.keys(map).length) setErrors(map);
+      }
+      showAlert(
+        "Registro fallido",
+        apiErr?.message || "Ha ocurrido un error inesperado. Intenta nuevamente.",
+        "error",
+      );
     } finally {
       setIsLoading(false);
     }
