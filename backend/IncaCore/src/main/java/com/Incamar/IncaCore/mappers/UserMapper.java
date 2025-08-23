@@ -32,8 +32,10 @@ public interface UserMapper {
     }
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    //@Mapping(target = "email", source = "dto.email")
     @Mapping(target = "role", source = "dto.role")
+    @Mapping(target = "department", source = "dto.department")
     @Mapping(target = "accountStatus", source = "dto.accountStatus")
+    @Mapping(target = "employee.firstName", source = "dto.firstName")
+    @Mapping(target = "employee.lastName", source = "dto.lastName")
     void updateUserFromDto(UpdateUserReq dto, @MappingTarget User user);
 }
