@@ -94,11 +94,7 @@ export default function VerifyEmailResetPasswordPage() {
         )}
 
         <Form layout="vertical" onFinish={onSubmit} requiredMark={false} autoComplete="off">
-          <Form.Item
-            label="Nueva contraseña"
-            validateStatus={errors.newPassword ? "error" : ""}
-            help={errors.newPassword}
-          >
+          <Form.Item validateStatus={errors.newPassword ? "error" : ""} help={errors.newPassword}>
             <Input.Password
               name="newPassword"
               placeholder="Nueva contraseña"
@@ -127,7 +123,6 @@ export default function VerifyEmailResetPasswordPage() {
           </Form.Item>
 
           <Form.Item
-            label="Confirmar contraseña"
             validateStatus={errors.confirmPassword ? "error" : ""}
             help={errors.confirmPassword}
           >

@@ -9,29 +9,30 @@ import {
   PlusOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
-import type { Dayjs } from "dayjs"; // use only Dayjs type
-import type { MantenimientoItem } from "@/features/mantenimiento";
+import type { Dayjs } from "dayjs";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import type { MaintenanceListItem } from "@/features/maintenance";
+
+dayjs.extend(customParseFormat);
 
 interface Props {
-  items: MantenimientoItem[];
-  onSelect?: (item: MantenimientoItem) => void; // legado (click fila)
-  onView?: (item: MantenimientoItem) => void;
-  onEdit?: (item: MantenimientoItem) => void;
-  onDelete?: (item: MantenimientoItem) => void;
-  onCreate?: () => void; // nuevo
+  items: MaintenanceListItem[];
+  onSelect?: (item: MaintenanceListItem) => void;
+  onView?: (item: MaintenanceListItem) => void;
+  onEdit?: (item: MaintenanceListItem) => void;
+  onDelete?: (item: MaintenanceListItem) => void;
+  onCreate?: () => void;
 }
 
-const estadoColor: Record<string, string> = {
-  pendiente: "orange",
-  en_progreso: "blue",
-  completado: "green",
+const statusColor: Record<string, string> = {
+  SOLICITADO: "orange",
+  PROGRAMADO: "gold",
+  EN_PROGRESO: "blue",
+  FINALIZADO: "green",
 };
 
-const formatDate = (d?: string) => (d ? new Date(d).toLocaleDateString() : "-");
-const formatCurrency = (v?: number) =>
-  typeof v === "number"
-    ? new Intl.NumberFormat("es-ES", { style: "currency", currency: "USD" }).format(v)
-    : "-";
+const displayDate = (d?: string | null) => (d ? d : "-");
 
 export const MantenimientoList: React.FC<Props> = ({
   items,
@@ -42,7 +43,7 @@ export const MantenimientoList: React.FC<Props> = ({
   onCreate,
 }) => {
   const [search, setSearch] = useState("");
-  const [estadoFilter, setEstadoFilter] = useState<string | undefined>(undefined);
+  const [statusFilter, setStatusFilter] = useState<string | undefined>(undefined);
   const [fechaProgRange, setFechaProgRange] = useState<[Dayjs, Dayjs] | null>(null);
 
   const filtered = useMemo(() => {
@@ -50,92 +51,99 @@ export const MantenimientoList: React.FC<Props> = ({
     return items.filter((i) => {
       const matchesSearch =
         !term ||
-        i.tarea.toLowerCase().includes(term) ||
-        i.embarcacion.toLowerCase().includes(term) ||
-        (i.responsable?.toLowerCase().includes(term) ?? false);
-      const matchesEstado = !estadoFilter || i.estado === estadoFilter;
+        (i.maintenanceReason || i.maintenanceType || "").toLowerCase().includes(term) ||
+        i.vesselName.toLowerCase().includes(term) ||
+        (i.maintenanceManager || "").toLowerCase().includes(term);
+      const matchesStatus = !statusFilter || i.status === statusFilter;
       const matchesFechaProg =
-        !fechaProgRange || !i.fechaProgramada
-          ? !fechaProgRange // si hay rango pero el item no tiene fecha -> excluye
+        !fechaProgRange || !i.scheduledAt
+          ? !fechaProgRange
           : (() => {
-              const d = new Date(i.fechaProgramada as string).getTime();
+              const d = dayjs(i.scheduledAt, "DD-MM-YYYY", true).valueOf();
               const start = fechaProgRange[0].startOf("day").valueOf();
               const end = fechaProgRange[1].endOf("day").valueOf();
               return d >= start && d <= end;
             })();
-      return matchesSearch && matchesEstado && matchesFechaProg;
+      return matchesSearch && matchesStatus && matchesFechaProg;
     });
-  }, [items, search, estadoFilter, fechaProgRange]);
+  }, [items, search, statusFilter, fechaProgRange]);
 
-  const columns: ColumnsType<MantenimientoItem> = [
+  const columns: ColumnsType<MaintenanceListItem> = [
     {
       title: "Tarea",
-      dataIndex: "tarea",
-      key: "tarea",
-      render: (text: string, record: MantenimientoItem) => (
+      dataIndex: "maintenanceReason",
+      key: "maintenanceReason",
+      render: (_: unknown, record: MaintenanceListItem) => (
         <div className="flex flex-col">
-          <span className="font-medium text-gray-800">{text}</span>
-          <span className="text-xs text-gray-500">Embarcación: {record.embarcacion}</span>
+          <span className="font-medium text-gray-800">
+            {record.maintenanceReason || record.maintenanceType}
+          </span>
+          <span className="text-xs text-gray-500">Embarcación: {record.vesselName}</span>
         </div>
       ),
     },
     {
       title: "Responsable",
-      dataIndex: "responsable",
-      key: "responsable",
-      render: (v: MantenimientoItem["responsable"]) =>
+      dataIndex: "maintenanceManager",
+      key: "maintenanceManager",
+      render: (v: MaintenanceListItem["maintenanceManager"]) =>
         v || <span className="text-gray-400">—</span>,
       responsive: ["md"],
     },
     {
-      title: "Programado",
-      dataIndex: "fechaProgramada",
-      key: "fechaProgramada",
-      render: (v: MantenimientoItem["fechaProgramada"]) => formatDate(v),
+      title: "Emitido",
+      dataIndex: "issuedAt",
+      key: "issuedAt",
+      render: (v: MaintenanceListItem["issuedAt"]) => displayDate(v),
       responsive: ["lg"],
     },
     {
-      title: "Real",
-      dataIndex: "fechaReal",
-      key: "fechaReal",
-      render: (v: MantenimientoItem["fechaReal"]) => formatDate(v),
+      title: "Programado",
+      dataIndex: "scheduledAt",
+      key: "scheduledAt",
+      render: (v: MaintenanceListItem["scheduledAt"]) => displayDate(v),
+      responsive: ["lg"],
+    },
+    {
+      title: "Inicio",
+      dataIndex: "startedAt",
+      key: "startedAt",
+      render: (v: MaintenanceListItem["startedAt"]) => displayDate(v),
+      responsive: ["lg"],
+    },
+    {
+      title: "Fin",
+      dataIndex: "finishedAt",
+      key: "finishedAt",
+      render: (v: MaintenanceListItem["finishedAt"]) => displayDate(v),
       responsive: ["lg"],
     },
     {
       title: "Estado",
-      dataIndex: "estado",
-      key: "estado",
+      dataIndex: "status",
+      key: "status",
       filters: [
-        { text: "Pendiente", value: "pendiente" },
-        { text: "En progreso", value: "en_progreso" },
-        { text: "Completado", value: "completado" },
+        { text: "Solicitado", value: "SOLICITADO" },
+        { text: "Programado", value: "PROGRAMADO" },
+        { text: "En progreso", value: "EN_PROGRESO" },
+        { text: "Finalizado", value: "FINALIZADO" },
       ],
-      filteredValue: estadoFilter ? [estadoFilter] : null,
-      onFilter: (value: unknown, record: MantenimientoItem) => record.estado === value,
-      render: (estado: MantenimientoItem["estado"]) =>
-        estado ? (
-          <Tag color={estadoColor[estado]} className="rounded px-2 py-0.5 text-xs font-medium">
-            {estado.replace(/_/g, " ")}
-          </Tag>
-        ) : (
-          <span className="text-gray-400">—</span>
-        ),
-    },
-    {
-      title: "Costo",
-      dataIndex: "costo",
-      key: "costo",
-      align: "right" as const,
-      render: (v: MantenimientoItem["costo"]) => (
-        <span className="font-medium">{formatCurrency(v)}</span>
+      filteredValue: statusFilter ? [statusFilter] : null,
+      onFilter: (value: unknown, record: MaintenanceListItem) => record.status === value,
+      render: (status: MaintenanceListItem["status"]) => (
+        <Tag
+          color={statusColor[status] || "default"}
+          className="rounded px-2 py-0.5 text-xs font-medium"
+        >
+          {status.replace(/_/g, " ")}
+        </Tag>
       ),
-      responsive: ["md"],
     },
     {
       title: "Acciones",
       key: "acciones",
       align: "right" as const,
-      render: (_: unknown, record: MantenimientoItem) => (
+      render: (_: unknown, record: MaintenanceListItem) => (
         <Space size="small" onClick={(e) => e.stopPropagation()}>
           <Tooltip title="Ver">
             <Button
@@ -188,12 +196,13 @@ export const MantenimientoList: React.FC<Props> = ({
                 <FilterOutlined /> Estado
               </span>
             }
-            value={estadoFilter}
-            onChange={(v) => setEstadoFilter(v)}
+            value={statusFilter}
+            onChange={(v) => setStatusFilter(v)}
             options={[
-              { label: "Pendiente", value: "pendiente" },
-              { label: "En progreso", value: "en_progreso" },
-              { label: "Completado", value: "completado" },
+              { label: "Solicitado", value: "SOLICITADO" },
+              { label: "Programado", value: "PROGRAMADO" },
+              { label: "En progreso", value: "EN_PROGRESO" },
+              { label: "Finalizado", value: "FINALIZADO" },
             ]}
           />
           <DatePicker.RangePicker
@@ -208,7 +217,7 @@ export const MantenimientoList: React.FC<Props> = ({
         </div>
         <div className="flex justify-end">
           <Button type="primary" icon={<PlusOutlined />} onClick={onCreate}>
-            Nuevo mantenimiento
+            Nueva orden
           </Button>
         </div>
       </div>

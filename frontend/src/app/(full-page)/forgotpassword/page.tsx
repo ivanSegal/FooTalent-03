@@ -92,11 +92,7 @@ export default function ForgotPasswordPage() {
         </div>
 
         <Form layout="vertical" onFinish={handleSubmit} requiredMark={false} autoComplete="off">
-          <Form.Item
-            label="Correo"
-            validateStatus={errors.email ? "error" : ""}
-            help={errors.email}
-          >
+          <Form.Item validateStatus={errors.email ? "error" : ""} help={errors.email}>
             <Input
               id="email"
               name="email"
