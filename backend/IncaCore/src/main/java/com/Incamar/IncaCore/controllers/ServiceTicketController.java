@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/boleta-servicio")
-@Tag(name = "05 - Boleta de servicio", description = "Endpoints para la gestión de boletas de servicio para embarcaciones.")
+@Tag(name = "06 - Boleta de servicio", description = "Endpoints para la gestión de boletas de servicio para embarcaciones.")
 @RequiredArgsConstructor
 public class ServiceTicketController {
 
@@ -45,11 +45,8 @@ public class ServiceTicketController {
     @PreAuthorize("hasAnyRole('ADMIN','PATRON','SUPERVISOR')")
     @PostMapping
     public ResponseEntity<ApiResult<?>> create(
-            @Validated(ServiceTicketRequestDto.Create.class) @RequestBody ServiceTicketRequestDto dto,
-            Authentication authentication
-    ) {
-        JwtDataDto jwtDataDto = (JwtDataDto) authentication.getPrincipal();
-        ServiceTicketResponseDto created = boleta.createBoletaServicio(dto, jwtDataDto);
+            @Validated(ServiceTicketRequestDto.Create.class) @RequestBody ServiceTicketRequestDto dto) {
+        ServiceTicketResponseDto created = boleta.createBoletaServicio(dto);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResult.success(created, "Boleta de servicio creada correctamente."));
     }

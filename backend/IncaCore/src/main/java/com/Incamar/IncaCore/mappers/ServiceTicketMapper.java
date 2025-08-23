@@ -24,7 +24,8 @@ public interface ServiceTicketMapper {
     void updateFromDto(ServiceTicketRequestDto dto, @MappingTarget ServiceTicket target);
 
     @Mapping(target = "boatName", source = "boat.name")
-    @Mapping(target = "responsibleUsername", source = "responsible.employee.firstName")
+    @Mapping(target = "responsibleUsername",
+            expression = "java(entity.getResponsible().getEmployee().getFirstName() + \" \" + entity.getResponsible().getEmployee().getLastName())")
     ServiceTicketResponseDto toDTO(ServiceTicket entity);
 /*
     // Regex para AAA-00-0 .. AAAA-00-0000 y capturar el bloque final
