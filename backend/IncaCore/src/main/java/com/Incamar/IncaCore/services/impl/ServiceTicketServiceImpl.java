@@ -13,6 +13,7 @@ import com.Incamar.IncaCore.repositories.VesselRepository;
 import com.Incamar.IncaCore.repositories.UserRepository;
 import com.Incamar.IncaCore.services.ServiceTicketService;
 import jakarta.validation.ValidationException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,14 +23,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
+@RequiredArgsConstructor
 public class ServiceTicketServiceImpl implements ServiceTicketService {
 
-    @Autowired
-    ServiceTicketRepository serviceTicketRepository;
-    @Autowired UserRepository userRepository;
-    @Autowired VesselRepository vesselRepository;
-    @Autowired
-    ServiceTicketMapper mapper;
+
+    private final ServiceTicketRepository serviceTicketRepository;
+    private final UserRepository userRepository;
+    private final VesselRepository vesselRepository;
+    private final ServiceTicketMapper mapper;
+    private final AuthServiceImpl authService;
 
     // Regex para AAA-00-0 .. AAAA-00-0000, capturando el último bloque numérico
     private static final Pattern REPORT_TRAVEL_PATTERN =
@@ -48,13 +50,12 @@ public class ServiceTicketServiceImpl implements ServiceTicketService {
     }
 
     @Override
-    public ServiceTicketResponseDto createBoletaServicio(ServiceTicketRequestDto requestDto, JwtDataDto jwtDataDto) {
+    public ServiceTicketResponseDto createBoletaServicio(ServiceTicketRequestDto requestDto) {
 
         Vessel boat = vesselRepository.findById(requestDto.getBoatId())
                 .orElseThrow(() -> new ResourceNotFoundException("Embarcación asociada a la boleta de servicio no encontrada."));
-        User responsible = userRepository.findById(jwtDataDto.id())
-                .orElseThrow(() -> new ResourceNotFoundException("Usuario asociado a la boleta de servicio no encontrado."));
 
+        User responsible = authService.getAuthenticatedUser().orElseThrow(()->new  ResourceNotFoundException("Usuario no encontraado"));
 
         validateTravelConsistency(requestDto.getTravelNro(), requestDto.getReportTravelNro());
 

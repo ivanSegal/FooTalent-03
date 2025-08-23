@@ -48,12 +48,9 @@ public class MaintenanceOrder {
             nullable = false,
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime issuedAt = LocalDateTime.now();*/
-    @Column(name = "issuedAt",
-            updatable = false,
-            insertable = false,
-            nullable = false,
-            columnDefinition = "DATE DEFAULT CURRENT_DATE")
-    private LocalDate issuedAt = LocalDate.now();
+
+    @Column(name = "issuedAt", nullable = false, updatable = false)
+    private LocalDate issuedAt;
     /*@Column(name = "scheduled_at",
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime scheduledAt;
@@ -72,4 +69,9 @@ public class MaintenanceOrder {
 
     @Column(name = "maintenance_reason")
     private String maintenanceReason;
+
+    @PrePersist
+    protected void onCreate() {
+        issuedAt = LocalDate.now();
+    }
 }
