@@ -46,9 +46,8 @@ public class ServiceTicketController {
     @PostMapping
     public ResponseEntity<ApiResult<?>> create(
             @Validated(ServiceTicketRequestDto.Create.class) @RequestBody ServiceTicketRequestDto dto,
-            Authentication authentication
-    ) {
-        JwtDataDto jwtDataDto = (JwtDataDto) authentication.getPrincipal();
+            JwtDataDto jwtDataDto) {
+
         ServiceTicketResponseDto created = boleta.createBoletaServicio(dto, jwtDataDto);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResult.success(created, "Boleta de servicio creada correctamente."));
