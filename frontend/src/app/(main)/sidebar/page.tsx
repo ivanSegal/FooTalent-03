@@ -7,6 +7,8 @@ import Image from "next/image";
 import logo from "@/assets/images/Logo.png";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
+import Cookies from "js-cookie";
+import { showAutoAlert, showConfirmAlert } from "@/utils/showAlert";
 
 const DashboardIcon = () => (
   <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -181,6 +183,17 @@ const Sidebar: React.FC<ExtendedSidebarProps> = ({
   const [collapsed, setCollapsed] = useState(false);
   const router = useRouter();
   const pathname = usePathname(); // current route
+  const handleLogout = () => {
+    Cookies.remove("token", { path: "/" });
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("token");
+    }
+    document.cookie = "loggedIn=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    showAutoAlert("Sesión cerrada", "Has salido del sistema correctamente", "success", 2000);
+    setTimeout(() => {
+      router.push("/");
+    }, 2000);
+  };
   const getVariantClasses = () => {
     switch (variant) {
       case "dark":
@@ -210,6 +223,21 @@ const Sidebar: React.FC<ExtendedSidebarProps> = ({
   const handleItemClick = (item: MenuItem) => {
     onItemClick?.(item);
     if (item.href) router.push(item.href);
+  };
+
+  const onLogoutClick = async () => {
+    const confirmed = await showConfirmAlert(
+      "Cerrar sesión",
+      "¿Estás seguro de que deseas cerrar la sesión?",
+      "Sí, salir",
+      "Cancelar",
+    );
+    if (!confirmed) return;
+    if (onLogout) {
+      await Promise.resolve(onLogout());
+    } else {
+      handleLogout();
+    }
   };
 
   return (
@@ -280,7 +308,7 @@ const Sidebar: React.FC<ExtendedSidebarProps> = ({
         {/* Botón de Cerrar Sesión */}
         {!collapsed && (
           <button
-            onClick={onLogout}
+            onClick={onLogoutClick}
             className={`mt-3 flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-150 ${classes.logoutButton}`}
           >
             <LogoutIcon />
@@ -291,7 +319,7 @@ const Sidebar: React.FC<ExtendedSidebarProps> = ({
         {/* Botón de logout para sidebar colapsado */}
         {collapsed && (
           <button
-            onClick={onLogout}
+            onClick={onLogoutClick}
             className={`mt-2 flex w-full items-center justify-center rounded-md p-2 text-sm transition-all duration-150 ${classes.logoutButton}`}
             title="Cerrar Sesión"
           >

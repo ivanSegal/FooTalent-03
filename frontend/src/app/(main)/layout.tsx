@@ -13,10 +13,16 @@ export const metadata: Metadata = {
 
 export default function FullPageLayout({ children }: FullPageLayoutProps) {
   return (
-    <React.Fragment>
-      {/* <Navbar /> */}
-      <Sidebar />
-      {children}
-    </React.Fragment>
+    <div className="flex min-h-screen bg-gray-50">
+      {/* Sidebar fijo a la izquierda */}
+      <aside className="sticky top-0 h-screen shrink-0 overflow-y-auto border-r border-gray-200 bg-white">
+        <Sidebar />
+      </aside>
+
+      {/* Contenido ocupa el espacio restante y hace scroll */}
+      <div className="flex min-w-0 flex-1 flex-col">
+        <main className="flex-1 overflow-auto">{children}</main>
+      </div>
+    </div>
   );
 }
