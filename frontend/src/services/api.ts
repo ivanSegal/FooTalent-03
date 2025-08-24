@@ -23,6 +23,9 @@ api.interceptors.request.use(
   },
 );
 
+// Evita múltiples redirecciones simultáneas
+let isLoggingOut = false;
+
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -35,7 +38,8 @@ api.interceptors.response.use(
       if (Array.isArray(val)) {
         const out: Record<string, string> = {};
         for (const item of val) {
-          if (item && typeof item === "object") {
+          if (!item) continue;
+          if (typeof item === "object") {
             // Support shapes: { field, message } | { param, msg } | { property, constraints }
             const obj = item as Record<string, unknown>;
             const key = (obj.field ?? obj.param ?? obj.property) as string | undefined;
@@ -46,6 +50,20 @@ api.interceptors.response.use(
               | string
               | undefined;
             if (key && msg) out[String(key)] = String(msg);
+            continue;
+          }
+          if (typeof item === "string") {
+            // Support strings like "field: message" or "field mensaje..."
+            const s = item.trim();
+            const m = s.match(/^([A-Za-z_][A-Za-z0-9_\.\-]*)\s*[:\-]?\s*(.*)$/);
+            if (m) {
+              const key = m[1];
+              const msg = m[2] || s;
+              // avoid mapping the whole string if key looks too generic
+              if (key && key.length <= 64) {
+                out[key] = msg;
+              }
+            }
           }
         }
         return Object.keys(out).length ? out : undefined;
@@ -63,6 +81,28 @@ api.interceptors.response.use(
     };
 
     const data = error?.response?.data;
+    // Logout automático si el backend envía errorCode AUTH_ERROR
+    try {
+      const serverErrorCode = data?.errorCode || data?.code || data?.error?.code;
+      if (serverErrorCode === "AUTH_ERROR" && typeof window !== "undefined" && !isLoggingOut) {
+        isLoggingOut = true;
+        try {
+          Cookies.remove("token");
+          // Limpia datos básicos de sesión si los hubiera
+          try {
+            window.localStorage?.removeItem?.("user");
+          } catch {}
+        } finally {
+          // Redirige a login con motivo
+          setTimeout(() => {
+            window.location.href = "/login?reason=auth_error";
+          }, 10);
+        }
+      }
+    } catch {
+      // noop
+    }
+
     // Common backend shapes: {message, success, errors}, {error: {message}}, or validation map
     if (data) {
       if (typeof data.message === "string") err.message = data.message;
@@ -72,6 +112,21 @@ api.interceptors.response.use(
       const fe = data.errors ?? data.fieldErrors ?? data.details ?? data.validationErrors;
       const mapped = buildFieldErrors(fe);
       if (mapped) err.fieldErrors = mapped;
+      // If details is an array of strings and not mapped to fields, append to message
+      try {
+        const details = data.details;
+        if (Array.isArray(details)) {
+          const stringDetails = details.filter((d: unknown) => typeof d === "string") as string[];
+          if (stringDetails.length) {
+            const joined = stringDetails.join(" | ");
+            if (!err.message || err.message === "Error en la solicitud") {
+              err.message = joined;
+            } else if (!String(err.message).includes(joined)) {
+              err.message = `${err.message} — ${joined}`;
+            }
+          }
+        }
+      } catch {}
       // Some APIs place detail at data.detail or data.title
       if (
         typeof data.detail === "string" &&
