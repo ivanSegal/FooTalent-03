@@ -47,6 +47,7 @@ export const serviceTicketService = {
     return unwrap<ServiceTicketListItem>(data);
   },
   async create(payload: Partial<ServiceTicketListItem>): Promise<ServiceTicketListItem> {
+    console.log("Creating service ticket with payload:", payload);
     const { data } = await api.post<ServiceTicketListItem | ApiResult<ServiceTicketListItem>>(
       BASE,
       payload,

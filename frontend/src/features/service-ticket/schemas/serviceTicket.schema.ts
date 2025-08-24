@@ -9,7 +9,7 @@ export const serviceTicketSchema = z.object({
   code: z.string().min(1, "Requerido"),
   checkingNro: z.coerce.number().int().nonnegative(),
   boatName: z.string().min(1, "Requerido"),
-  responsibleUsername: z.string().min(1, "Requerido"),
+  responsibleUsername: z.string().optional(),
 });
 
 export type ServiceTicketFormValues = z.infer<typeof serviceTicketSchema>;

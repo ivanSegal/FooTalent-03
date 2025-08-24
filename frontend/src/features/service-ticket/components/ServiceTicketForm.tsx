@@ -1,15 +1,25 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { useForm, Controller, type SubmitHandler, type Resolver } from "react-hook-form";
+import {
+  useForm,
+  Controller,
+  type SubmitHandler,
+  type Resolver,
+  type Path,
+  type ErrorOption,
+} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Input, DatePicker, Button } from "antd";
+import { Input, DatePicker, Button, Select } from "antd";
 import dayjs from "dayjs";
 import {
   serviceTicketSchema,
   type ServiceTicketFormValues,
 } from "@/features/service-ticket/schemas/serviceTicket.schema";
 import { serviceTicketService, type ServiceTicketListItem } from "@/features/service-ticket";
+import { showAlert } from "@/utils/showAlert";
+import { vasselsService, type Vassel } from "@/features/vassels";
+import type { NormalizedApiError } from "@/types/api";
 
 interface Props {
   items: ServiceTicketListItem[];
@@ -36,10 +46,24 @@ export const ServiceTicketForm: React.FC<Props> = ({ items, setItems, current, o
     formState: { errors, isSubmitting, isDirty },
     reset,
     control,
+    setError,
   } = useForm<ServiceTicketFormValues>({
     resolver: zodResolver(serviceTicketSchema) as unknown as Resolver<ServiceTicketFormValues>,
     defaultValues,
   });
+
+  // Cargar embarcaciones para el select
+  const [vassels, setVassels] = React.useState<Vassel[]>([]);
+  useEffect(() => {
+    void (async () => {
+      try {
+        const res = await vasselsService.list({ page: 0, size: 100 });
+        setVassels(res.content);
+      } catch {
+        // opcional: ignorar error silenciosamente
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     if (current) {
@@ -51,16 +75,49 @@ export const ServiceTicketForm: React.FC<Props> = ({ items, setItems, current, o
 
   const onSubmit: SubmitHandler<ServiceTicketFormValues> = async (data) => {
     try {
+      // Incluir boatId si el usuario eligió una embarcación
+      const selected = vassels.find((v) => v.name === data.boatName);
+      const payload = selected ? { ...data, boatId: selected.id } : data;
       if (current) {
-        const updated = await serviceTicketService.update(current.id, data);
+        const updated = await serviceTicketService.update(current.id, payload);
         setItems(items.map((t) => (t.id === updated.id ? updated : t)));
       } else {
-        const created = await serviceTicketService.create(data);
+        const created = await serviceTicketService.create(payload);
         setItems([created, ...items]);
       }
       onClose();
     } catch (e) {
-      console.error(e);
+      const apiErr = e as NormalizedApiError;
+      // Aplica errores sólo a campos conocidos del formulario
+      if (apiErr?.fieldErrors) {
+        const keys: Array<keyof ServiceTicketFormValues> = [
+          "travelNro",
+          "travelDate",
+          "vesselAttended",
+          "solicitedBy",
+          "reportTravelNro",
+          "code",
+          "checkingNro",
+          "boatName",
+        ];
+        for (const k of keys) {
+          const msg = apiErr.fieldErrors[k as string];
+          if (msg) {
+            setError(
+              k as Path<ServiceTicketFormValues>,
+              {
+                type: "server",
+                message: String(msg),
+              } as ErrorOption,
+            );
+          }
+        }
+      }
+      await showAlert(
+        "No se pudo guardar",
+        apiErr?.message || "Ocurrió un error. Intenta nuevamente.",
+        "error",
+      );
     }
   };
 
@@ -146,24 +203,6 @@ export const ServiceTicketForm: React.FC<Props> = ({ items, setItems, current, o
         </div>
 
         <div className="flex flex-col">
-          <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="responsibleUsername">
-            Responsable
-          </label>
-          <Controller
-            control={control}
-            name="responsibleUsername"
-            render={({ field }) => (
-              <Input
-                id="responsibleUsername"
-                placeholder="Responsable"
-                {...field}
-                value={field.value ?? ""}
-              />
-            )}
-          />
-        </div>
-
-        <div className="flex flex-col">
           <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="reportTravelNro">
             N° Reporte de Viaje
           </label>
@@ -209,15 +248,26 @@ export const ServiceTicketForm: React.FC<Props> = ({ items, setItems, current, o
 
         <div className="flex flex-col">
           <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="boatName">
-            Nombre del barco
+            Embarcación
           </label>
           <Controller
             control={control}
             name="boatName"
             render={({ field }) => (
-              <Input id="boatName" placeholder="Barco" {...field} value={field.value ?? ""} />
+              <Select
+                id="boatName"
+                showSearch
+                placeholder="Selecciona embarcación"
+                optionFilterProp="label"
+                value={field.value ?? undefined}
+                onChange={(val) => field.onChange(val)}
+                options={vassels.map((v) => ({ label: v.name, value: v.name }))}
+              />
             )}
           />
+          {errors.boatName && (
+            <p className="mt-1 text-xs text-red-600">{errors.boatName.message as string}</p>
+          )}
         </div>
       </div>
 
