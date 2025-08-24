@@ -286,7 +286,7 @@ export const MaintenanceList = () => {
   if (loading) {
     return (
       <main className="min-h-screen bg-gray-50 p-8">
-        <div className="mx-auto max-w-7xl space-y-6">
+        <div className="mx-auto space-y-6">
           {/* Header skeleton */}
           <Skeleton active title={{ width: 260 }} paragraph={false} />
           {/* Card/list skeleton */}
@@ -303,7 +303,7 @@ export const MaintenanceList = () => {
   }
   return (
     <main className="min-h-screen bg-gray-50 p-8">
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto">
         <header className="mb-8 flex flex-wrap items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Mantenimientos</h1>
