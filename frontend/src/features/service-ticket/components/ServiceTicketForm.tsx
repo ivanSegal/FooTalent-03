@@ -8,6 +8,7 @@ import {
   type Resolver,
   type Path,
   type ErrorOption,
+  type FieldErrors,
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input, DatePicker, Button, Select } from "antd";
@@ -43,12 +44,16 @@ const defaultValues: Partial<ServiceTicketFormValues> = {
 export const ServiceTicketForm: React.FC<Props> = ({ items, setItems, current, onClose }) => {
   const {
     handleSubmit,
-    formState: { errors, isSubmitting, isDirty },
+    formState: { errors, isSubmitting, isDirty, isValid },
     reset,
     control,
     setError,
+    setFocus,
   } = useForm<ServiceTicketFormValues>({
     resolver: zodResolver(serviceTicketSchema) as unknown as Resolver<ServiceTicketFormValues>,
+    mode: "onChange",
+    reValidateMode: "onChange",
+    shouldFocusError: true,
     defaultValues,
   });
 
@@ -84,6 +89,7 @@ export const ServiceTicketForm: React.FC<Props> = ({ items, setItems, current, o
       } else {
         const created = await serviceTicketService.create(payload);
         setItems([created, ...items]);
+        reset();
       }
       onClose();
     } catch (e) {
@@ -121,8 +127,19 @@ export const ServiceTicketForm: React.FC<Props> = ({ items, setItems, current, o
     }
   };
 
+  const onInvalid = async (formErrors: FieldErrors<ServiceTicketFormValues>) => {
+    // Enfocar el primer campo con error y mostrar alerta
+    const first = Object.keys(formErrors)[0] as Path<ServiceTicketFormValues> | undefined;
+    if (first) setFocus(first);
+    await showAlert(
+      "Completa los campos requeridos",
+      "Revisa los campos marcados en rojo.",
+      "warning",
+    );
+  };
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit, onInvalid)} className="space-y-4">
       <div className="grid gap-4 md:grid-cols-2">
         <div className="flex flex-col">
           <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="travelNro">
@@ -132,7 +149,13 @@ export const ServiceTicketForm: React.FC<Props> = ({ items, setItems, current, o
             control={control}
             name="travelNro"
             render={({ field }) => (
-              <Input id="travelNro" type="number" {...field} value={field.value ?? 0} />
+              <Input
+                id="travelNro"
+                type="number"
+                {...field}
+                value={field.value ?? 0}
+                status={errors.travelNro ? "error" : undefined}
+              />
             )}
           />
           {errors.travelNro && (
@@ -155,6 +178,7 @@ export const ServiceTicketForm: React.FC<Props> = ({ items, setItems, current, o
                 value={field.value ? dayjs(field.value as string, "DD-MM-YYYY") : null}
                 onChange={(d) => field.onChange(d ? d.format("DD-MM-YYYY") : "")}
                 className="w-full"
+                status={errors.travelDate ? "error" : undefined}
               />
             )}
           />
@@ -176,6 +200,7 @@ export const ServiceTicketForm: React.FC<Props> = ({ items, setItems, current, o
                 placeholder="Nombre"
                 {...field}
                 value={field.value ?? ""}
+                status={errors.vesselAttended ? "error" : undefined}
               />
             )}
           />
@@ -197,9 +222,13 @@ export const ServiceTicketForm: React.FC<Props> = ({ items, setItems, current, o
                 placeholder="Solicitante"
                 {...field}
                 value={field.value ?? ""}
+                status={errors.solicitedBy ? "error" : undefined}
               />
             )}
           />
+          {errors.solicitedBy && (
+            <p className="mt-1 text-xs text-red-600">{errors.solicitedBy.message as string}</p>
+          )}
         </div>
 
         <div className="flex flex-col">
@@ -215,9 +244,13 @@ export const ServiceTicketForm: React.FC<Props> = ({ items, setItems, current, o
                 placeholder="RNE-XX-YYY"
                 {...field}
                 value={field.value ?? ""}
+                status={errors.reportTravelNro ? "error" : undefined}
               />
             )}
           />
+          {errors.reportTravelNro && (
+            <p className="mt-1 text-xs text-red-600">{errors.reportTravelNro.message as string}</p>
+          )}
         </div>
 
         <div className="flex flex-col">
@@ -228,9 +261,18 @@ export const ServiceTicketForm: React.FC<Props> = ({ items, setItems, current, o
             control={control}
             name="checkingNro"
             render={({ field }) => (
-              <Input id="checkingNro" type="number" {...field} value={field.value ?? 0} />
+              <Input
+                id="checkingNro"
+                type="number"
+                {...field}
+                value={field.value ?? 0}
+                status={errors.checkingNro ? "error" : undefined}
+              />
             )}
           />
+          {errors.checkingNro && (
+            <p className="mt-1 text-xs text-red-600">{errors.checkingNro.message as string}</p>
+          )}
         </div>
 
         <div className="flex flex-col">
@@ -241,9 +283,18 @@ export const ServiceTicketForm: React.FC<Props> = ({ items, setItems, current, o
             control={control}
             name="code"
             render={({ field }) => (
-              <Input id="code" placeholder="Código" {...field} value={field.value ?? ""} />
+              <Input
+                id="code"
+                placeholder="Código"
+                {...field}
+                value={field.value ?? ""}
+                status={errors.code ? "error" : undefined}
+              />
             )}
           />
+          {errors.code && (
+            <p className="mt-1 text-xs text-red-600">{errors.code.message as string}</p>
+          )}
         </div>
 
         <div className="flex flex-col">
@@ -262,6 +313,7 @@ export const ServiceTicketForm: React.FC<Props> = ({ items, setItems, current, o
                 value={field.value ?? undefined}
                 onChange={(val) => field.onChange(val)}
                 options={vassels.map((v) => ({ label: v.name, value: v.name }))}
+                status={errors.boatName ? "error" : undefined}
               />
             )}
           />
@@ -277,7 +329,12 @@ export const ServiceTicketForm: React.FC<Props> = ({ items, setItems, current, o
             Cancelar
           </Button>
         )}
-        <Button htmlType="submit" type="primary" loading={isSubmitting} disabled={isSubmitting}>
+        <Button
+          htmlType="submit"
+          type="primary"
+          loading={isSubmitting}
+          disabled={isSubmitting || !isValid}
+        >
           {isSubmitting ? "Guardando..." : isDirty ? "Guardar cambios" : "Guardar"}
         </Button>
       </div>
