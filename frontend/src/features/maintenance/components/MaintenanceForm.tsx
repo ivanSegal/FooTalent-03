@@ -16,7 +16,9 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { MaintenanceFormValues, maintenanceSchema } from "../schemas/maintenance.schema";
 import { MaintenanceListItem, maintenanceService } from "@/features/maintenance";
+
 import { vasselsService, type Vassel } from "@/features/vassels";
+
 
 const { TextArea } = Input;
 
@@ -55,6 +57,7 @@ export const MaintenanceForm: React.FC<Props> = ({
     defaultValues,
   });
 
+
   // Cargar embarcaciones para el select
   const [vassels, setVassels] = React.useState<Vassel[]>([]);
   useEffect(() => {
@@ -67,6 +70,7 @@ export const MaintenanceForm: React.FC<Props> = ({
       }
     })();
   }, []);
+
   useEffect(() => {
     if (maintenanceList) {
       // Prefill al editar
@@ -79,11 +83,13 @@ export const MaintenanceForm: React.FC<Props> = ({
 
   const onSubmit: SubmitHandler<MaintenanceFormValues> = async (data) => {
     try {
+
       // Incluir vesselId si el usuario eligió una embarcación válida
       const selected = vassels.find((v) => v.name === data.vesselName);
       const payload: Partial<MaintenanceListItem> = selected
         ? { ...data, vesselId: selected.id }
         : { ...data };
+
       if (maintenanceList) {
         const updatedMaintenance = await maintenanceService.update(maintenanceList.id, payload);
         console.log("Updated maintenance order:", updatedMaintenance);
@@ -120,6 +126,7 @@ export const MaintenanceForm: React.FC<Props> = ({
             control={control}
             name="vesselName"
             render={({ field }) => (
+
               <Select
                 id="vesselName"
                 showSearch
@@ -128,6 +135,7 @@ export const MaintenanceForm: React.FC<Props> = ({
                 value={field.value ?? undefined}
                 onChange={(val) => field.onChange(val)}
                 options={vassels.map((v) => ({ label: v.name, value: v.name }))}
+
               />
             )}
           />
