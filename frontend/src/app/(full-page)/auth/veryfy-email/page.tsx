@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { Suspense, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { resetPassword } from "@/services/authService";
 import { ResetPasswordRequest } from "@/types/auth";
@@ -10,7 +10,7 @@ import { Button, Card, Form, Input, Typography } from "antd";
 import Image from "next/image";
 import LogoLogin from "@/assets/images/LogoLogin.png";
 
-export default function VerifyEmailResetPasswordPage() {
+function VerifyEmailResetPasswordPageInner() {
   const router = useRouter();
   const search = useSearchParams();
   const token = useMemo(() => search.get("token") || "", [search]);
@@ -159,5 +159,16 @@ export default function VerifyEmailResetPasswordPage() {
         </Form>
       </Card>
     </div>
+  );
+}
+
+export default function VerifyEmailResetPasswordPage() {
+  // Next.js requires a Suspense boundary when using useSearchParams in client components
+  return (
+    <Suspense
+      fallback={<div className="flex min-h-screen items-center justify-center">Cargando…</div>}
+    >
+      <VerifyEmailResetPasswordPageInner />
+    </Suspense>
   );
 }
