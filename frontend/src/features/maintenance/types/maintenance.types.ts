@@ -3,6 +3,7 @@
 export interface MaintenanceListItem {
   id: number;
   vesselName: string;
+  vesselId?: number;
   maintenanceType: string; // p.ej. "PREVENTIVO"
   status: string; // p.ej. "SOLICITADO"
   maintenanceManager: string;

@@ -1,12 +1,21 @@
 "use client";
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 import { useForm, Controller, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Input, Select, DatePicker } from "antd";
+import { Input, Select, DatePicker, Button } from "antd";
+import {
+  FileTextOutlined,
+  ToolOutlined,
+  FlagOutlined,
+  ScheduleOutlined,
+  FieldTimeOutlined,
+  CheckCircleOutlined,
+  CompassOutlined,
+} from "@ant-design/icons";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { MaintenanceFormValues, maintenanceSchema } from "../schemas/maintenance.schema";
-import { MaintenanceListItem } from "../types/maintenance.types";
+import { MaintenanceListItem, maintenanceService } from "@/features/maintenance";
 
 const { TextArea } = Input;
 
@@ -14,16 +23,14 @@ interface Props {
   maintenanceLists: MaintenanceListItem[];
   setMaintenanceLists: React.Dispatch<React.SetStateAction<MaintenanceListItem[]>>;
   maintenanceList: MaintenanceListItem | null;
-  setMaintenanceList: React.Dispatch<React.SetStateAction<MaintenanceListItem | null>>;
+  hideMaintenanceFormDialog: () => void;
 }
 
 const defaultValues: Partial<MaintenanceFormValues> = {
   vesselName: "",
   maintenanceReason: "",
-  maintenanceManager: "",
   maintenanceType: "PREVENTIVO",
   status: "SOLICITADO",
-  issuedAt: null,
   scheduledAt: null,
   startedAt: null,
   finishedAt: null,
@@ -35,76 +42,104 @@ export const MaintenanceForm: React.FC<Props> = ({
   maintenanceLists,
   setMaintenanceLists,
   maintenanceList,
-  setMaintenanceList,
+  hideMaintenanceFormDialog,
 }) => {
   const {
-    register,
     handleSubmit,
     formState: { errors, isSubmitting, isDirty },
     reset,
     control,
-    setValue,
   } = useForm<MaintenanceFormValues>({
     resolver: zodResolver(maintenanceSchema),
+    defaultValues,
   });
   useEffect(() => {
     if (maintenanceList) {
-      Object.keys(maintenanceList).forEach((key) =>
-        setValue(key as keyof MaintenanceFormValues, maintenanceList[key]),
-      );
+      // Prefill al editar
+      reset({ ...defaultValues, ...maintenanceList } as MaintenanceFormValues);
+    } else {
+      // Valores limpios al crear
+      reset(defaultValues as MaintenanceFormValues);
     }
-  }, [maintenanceList, setValue]);
+  }, [maintenanceList, reset]);
 
-  const submit: SubmitHandler<MaintenanceFormValues> = (data) => {
-    onSubmit(data);
+  const onSubmit: SubmitHandler<MaintenanceFormValues> = async (data) => {
+    try {
+      const payload: Partial<MaintenanceListItem> = {
+        ...data,
+        vesselId: Number(data.vesselName),
+      };
+      if (maintenanceList) {
+        const updatedMaintenance = await maintenanceService.update(maintenanceList.id, payload);
+        console.log("Updated maintenance order:", updatedMaintenance);
+        const updatedMaintenanceLists = maintenanceLists.map((t) =>
+          t.id === updatedMaintenance.id ? updatedMaintenance : t,
+        );
+        setMaintenanceLists(updatedMaintenanceLists);
+        // showToast("success", "Éxito", "Mantenimiento actualizado");
+      } else {
+        const newMaintenance = await maintenanceService.create(payload);
+        setMaintenanceLists([newMaintenance, ...maintenanceLists]);
+        // showToast("success", "Éxito", "Mantenimiento creado");
+      }
+      // hideTanqueFormDialog();
+      hideMaintenanceFormDialog();
+    } catch (error) {
+      // handleFormError(error, toast); // Pasamos la referencia del toast
+      console.error(error);
+    } finally {
+      // setMaintenanceList(null);
+    }
   };
   console.log("errors", errors);
+  // console.log("test", watch());
   return (
-    <form onSubmit={handleSubmit(submit)} className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div className="grid gap-4 md:grid-cols-2">
         {/* Embarcación */}
         <div className="flex flex-col">
           <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="vesselName">
-            Embarcación
+            <CompassOutlined className="mr-1 text-gray-600" /> Embarcación
           </label>
-          <Input
-            id="vesselName"
-            placeholder="Nombre / código"
-            {...register("vesselName")}
-            status={errors.vesselName ? "error" : undefined}
+          <Controller
+            control={control}
+            name="vesselName"
+            render={({ field }) => (
+              <Input
+                id="vesselName"
+                placeholder="Nombre / código"
+                {...field}
+                value={field.value ?? ""}
+                status={errors.vesselName ? "error" : undefined}
+              />
+            )}
           />
           {errors.vesselName && (
             <p className="mt-1 text-xs text-red-600">{errors.vesselName.message as string}</p>
           )}
         </div>
-        {/* Responsable */}
-        <div className="flex flex-col">
-          <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="maintenanceManager">
-            Responsable
-          </label>
-          <Input
-            id="maintenanceManager"
-            placeholder="Nombre"
-            {...register("maintenanceManager")}
-            status={errors.maintenanceManager ? "error" : undefined}
-          />
-          {errors.maintenanceManager && (
-            <p className="mt-1 text-xs text-red-600">
-              {errors.maintenanceManager.message as string}
-            </p>
-          )}
-        </div>
+
         {/* Descripción */}
         <div className="flex flex-col md:col-span-2">
-          <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="maintenanceReason">
-            Motivo / Descripción
+          <label
+            className="mb-1 flex items-center gap-2 text-sm font-medium text-gray-700"
+            htmlFor="maintenanceReason"
+          >
+            <FileTextOutlined className="text-gray-600" /> Motivo / Descripción
           </label>
-          <TextArea
-            id="maintenanceReason"
-            placeholder="Describe la tarea de mantenimiento"
-            autoSize={{ minRows: 3 }}
-            {...register("maintenanceReason")}
-            status={errors.maintenanceReason ? "error" : undefined}
+          <Controller
+            control={control}
+            name="maintenanceReason"
+            render={({ field }) => (
+              <TextArea
+                id="maintenanceReason"
+                placeholder="Describe la tarea de mantenimiento"
+                autoSize={{ minRows: 3 }}
+                {...field}
+                value={field.value ?? ""}
+                status={errors.maintenanceReason ? "error" : undefined}
+              />
+            )}
           />
           {errors.maintenanceReason && (
             <p className="mt-1 text-xs text-red-600">
@@ -114,8 +149,11 @@ export const MaintenanceForm: React.FC<Props> = ({
         </div>
         {/* Tipo de mantenimiento */}
         <div className="flex flex-col">
-          <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="maintenanceType">
-            Tipo de mantenimiento
+          <label
+            className="mb-1 flex items-center gap-2 text-sm font-medium text-gray-700"
+            htmlFor="maintenanceType"
+          >
+            <ToolOutlined className="text-gray-600" /> Tipo de mantenimiento
           </label>
           <Controller
             control={control}
@@ -136,8 +174,11 @@ export const MaintenanceForm: React.FC<Props> = ({
         </div>
         {/* Estado */}
         <div className="flex flex-col">
-          <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="status">
-            Estado
+          <label
+            className="mb-1 flex items-center gap-2 text-sm font-medium text-gray-700"
+            htmlFor="status"
+          >
+            <FlagOutlined className="text-gray-600" /> Estado
           </label>
           <Controller
             control={control}
@@ -150,9 +191,11 @@ export const MaintenanceForm: React.FC<Props> = ({
                 onChange={(val) => field.onChange(val)}
                 options={[
                   { label: "Solicitado", value: "SOLICITADO" },
-                  { label: "Programado", value: "PROGRAMADO" },
-                  { label: "En progreso", value: "EN_PROGRESO" },
+                  { label: "En proceso", value: "EN_PROCESO" },
+                  { label: "Esperando insumos", value: "ESPERANDO_INSUMOS" },
                   { label: "Finalizado", value: "FINALIZADO" },
+                  { label: "Anulado", value: "ANULADO" },
+                  { label: "Rechazado", value: "RECHAZADO" },
                 ]}
               />
             )}
@@ -160,27 +203,11 @@ export const MaintenanceForm: React.FC<Props> = ({
         </div>
         {/* Fechas */}
         <div className="flex flex-col">
-          <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="issuedAt">
-            Fecha Emisión
-          </label>
-          <Controller
-            control={control}
-            name="issuedAt"
-            render={({ field }) => (
-              <DatePicker
-                id="issuedAt"
-                format="DD-MM-YYYY"
-                placeholder="Selecciona fecha"
-                value={field.value ? dayjs(field.value as string, "DD-MM-YYYY") : null}
-                onChange={(d) => field.onChange(d ? d.format("DD-MM-YYYY") : null)}
-                className="w-full"
-              />
-            )}
-          />
-        </div>
-        <div className="flex flex-col">
-          <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="scheduledAt">
-            Fecha Programada
+          <label
+            className="mb-1 flex items-center gap-2 text-sm font-medium text-gray-700"
+            htmlFor="scheduledAt"
+          >
+            <ScheduleOutlined className="text-gray-600" /> Fecha Programada
           </label>
           <Controller
             control={control}
@@ -198,8 +225,11 @@ export const MaintenanceForm: React.FC<Props> = ({
           />
         </div>
         <div className="flex flex-col">
-          <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="startedAt">
-            Fecha Inicio
+          <label
+            className="mb-1 flex items-center gap-2 text-sm font-medium text-gray-700"
+            htmlFor="startedAt"
+          >
+            <FieldTimeOutlined className="text-gray-600" /> Fecha Inicio
           </label>
           <Controller
             control={control}
@@ -217,8 +247,11 @@ export const MaintenanceForm: React.FC<Props> = ({
           />
         </div>
         <div className="flex flex-col">
-          <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="finishedAt">
-            Fecha Fin
+          <label
+            className="mb-1 flex items-center gap-2 text-sm font-medium text-gray-700"
+            htmlFor="finishedAt"
+          >
+            <CheckCircleOutlined className="text-gray-600" /> Fecha Fin
           </label>
           <Controller
             control={control}
@@ -237,22 +270,14 @@ export const MaintenanceForm: React.FC<Props> = ({
         </div>
       </div>
       <div className="flex items-center justify-end gap-3 pt-2">
-        {onCancel && (
-          <button
-            type="button"
-            onClick={onCancel}
-            className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
-          >
+        {hideMaintenanceFormDialog && (
+          <Button htmlType="button" onClick={hideMaintenanceFormDialog}>
             Cancelar
-          </button>
+          </Button>
         )}
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 focus:outline-none disabled:opacity-60"
-        >
+        <Button htmlType="submit" type="primary" loading={isSubmitting} disabled={isSubmitting}>
           {isSubmitting ? "Guardando..." : isDirty ? "Guardar cambios" : "Guardar"}
-        </button>
+        </Button>
       </div>
     </form>
   );
