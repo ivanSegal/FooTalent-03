@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
-import { Rubik } from "next/font/google";
+import { DM_Sans } from "next/font/google";
+import "antd/dist/reset.css";
 import "./globals.css";
 import ReactQueryProvider from "@/contexts/ReactQueryProvider";
-import Navbar from "@/components/Navbar";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { ConfigProvider, theme as antdTheme } from "antd";
+import esES from "antd/locale/es_ES";
 
-const rubik = Rubik({
-  variable: "--font-rubik",
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -19,11 +21,41 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${rubik.variable} antialiased`}>
-        <AuthProvider>
-          <Navbar />
-          <ReactQueryProvider>{children}</ReactQueryProvider>
-        </AuthProvider>
+      <body className={`${dmSans.variable} antialiased`}>
+        <ConfigProvider
+          locale={esES}
+          theme={{
+            algorithm: antdTheme.defaultAlgorithm,
+            token: {
+              // Brand align with provided palette
+              // Primary: #3758F9, Success: #13C296, Text Base: #1E293B
+              colorPrimary: "#3758F9",
+              colorSuccess: "#13C296",
+              colorLink: "#3758F9",
+              colorTextBase: "#1E293B",
+              // Using #49649B as an assumption for the second swatch (please confirm)
+              colorInfo: "#49649B",
+              borderRadius: 6,
+              fontFamily: "var(--font-dm-sans), DM Sans, sans-serif",
+              // Typography scale per spec
+              // fontSize: 18, // body
+              // fontSizeLG: 18,
+              // fontSizeHeading1: 36,
+              // fontSizeHeading2: 24,
+              // fontWeightStrong: 700,
+            },
+            components: {
+              Button: {
+                controlHeight: 40,
+                fontWeight: 600, // semibold for buttons
+              },
+            },
+          }}
+        >
+          <AuthProvider>
+            <ReactQueryProvider>{children}</ReactQueryProvider>
+          </AuthProvider>
+        </ConfigProvider>
       </body>
     </html>
   );
