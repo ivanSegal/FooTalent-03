@@ -20,7 +20,6 @@ import { MaintenanceListItem, maintenanceService } from "@/features/maintenance"
 
 import { vasselsService, type Vassel } from "@/features/vassels";
 
-
 const { TextArea } = Input;
 
 interface Props {
@@ -124,8 +123,6 @@ export const MaintenanceForm: React.FC<Props> = ({
             control={control}
             name="vesselName"
             render={({ field }) => (
-
-
               <Select
                 id="vesselName"
                 showSearch
@@ -134,8 +131,6 @@ export const MaintenanceForm: React.FC<Props> = ({
                 value={field.value ?? undefined}
                 onChange={(val) => field.onChange(val)}
                 options={vassels.map((v) => ({ label: v.name, value: v.name }))}
-
-
               />
             )}
           />
