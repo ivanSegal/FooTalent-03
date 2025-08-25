@@ -5,8 +5,11 @@ import { MenuItem } from "@/types/menu_Item";
 import { SidebarProps } from "@/types/sidebar_props";
 import Image from "next/image";
 import logo from "@/assets/images/Logo.png";
+import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import Cookies from "js-cookie";
+import { showAutoAlert, showConfirmAlert } from "@/utils/showAlert";
 
-// Iconos por defecto
 const DashboardIcon = () => (
   <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
     <path
@@ -164,6 +167,14 @@ const defaultMenuItems: MenuItem[] = [
   { id: "maintenance", label: "Mantenimiento", href: "/maintenance", icon: <MaintenanceIcon /> },
   { id: "boats", label: "Embarcaciones", href: "/boats", icon: <ShippingIcon /> },
   { id: "inventory", label: "Inventario", href: "/inventory", icon: <InventoryIcon /> },
+
+  {
+    id: "service-ticket",
+    label: "Boleta de servicio",
+    href: "/boleta-servicio",
+    icon: <InventoryIcon />,
+  },
+
   { id: "config", label: "Configuración", href: "/config", icon: <ConfigIcon /> },
 ];
 
@@ -178,6 +189,19 @@ const Sidebar: React.FC<ExtendedSidebarProps> = ({
   // onToggleCollapse,
 }) => {
   const [collapsed, setCollapsed] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname(); // current route
+  const handleLogout = () => {
+    Cookies.remove("token", { path: "/" });
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("token");
+    }
+    document.cookie = "loggedIn=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    showAutoAlert("Sesión cerrada", "Has salido del sistema correctamente", "success", 2000);
+    setTimeout(() => {
+      router.push("/");
+    }, 2000);
+  };
   const getVariantClasses = () => {
     switch (variant) {
       case "dark":
@@ -203,6 +227,26 @@ const Sidebar: React.FC<ExtendedSidebarProps> = ({
   };
 
   const classes = getVariantClasses();
+
+  const handleItemClick = (item: MenuItem) => {
+    onItemClick?.(item);
+    if (item.href) router.push(item.href);
+  };
+
+  const onLogoutClick = async () => {
+    const confirmed = await showConfirmAlert(
+      "Cerrar sesión",
+      "¿Estás seguro de que deseas cerrar la sesión?",
+      "Sí, salir",
+      "Cancelar",
+    );
+    if (!confirmed) return;
+    if (onLogout) {
+      await Promise.resolve(onLogout());
+    } else {
+      handleLogout();
+    }
+  };
 
   return (
     <div
@@ -241,15 +285,18 @@ const Sidebar: React.FC<ExtendedSidebarProps> = ({
       <nav className="flex-1 p-2">
         <ul className="space-y-1">
           {menuItems.map((item) => {
-            const isActive = activeItemId === item.id || item.active;
+            const isActive = item.href
+              ? pathname === item.href || pathname.startsWith(item.href + "/")
+              : activeItemId === item.id || item.active; // derive active by URL
             return (
               <li key={item.id}>
                 <button
-                  onClick={() => onItemClick?.(item)}
+                  onClick={() => handleItemClick(item)}
                   className={`flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-all duration-150 ${
                     isActive ? classes.activeMenuItem : classes.menuItem
                   }`}
                   title={collapsed ? item.label : undefined}
+                  aria-current={isActive ? "page" : undefined}
                 >
                   <span className={`${classes.icon} ${isActive ? "text-current" : ""}`}>
                     {item.icon}
@@ -269,7 +316,7 @@ const Sidebar: React.FC<ExtendedSidebarProps> = ({
         {/* Botón de Cerrar Sesión */}
         {!collapsed && (
           <button
-            onClick={onLogout}
+            onClick={onLogoutClick}
             className={`mt-3 flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-150 ${classes.logoutButton}`}
           >
             <LogoutIcon />
@@ -280,7 +327,7 @@ const Sidebar: React.FC<ExtendedSidebarProps> = ({
         {/* Botón de logout para sidebar colapsado */}
         {collapsed && (
           <button
-            onClick={onLogout}
+            onClick={onLogoutClick}
             className={`mt-2 flex w-full items-center justify-center rounded-md p-2 text-sm transition-all duration-150 ${classes.logoutButton}`}
             title="Cerrar Sesión"
           >

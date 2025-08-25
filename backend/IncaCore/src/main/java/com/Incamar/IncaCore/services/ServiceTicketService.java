@@ -12,7 +12,7 @@ public interface ServiceTicketService {
 
     ServiceTicketResponseDto getBoletaServicioById(Long id);
 
-    ServiceTicketResponseDto createBoletaServicio(ServiceTicketRequestDto requestDto, JwtDataDto jwtDataDto);
+    ServiceTicketResponseDto createBoletaServicio(ServiceTicketRequestDto requestDto);
 
     ServiceTicketResponseDto editBoletaServicio(Long id, ServiceTicketRequestDto requestDto);
 

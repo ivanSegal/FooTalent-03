@@ -3,7 +3,7 @@ package com.Incamar.IncaCore.controllers;
 import com.Incamar.IncaCore.documentation.maintenanceOrder.*;
 import com.Incamar.IncaCore.dtos.maintenanceOrder.MaintenanceOrderRequestDto;
 import com.Incamar.IncaCore.dtos.maintenanceOrder.MaintenanceOrderResponseDto;
-import com.Incamar.IncaCore.dtos.users.JwtDataDto;
+import com.Incamar.IncaCore.security.CustomUserDetails;
 import com.Incamar.IncaCore.services.MaintenanceOrderService;
 import com.Incamar.IncaCore.utils.ApiResult;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,64 +22,59 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/ordenes-mantenimiento")
 @RequiredArgsConstructor
-@Tag(name = "04 - Ordenes de Mantenimiento", description = "Endpoints para la gestión de órdenes de mantenimiento de " +
+@Tag(name = "05 - Ordenes de Mantenimiento", description = "Endpoints para la gestión de órdenes de mantenimiento de " +
         "embarcaciones")
 public class MaintenanceOrderController {
     private final MaintenanceOrderService maintenanceOrderService;
 
     @GetAllMaintenanceOrdersEndpointDoc
-    @PreAuthorize("hasAnyRole('SUPERVISOR', 'PATRON', 'ADMINISTRATIVO', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERVISOR', 'OPERADOR')")
     @GetMapping
     public ResponseEntity<Page<MaintenanceOrderResponseDto>> getAllMaintenanceOrders(@ParameterObject Pageable pageable) {
         return ResponseEntity.ok(maintenanceOrderService.getAllMaintenanceOrders(pageable));
     }
 
     @GetMaintenanceOrderByIdEndpointDoc
-    @PreAuthorize("hasAnyRole('SUPERVISOR', 'PATRON', 'ADMINISTRATIVO', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERVISOR', 'OPERADOR')")
     @GetMapping("/{id}")
     public ResponseEntity<MaintenanceOrderResponseDto> getMaintenanceOrderById(@PathVariable Long id) {
-        MaintenanceOrderResponseDto MaintenanceOrder = maintenanceOrderService.getMaintenanceOrderById(id);
-        if(MaintenanceOrder !=null) {
-            return ResponseEntity.ok(MaintenanceOrder);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(maintenanceOrderService.getMaintenanceOrderById(id));
     }
 
     @CreateMaintenanceOrderEndpointDoc
-    @PreAuthorize("hasAnyRole('SUPERVISOR', 'ADMINISTRATIVO', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERVISOR', 'OPERADOR')")
     @PostMapping
-    public ResponseEntity<ApiResult<?>> createMaintenanceOrder(@Validated(MaintenanceOrderRequestDto.Create.class) @RequestBody MaintenanceOrderRequestDto dto
+    public ResponseEntity<ApiResult<?>> createMaintenanceOrder(@Validated(MaintenanceOrderRequestDto.Create.class) @RequestBody MaintenanceOrderRequestDto requestDto
             , Authentication authentication) {
-        JwtDataDto jwtDataDto = (JwtDataDto) authentication.getPrincipal();
-        MaintenanceOrderResponseDto createdOrden = maintenanceOrderService.createMaintenanceOrder(dto, jwtDataDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResult.success(createdOrden,
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        MaintenanceOrderResponseDto createdOrder = maintenanceOrderService.createMaintenanceOrder(requestDto, userDetails);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResult.success(createdOrder,
                 "Orden de mantenimiento creada correctamente."));
     }
 
+    @UpdateMaintenanceOrderEndpointDoc
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERVISOR')")
+    @PutMapping("/{id}")
+    public ResponseEntity<MaintenanceOrderResponseDto> updateMaintenanceOrder(@PathVariable Long id, @Valid @RequestBody MaintenanceOrderRequestDto requestDto) {
+        MaintenanceOrderResponseDto updatedOrder = maintenanceOrderService.editMaintenanceOrder(id, requestDto);
+        return ResponseEntity.ok(updatedOrder);
+    }
+
     @DeleteMaintenanceOrderEndpointDoc
-    @PreAuthorize("hasAnyRole('SUPERVISOR', 'ADMINISTRATIVO', 'ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteMaintenanceOrder(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteMaintenanceOrder(@PathVariable Long id) {
         maintenanceOrderService.deleteMaintenanceOrderById(id);
         return ResponseEntity.noContent().build();
     }
 
-    @UpdateMaintenanceOrderEndpointDoc
-    @PreAuthorize("hasAnyRole('SUPERVISOR', 'ADMINISTRATIVO', 'ADMIN')")
-    @PutMapping("/{id}")
-    public ResponseEntity<?> editMaintenanceOrder(@PathVariable Long id, @Valid @RequestBody MaintenanceOrderRequestDto dto) {
-        MaintenanceOrderResponseDto updatedOrden = maintenanceOrderService.editMaintenanceOrder(id, dto);
-        return ResponseEntity.ok(updatedOrden);
-    }
-
-    @PreAuthorize("hasAnyRole('SUPERVISOR', 'PATRON', 'ADMINISTRATIVO', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERVISOR', 'OPERADOR')")
     @SearchMaintenanceOrdersEndpointDoc
     @GetMapping("/search")
-    public ResponseEntity<Page<?>> searchMaintenanceOrderByVessel(@RequestParam("nombre") String vesselName,
+    public ResponseEntity<Page<MaintenanceOrderResponseDto>> searchMaintenanceOrderByVessel(@RequestParam(
+            "vesselName") String vesselName,
                                                                   @ParameterObject Pageable pageable) {
-        Page<MaintenanceOrderResponseDto> result = maintenanceOrderService.searchMaintenanceOrderByVessel(vesselName, pageable);
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(maintenanceOrderService.searchMaintenanceOrderByVessel(vesselName, pageable));
     }
 
 }

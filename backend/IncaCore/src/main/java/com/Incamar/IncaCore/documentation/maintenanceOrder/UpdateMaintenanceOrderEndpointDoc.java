@@ -20,8 +20,9 @@ import java.lang.annotation.*;
 @Operation(
         summary = "Actualizar orden de mantenimiento",
         description = """
-        Actualiza la información de una orden de mantenimiento existente identificada por su ID. \
-        Accesible solo para usuarios autorizados con rol <strong>ADMIN.</strong>
+        Actualiza la información de una orden de mantenimiento existente identificada por su ID. \s
+        Accesible solo para usuarios autorizados con rol <strong>ADMIN o SUPERVISOR</strong> y \
+                pertenecientes al departamento <strong>MANTENIMIENTO</strong>
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )
@@ -36,14 +37,15 @@ import java.lang.annotation.*;
                           "success": true,
                           "message": "Orden de Mantenimiento actualizada correctamente.",
                           "data": {
-                            "embarcacion_id": 101,
-                            "tipo_mantenimiento": "PREVENTIVO",
-                            "estado": "SOLICITADO",
-                            "encargadoMantenimientoUsername": "juan.perez_94",
-                            "fechaEmision":"...",
-                            "fechaProgramada":"...",
-                            "fechaInicio":"...",
-                            "fechaFin":"...",
+                            "vesselId": "3",
+                            "maintenanceType": "PREVENTIVO",
+                            "status": "SOLICITADO",
+                            "maintenanceManager": "Juan Perez",
+                            "maintenanceReason":"...",
+                            "issuedAt":"...",
+                            "scheduledAt":"...",
+                            "startedAt":"...",
+                            "finishedAt": "..."
                           }
                         }
                         """)
@@ -51,7 +53,7 @@ import java.lang.annotation.*;
         ),
         @ApiResponse(
                 responseCode = "400",
-                description = "Solicitud inválida: datos malformados o violaciones de validación",
+                description = "Solicitud inválida: error de validación o datos incorrectos",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(example = """
