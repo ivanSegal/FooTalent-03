@@ -9,7 +9,7 @@ interface ApiResponse<T> {
   data: T;
 }
 
-// Guardamos el token como cookie accesible por middleware
+// Guardamos el token como cookie accesible por middleware 
 const saveTokenInCookie = (token: string) => {
   Cookies.set("token", token, {
     path: "/",

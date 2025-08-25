@@ -168,16 +168,17 @@ const defaultMenuItems: MenuItem[] = [
 ];
 
 const Sidebar: React.FC<ExtendedSidebarProps> = ({
-  // title = "Dashboard admin",
+  title = "Dashboard admin",
   menuItems = defaultMenuItems,
   activeItemId = "dashboard",
   onItemClick,
-  // collapsed: collapsedProp = false,
+  collapsed: collapsedProp = false,
   variant = "dark",
   onLogout,
-  // onToggleCollapse,
+  onToggleCollapse,
 }) => {
   const [collapsed, setCollapsed] = useState(false);
+  
   const getVariantClasses = () => {
     switch (variant) {
       case "dark":
@@ -206,7 +207,7 @@ const Sidebar: React.FC<ExtendedSidebarProps> = ({
 
   return (
     <div
-      className={`${collapsed ? "w-16" : "w-64"} flex h-screen flex-col transition-all duration-200 ${classes.container}`}
+      className={`${collapsed ? "w-16" : "w-64"} absolute flex h-screen flex-col transition-all duration-200 ${classes.container}`}
     >
       {/* Header */}
       <div className="flex min-h-[64px] items-center justify-center border-b border-current/10 p-4">
