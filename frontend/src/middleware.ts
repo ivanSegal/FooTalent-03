@@ -45,8 +45,8 @@ export const config = {
     // secciones principales protegidas
     "/maintenance",
     "/maintenance/:path*",
-    "/boats",
-    "/boats/:path*",
+    "/vassels",
+    "/vassels/:path*",
     "/inventory",
     "/inventory/:path*",
     "/config",

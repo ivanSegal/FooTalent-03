@@ -165,7 +165,7 @@ const defaultMenuItems: MenuItem[] = [
   { id: "dashboard", label: "Dashboard", href: "/dashboard", icon: <DashboardIcon /> },
   { id: "users", label: "Usuarios", href: "/users", icon: <UsersIcon /> },
   { id: "maintenance", label: "Mantenimiento", href: "/maintenance", icon: <MaintenanceIcon /> },
-  { id: "boats", label: "Embarcaciones", href: "/boats", icon: <ShippingIcon /> },
+  { id: "vassels", label: "Embarcaciones", href: "/vassels", icon: <ShippingIcon /> },
   { id: "inventory", label: "Inventario", href: "/inventory", icon: <InventoryIcon /> },
 
   {
