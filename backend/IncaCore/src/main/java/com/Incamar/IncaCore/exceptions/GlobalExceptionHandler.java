@@ -1,177 +1,172 @@
 package com.Incamar.IncaCore.exceptions;
 
-
 import jakarta.servlet.http.HttpServletRequest;
-
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.mail.MailSendException;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
-  // This method handles all exceptions that are not specifically handled by other methods.
   @ExceptionHandler(Exception.class)
-  public ResponseEntity<ErrorResponse> handleConflict(Exception ex, HttpServletRequest request) {
-
-    ErrorResponse error = new ErrorResponse(
-        HttpStatus.INTERNAL_SERVER_ERROR.value(),
-        "INTERNAL_ERROR",
-        ex.getMessage(),
-        ex.toString(),
-        request.getRequestURI()
-    );
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
-  }
-
-
-  /** * This method handles IllegalArgumentException and MethodArgumentNotValidException.
-   * It returns a 400 Bad Request response with details about the validation errors.
-   * It checks if the exception is an instance of MethodArgumentNotValidException
-   * and collects the field errors to provide detailed information.
-   * * If the exception is an IllegalArgumentException, it returns a generic bad request response.
-   *
-   */
-  @ExceptionHandler({IllegalArgumentException.class, MethodArgumentNotValidException.class})
-  public ResponseEntity<ErrorResponse> handleBadRequestExceptions(Exception ex, HttpServletRequest request) {
-
-    if (ex instanceof MethodArgumentNotValidException validationEx) {
-      String details = validationEx.getBindingResult().getFieldErrors().stream()
-          .map(f -> f.getField() + ": " + f.getDefaultMessage())
-          .collect(Collectors.joining(", "));
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-          new ErrorResponse(
-              HttpStatus.BAD_REQUEST.value(),
-              "VALIDATION_ERROR",
-              ex.getMessage(),
-              details,
-              request.getRequestURI()
-          )
-      );
-    } else if (ex instanceof IllegalArgumentException) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-          new ErrorResponse(
-              HttpStatus.BAD_REQUEST.value(),
-              "BAD_REQUEST",
-              ex.getMessage(),
-              ex.toString(),
-              request.getRequestURI()
-          )
-      );
-    }
-
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-
-        new ErrorResponse(
-            HttpStatus.BAD_REQUEST.value(),
-            "BAD_REQUEST",
-            ex.getMessage(),
-            ex.toString(),
+  public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex, HttpServletRequest request) {
+    ErrorResponse errorResponse = new ErrorResponse(
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            "INTERNAL_ERROR",
+            "Ocurrió un error interno en el servidor",
+            Collections.singletonList(ex.getMessage()),
             request.getRequestURI()
-        )
     );
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
   }
 
-
-  // This method handles UnauthorizedException and returns a 401 Unauthorized response.
-  @ExceptionHandler(UnauthorizedException.class)
-  public ResponseEntity<ErrorResponse> handleUnauthorized(UnauthorizedException ex, WebRequest request) {
-    ErrorResponse error = new ErrorResponse(
-        HttpStatus.UNAUTHORIZED.value(),
-        "UNAUTHORIZED",
-        ex.getMessage(),
-        request.getDescription(false),
-        request.getDescription(false).split("=")[1]
-    );
-    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
-  }
-
-  // This method handles ForbiddenException and returns a 403 Forbidden response.
-  @ExceptionHandler(ForbiddenException.class)
-  public ResponseEntity<ErrorResponse> handleForbidden(ForbiddenException ex,WebRequest request) {
-    ErrorResponse error = new ErrorResponse(
-        HttpStatus.FORBIDDEN.value(),
-        "FORBIDDEN",
-        ex.getMessage(),
-        request.getDescription(false),
-        request.getDescription(false).split("=")[1]
-    );
-    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
-  }
-
-
-  // This method handles ResourceNotFoundException and returns a 404 Not Found response.
-  @ExceptionHandler(ResourceNotFoundException.class)
-  public ResponseEntity<ErrorResponse> handleNotFound(ResourceNotFoundException ex, WebRequest request) {
-    ErrorResponse error = new ErrorResponse(
-        HttpStatus.NOT_FOUND.value(),
-        "NOT_FOUND",
-        ex.getMessage(),
-        request.getDescription(false),
-        request.getDescription(false).split("=")[1]
-    );
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-  }
-
-  // This method handles ConflictException and returns a 409 Conflict response.
-  @ExceptionHandler(ConflictException.class)
-  public ResponseEntity<ErrorResponse> handleConflict(ConflictException ex, WebRequest request) {
-    ErrorResponse error = new ErrorResponse(
-        HttpStatus.CONFLICT.value(),
-        "CONFLICT",
-        ex.getMessage(),
-        request.getDescription(false),
-        request.getDescription(false).split("=")[1]
-    );
-    return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
-  }
-
-  @ExceptionHandler(BadRequestException.class)
-  public ResponseEntity<ErrorResponse> handleBadRequestException(
-      BadRequestException ex, HttpServletRequest request) {
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex, HttpServletRequest request) {
+    var details = ex.getBindingResult()
+            .getFieldErrors()
+            .stream()
+            .map(f -> f.getField() + ": " + f.getDefaultMessage())
+            .collect(Collectors.toList());
 
     ErrorResponse errorResponse = new ErrorResponse(
-        HttpStatus.BAD_REQUEST.value(),
-        "BAD_REQUEST",
-        ex.getMessage(),
-        ex.toString(),
-        request.getRequestURI()
+            HttpStatus.BAD_REQUEST.value(),
+            "VALIDATION_ERROR",
+            "Falló la validación de los campos",
+            details,
+            request.getRequestURI()
     );
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
   }
 
-  @ExceptionHandler(ServiceUnavailableException.class)
-  public ResponseEntity<ErrorResponse> handleServiceUnavailable(ServiceUnavailableException ex, WebRequest request) {
-    ErrorResponse error = new ErrorResponse(
-        HttpStatus.SERVICE_UNAVAILABLE.value(),
-        "SERVICE_UNAVAILABLE",
-        ex.getMessage(),
-        request.getDescription(false),
-        request.getDescription(false).split("=")[1]
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex, HttpServletRequest request) {
+    ErrorResponse errorResponse = new ErrorResponse(
+            HttpStatus.BAD_REQUEST.value(),
+            "BAD_REQUEST",
+            ex.getMessage(),
+            Collections.singletonList(ex.getMessage()),
+            request.getRequestURI()
     );
-    return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(error);
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+  }
+
+  @ExceptionHandler(DataIntegrityViolationException.class)
+  public ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(DataIntegrityViolationException ex, HttpServletRequest request) {
+    String message = ex.getRootCause() != null ? ex.getRootCause().getMessage() : ex.getMessage();
+    ErrorResponse errorResponse = new ErrorResponse(
+            HttpStatus.CONFLICT.value(),
+            "DATA_INTEGRITY_VIOLATION",
+            "Se intento añadir un valor repetido a un campo unico",
+            Collections.singletonList(message),
+            request.getRequestURI()
+    );
+    return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+  }
+
+  @ExceptionHandler(BadCredentialsException.class)
+  public ResponseEntity<ErrorResponse> handleBadCredentialsException(BadCredentialsException ex, HttpServletRequest request) {
+    ErrorResponse errorResponse = new ErrorResponse(
+            HttpStatus.UNAUTHORIZED.value(),
+            "BAD_CREDENTIALS",
+            "Credenciales inválidas",
+            List.of(ex.getMessage()),
+            request.getRequestURI()
+    );
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
   }
 
   @ExceptionHandler(AccessDeniedException.class)
-  public ResponseEntity<ErrorResponse> handleAccessDeniedException(
-      AccessDeniedException ex, WebRequest request) {
-
+  public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException ex, HttpServletRequest request) {
     ErrorResponse errorResponse = new ErrorResponse(
-        HttpStatus.FORBIDDEN.value(),
-        "FORBIDDEN",
-        "Acceso denegado",
-        ex.getLocalizedMessage(),
-        request.getDescription(false).replace("uri=", "")
+            HttpStatus.FORBIDDEN.value(),
+            "ACCESS_DENIED",
+            "Acceso denegado: no tienes permiso para acceder a este recurso.",
+            Collections.singletonList(ex.getMessage()),
+            request.getRequestURI()
     );
-    return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
+    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
   }
 
+  @ExceptionHandler(MailSendException.class)
+  public ResponseEntity<ErrorResponse> handleMailSendException(MailSendException ex, HttpServletRequest request) {
+    String message = ex.getMostSpecificCause() != null ? ex.getMostSpecificCause().getMessage() : ex.getMessage();
+    ErrorResponse errorResponse = new ErrorResponse(
+            HttpStatus.SERVICE_UNAVAILABLE.value(),
+            "MAIL_SEND_ERROR",
+            "Error al enviar el correo electrónico: " + message,
+            Collections.singletonList(ex.getMessage()),
+            request.getRequestURI()
+    );
+    return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(errorResponse);
+  }
+
+  @ExceptionHandler(org.springframework.web.bind.MissingServletRequestParameterException.class)
+  public ResponseEntity<ErrorResponse> handleMissingServletRequestParameterException(org.springframework.web.bind.MissingServletRequestParameterException ex, HttpServletRequest request) {
+    ErrorResponse errorResponse = new ErrorResponse(
+            HttpStatus.BAD_REQUEST.value(),
+            "MISSING_PARAMETER",
+            "Falta un parámetro obligatorio: " + ex.getParameterName(),
+            Collections.singletonList(ex.getMessage()),
+            request.getRequestURI()
+    );
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+  }
+
+  @ExceptionHandler(org.springframework.http.converter.HttpMessageNotReadableException.class)
+  public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(org.springframework.http.converter.HttpMessageNotReadableException ex, HttpServletRequest request) {
+    ErrorResponse errorResponse = new ErrorResponse(
+            HttpStatus.BAD_REQUEST.value(),
+            "MESSAGE_NOT_READABLE",
+            "El cuerpo de la solicitud es inválido o está mal formado",
+            List.of(ex.getMessage()),
+            request.getRequestURI()
+    );
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+  }
+
+  @ExceptionHandler(InvalidPasswordException.class)
+  public ResponseEntity<ErrorResponse> handleInvalidPasswordException(InvalidPasswordException ex, HttpServletRequest request) {
+    ErrorResponse error = new ErrorResponse(
+            HttpStatus.BAD_REQUEST.value(),
+            "INVALID_PASSWORD",
+            ex.getMessage(),
+            Collections.singletonList(ex.getMessage()),
+            request.getRequestURI()
+    );
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+  }
+
+  @ExceptionHandler(InvalidTokenException.class)
+  public ResponseEntity<ErrorResponse> handleInvalidToken(InvalidTokenException ex, HttpServletRequest request) {
+    ErrorResponse error = new ErrorResponse(
+            HttpStatus.UNAUTHORIZED.value(),
+            "INVALID_TOKEN",
+            "Token inválido",
+            Collections.singletonList(ex.getMessage()),
+            request.getRequestURI()
+    );
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+  }
+
+  @ExceptionHandler(UserNotFoundException.class)
+  public ResponseEntity<ErrorResponse> handleUserNotFound(UserNotFoundException ex, HttpServletRequest request) {
+    ErrorResponse error = new ErrorResponse(
+            HttpStatus.NOT_FOUND.value(),
+            "USER_NOT_FOUND",
+            "Usuario no encontrado",
+            Collections.singletonList(ex.getMessage()),
+            request.getRequestURI()
+    );
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+  }
 }
