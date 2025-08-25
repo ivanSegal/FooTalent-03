@@ -42,6 +42,20 @@ export const vasselsService = {
     const { data } = await api.get<Vassel | ApiResult<Vassel>>(`${BASE}/${id}`);
     return unwrap<Vassel>(data);
   },
+
+  async create(payload: Partial<Vassel>): Promise<Vassel> {
+    const { data } = await api.post<Vassel | ApiResult<Vassel>>(`${BASE}/create`, payload);
+    return unwrap<Vassel>(data);
+  },
+
+  async update(id: number, payload: Partial<Vassel>): Promise<Vassel> {
+    const { data } = await api.put<Vassel | ApiResult<Vassel>>(`${BASE}/${id}`, payload);
+    return unwrap<Vassel>(data);
+  },
+
+  async remove(id: number): Promise<void> {
+    await api.delete(`${BASE}/${id}`);
+  },
 };
 
 export default vasselsService;
