@@ -2,9 +2,18 @@ package com.Incamar.IncaCore.models;
 
 import com.Incamar.IncaCore.enums.MovementType;
 import jakarta.persistence.*;
-
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import java.time.LocalDate;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Entity
+@Table(name = "inventory_movements")
 public class InventoryMovement {
 
     @Id
