@@ -8,12 +8,10 @@ import com.Incamar.IncaCore.models.Warehouse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import org.mapstruct.factory.Mappers;
+
 
 @Mapper(componentModel = "spring")
 public interface ItemWarehouseMapper {
-
-    ItemWarehouseMapper INSTANCE = Mappers.getMapper(ItemWarehouseMapper.class);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "warehouse", expression = "java(mapWarehouse(requestDto.getWarehouseId()))")
@@ -24,7 +22,7 @@ public interface ItemWarehouseMapper {
     ItemWarehouseResponseDto toResponseDto(ItemWarehouse itemWarehouse);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "warehouse", expression = "java(mapWarehouse(updateDto.getWarehouseId()))")
+    @Mapping(target = "warehouse", ignore = true)
     void updateEntityFromDto(ItemWarehouseUpdateDto updateDto, @MappingTarget ItemWarehouse entity);
 
     default Warehouse mapWarehouse(Long warehouseId) {

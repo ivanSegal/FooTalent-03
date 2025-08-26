@@ -3,7 +3,15 @@ package com.Incamar.IncaCore.dtos.itemwarehouse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ItemWarehouseUpdateDto {
 
     @Schema(description = "Nombre único del ítem", example = "Tornillos de acero")

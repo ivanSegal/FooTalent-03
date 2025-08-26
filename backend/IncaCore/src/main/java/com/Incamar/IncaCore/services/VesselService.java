@@ -1,4 +1,4 @@
-package com.Incamar.IncaCore.services.vessel;
+package com.Incamar.IncaCore.services;
 
 import com.Incamar.IncaCore.dtos.vessels.VesselRequestDto;
 import com.Incamar.IncaCore.dtos.vessels.VesselResponseDto;

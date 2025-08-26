@@ -3,7 +3,7 @@ package com.Incamar.IncaCore.controllers;
 import com.Incamar.IncaCore.documentation.vessel.*;
 import com.Incamar.IncaCore.dtos.vessels.VesselRequestDto;
 import com.Incamar.IncaCore.dtos.vessels.VesselResponseDto;
-import com.Incamar.IncaCore.services.vessel.VesselService;
+import com.Incamar.IncaCore.services.VesselService;
 import com.Incamar.IncaCore.utils.ApiResult;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

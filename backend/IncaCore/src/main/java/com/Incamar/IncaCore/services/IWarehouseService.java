@@ -1,4 +1,4 @@
-package com.Incamar.IncaCore.services.werehouse;
+package com.Incamar.IncaCore.services;
 
 import com.Incamar.IncaCore.dtos.warehouse.WarehouseRequestDto;
 import com.Incamar.IncaCore.dtos.warehouse.WarehouseResponseDto;

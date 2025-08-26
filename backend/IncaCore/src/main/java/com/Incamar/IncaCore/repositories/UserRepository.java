@@ -4,6 +4,7 @@ package com.Incamar.IncaCore.repositories;
 import com.Incamar.IncaCore.models.User;
 import com.Incamar.IncaCore.enums.AccountStatus;
 import com.Incamar.IncaCore.enums.Role;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -38,4 +39,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
   );
 
 
+    UUID id(UUID id);
+
+  boolean existsById( Long responsibleId);
 }

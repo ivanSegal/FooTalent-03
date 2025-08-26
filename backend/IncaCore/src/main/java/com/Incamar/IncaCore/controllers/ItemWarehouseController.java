@@ -1,13 +1,10 @@
 package com.Incamar.IncaCore.controllers;
 
+import com.Incamar.IncaCore.documentation.itemwarehouse.*;
 import com.Incamar.IncaCore.dtos.itemwarehouse.ItemWarehouseRequestDto;
 import com.Incamar.IncaCore.dtos.itemwarehouse.ItemWarehouseResponseDto;
 import com.Incamar.IncaCore.dtos.itemwarehouse.ItemWarehouseUpdateDto;
-import com.Incamar.IncaCore.dtos.warehouse.WarehouseRequestDto;
-import com.Incamar.IncaCore.dtos.warehouse.WarehouseResponseDto;
-import com.Incamar.IncaCore.models.ItemWarehouse;
-import com.Incamar.IncaCore.services.itemwarehouse.IItemWarehouseService;
-import com.Incamar.IncaCore.services.werehouse.IWarehouseService;
+import com.Incamar.IncaCore.services.IItemWarehouseService;
 import com.Incamar.IncaCore.utils.ApiResult;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -28,25 +25,29 @@ public class ItemWarehouseController {
 
     private final IItemWarehouseService itemWarehouseService;
 
+    @CreateItemWarehouseEndpointDoc
     @PostMapping("/create")
-    public ApiResult<?> createItemWarehouse(@Valid ItemWarehouseRequestDto itemWarehouse) {
+    public ApiResult<?> createItemWarehouse(@RequestBody @Valid ItemWarehouseRequestDto itemWarehouse) {
         ItemWarehouseResponseDto  itemWarehouseResponseDto = itemWarehouseService.createItemWarehouse(itemWarehouse);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResult.success(itemWarehouseResponseDto,"Item de almacen creado correctamente.")).getBody();
     }
 
+    @GetItemWarehouseByIdEndpointDoc
     @GetMapping("/{id}")
     public ResponseEntity<ApiResult<?>> getItemWarehouseById(@PathVariable Long id) {
         ItemWarehouseResponseDto itemWarehouseResponseDto = itemWarehouseService.getItemWarehouseById(id);
         return ResponseEntity.ok(ApiResult.success(itemWarehouseResponseDto,"Item de almacen obtenido exitosamente."));
     }
 
+    @DeleteItemWarehouseEndpointDoc
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResult<?>> deleteItemWarehouse(@PathVariable Long id) {
         itemWarehouseService.deleteById(id);
         return ResponseEntity.ok(ApiResult.success("Item de almacen eliminado exitosamente."));
     }
 
+    @UpdateItemWarehouseEndpointDoc
     @PutMapping("/{id}")
     public ResponseEntity<ApiResult<?>> editWarehouse(@PathVariable Long id,
                                                       @Valid @RequestBody ItemWarehouseUpdateDto itemWarehouseDto) {
@@ -54,14 +55,16 @@ public class ItemWarehouseController {
         return ResponseEntity.ok(ApiResult.success(itemWarehouseResponseDto,"Item de almacen editado exitosamente."));
     }
 
+    @GetAllItemWarehousesEndpointDoc
     @GetMapping
     public ResponseEntity<ApiResult<?>> getAllItemsWarehouse(@ParameterObject Pageable pageable) {
         return ResponseEntity.ok(ApiResult.success(itemWarehouseService.getAllItemsWarehouse(pageable),"Se visualizan exitosamente todos los items de almacen."));
     }
 
+    @SearchItemWarehouseEndpointDoc
     @GetMapping("/search")
     public ResponseEntity<ApiResult<?>> searchItemWarehouse(@RequestParam("nombre") String nombre, @ParameterObject Pageable pageable) {
         Page<ItemWarehouseResponseDto> result = itemWarehouseService.searchItemWarehouseByName(nombre, pageable);
-        return ResponseEntity.ok(ApiResult.success(result,"Embarcaciones obtenidas exitosamente."));
+        return ResponseEntity.ok(ApiResult.success(result,"Items de almacenamiento obtenidos exitosamente."));
     }
 }

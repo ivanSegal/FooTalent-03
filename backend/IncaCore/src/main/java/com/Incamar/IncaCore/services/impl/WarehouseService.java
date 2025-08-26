@@ -1,4 +1,4 @@
-package com.Incamar.IncaCore.services.werehouse;
+package com.Incamar.IncaCore.services.impl;
 
 
 import com.Incamar.IncaCore.dtos.warehouse.WarehouseRequestDto;
@@ -8,6 +8,7 @@ import com.Incamar.IncaCore.exceptions.ResourceNotFoundException;
 import com.Incamar.IncaCore.mappers.WarehouseMapper;
 import com.Incamar.IncaCore.models.Warehouse;
 import com.Incamar.IncaCore.repositories.WarehouseRepository;
+import com.Incamar.IncaCore.services.IWarehouseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,6 +49,7 @@ public class WarehouseService implements IWarehouseService {
     public WarehouseResponseDto editWarehouse(Long id, WarehouseRequestDto warehouseRequestDto) {
         Warehouse warehouse = warehouseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Almacen no encontrado."));
+
         WarehouseMapper.updateEntityFromDto(warehouseRequestDto, warehouse);
         warehouseRepository.save(warehouse);
         return WarehouseMapper.toDto(warehouse);

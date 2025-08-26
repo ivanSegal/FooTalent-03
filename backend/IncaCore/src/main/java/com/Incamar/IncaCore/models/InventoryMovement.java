@@ -24,11 +24,12 @@ public class InventoryMovement {
     @JoinColumn(name = "item_warehouse_id", nullable = false)
     private ItemWarehouse itemWarehouse;
 
-
     @Enumerated(EnumType.STRING)
     @Column(name = "movement_type", nullable = false)
     private MovementType movementType;
 
+    @Column(nullable = false)
+    private int quantity;
 
     @Column(nullable = false)
     private LocalDate date;

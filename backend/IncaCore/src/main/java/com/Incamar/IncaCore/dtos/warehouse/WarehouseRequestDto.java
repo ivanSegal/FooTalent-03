@@ -27,7 +27,7 @@ public class WarehouseRequestDto {
 
     @Schema(
             description = "Ubicación del almacén",
-            example = "Buenos Aires - Zona Norte",
+            example = "Av. Libertador 1234, Buenos Aires",
             minLength = 3,
             maxLength = 150,
             required = true
