@@ -7,6 +7,7 @@ import com.Incamar.IncaCore.dtos.serviceTicketDetail.ServiceTicketDetailResponse
 import com.Incamar.IncaCore.services.impl.ServiceTicketDetailServiceImpl;
 
 import com.Incamar.IncaCore.utils.ApiResult;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/boleta-servicio-detalle")
+@Tag(name = "07 - Detalles de boleta de servicio", description = "Endpoints para la gestión de los detalles de boletas de servicio para embarcaciones.")
 @RequiredArgsConstructor
 public class ServiceTicketDetailController {
 

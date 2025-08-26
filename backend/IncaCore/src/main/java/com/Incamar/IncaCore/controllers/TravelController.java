@@ -6,6 +6,7 @@ import com.Incamar.IncaCore.documentation.travel.GetTravelsByDetailEndpointDoc;
 import com.Incamar.IncaCore.dtos.travel.TravelRequestDto;
 import com.Incamar.IncaCore.dtos.travel.TravelResponseDto;
 import com.Incamar.IncaCore.services.TravelService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/travels")
+@Tag(name = "08 - Viajes realizados", description = "Endpoints para la carga de los horarios y destinos por viaje de la embarcación.")
 @RequiredArgsConstructor
 public class TravelController {
 
@@ -34,8 +36,8 @@ public class TravelController {
 
     @GetTotalHoursByDetailEndpointDoc
     @GetMapping("/detail/{detailId}/total-hours")
-    public ResponseEntity<Integer> getTotalHours(@PathVariable Long detailId) {
-        return ResponseEntity.ok(travelService.getTotalTraveledHours(detailId));
+    public ResponseEntity<String> getTotalHours(@PathVariable Long detailId) {
+        return ResponseEntity.ok(travelService.getTotalTraveledTime(detailId));
     }
 }
 
