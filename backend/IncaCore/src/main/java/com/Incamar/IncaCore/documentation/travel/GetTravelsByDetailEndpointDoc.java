@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Operation(
-        summary = "Crear un nuevo viaje asociado a un detalle de boleta",
+        summary = "Ver los viajes asociados a un detalle de boleta",
         description = """
         Registra un viaje con su origen, destino y horarios. \
         Debe estar vinculado a un `ServiceTicketDetail`. \

@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TravelServiceImpl implements TravelService {
 
+
     private final TravelRepository travelRepo;
     private final ServiceTicketDetailRepository detailRepo;
     private final TravelMapper mapper;
@@ -35,18 +36,33 @@ public class TravelServiceImpl implements TravelService {
     @Override
     public List<TravelResponseDto> getByDetailId(Long detailId) {
         return travelRepo.findByServiceTicketDetail_Id(detailId).stream()
-                .map(t -> {
-                    TravelResponseDto dto = mapper.toDto(t);
-                    dto.setTotalTraveledTime(formatDuration(durationOf(t)));
-                    return dto;
-                })
+                .map(mapper::toDto) // El cálculo por viaje lo hace @AfterMapping en TravelMapper
                 .toList();
+    }
+
+    @Override
+    public TravelResponseDto update(Long id, TravelRequestDto dto) {
+        Travel travel = travelRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Travel no encontrado con id: " + id));
+
+        mapper.updateFromDto(dto, travel);
+        Travel updated = travelRepo.save(travel);
+
+        return mapper.toDto(updated);
+    }
+
+    @Override
+    public void delete(Long id) {
+        if (!travelRepo.existsById(id)) {
+            throw new ResourceNotFoundException("Travel no encontrado con id: " + id);
+        }
+        travelRepo.deleteById(id);
     }
 
     @Override
     public String getTotalTraveledTime(Long detailId) {
         Duration total = travelRepo.findByServiceTicketDetail_Id(detailId).stream()
-                .map(this::durationOf)
+                .map(this::durationOf) // sigue usando este helper para sumar todos los viajes
                 .reduce(Duration.ZERO, Duration::plus);
         return formatDuration(total);
     }
