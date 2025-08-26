@@ -1,5 +1,6 @@
 package com.Incamar.IncaCore.dtos.travel;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -23,10 +24,12 @@ public class TravelRequestDto {
     private String destination;
 
     @Schema(example = "08:30")
+    @JsonFormat(pattern = "HH:mm")
     @NotNull
     private LocalTime departureTime;
 
     @Schema(example = "12:45")
+    @JsonFormat(pattern = "HH:mm")
     @NotNull
     private LocalTime arrivalTime;
 }
