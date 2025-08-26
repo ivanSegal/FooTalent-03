@@ -9,5 +9,5 @@ public interface TravelService {
 
     TravelResponseDto create(TravelRequestDto dto);
     List<TravelResponseDto> getByDetailId(Long detailId);
-    int getTotalTraveledHours(Long detailId);
+    String getTotalTraveledTime(Long detailId);
 }

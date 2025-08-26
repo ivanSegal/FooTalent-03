@@ -5,6 +5,7 @@ import com.Incamar.IncaCore.dtos.serviceTicketDetail.ServiceTicketDetailRequestD
 import com.Incamar.IncaCore.dtos.serviceTicketDetail.ServiceTicketDetailResponseDto;
 import com.Incamar.IncaCore.models.ServiceTicket;
 import com.Incamar.IncaCore.models.ServiceTicketDetail;
+import com.Incamar.IncaCore.services.TravelService;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.ERROR)
@@ -21,5 +22,6 @@ public interface ServiceTicketDetailMapper {
     void updateDetailsFromDto(ServiceTicketDetailRequestDto requestDto, @MappingTarget ServiceTicketDetail target);
 
     @Mapping(target = "serviceTicketId", source = "serviceTicket.id")
+    @Mapping(target = "hoursTraveled", ignore = true)
     ServiceTicketDetailResponseDto toDto(ServiceTicketDetail entity);
 }

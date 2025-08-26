@@ -29,11 +29,11 @@ public class ServiceTicketDetailRequestDto {
     @NotNull(groups = {Create.class})
     private String description;
 
-    @Schema(description = "Horas navegadas o trabajadas vinculadas al servicio.",
-            example = "6")
+    /*@Schema(description = "Horas navegadas o trabajadas vinculadas al servicio.",
+            example = "06:30")
     @NotNull(groups = {Create.class})
     @PositiveOrZero
-    private Integer hoursTraveled;
+    private String hoursTraveled;*/
 
     @Schema(description = "Nombre completo del patrón de barco.", example = "Juan Pérez")
     @NotNull(groups = {Create.class})

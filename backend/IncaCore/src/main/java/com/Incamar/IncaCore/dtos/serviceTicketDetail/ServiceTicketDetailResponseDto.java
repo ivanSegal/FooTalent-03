@@ -27,8 +27,8 @@ public class ServiceTicketDetailResponseDto {
             example = "Servicio de traslado de documentos. ")
     private String description;
 
-    @Schema(description = "Cantidad de horas viajadas.", example = "12")
-    private Integer hoursTraveled;
+    @Schema(description = "Cantidad total de horas viajadas en formato hh:mm", example = "04:15")
+    private String hoursTraveled;
 
     @Schema(description = "Nombre completo del patrón.", example = "Silvio Rodriguez")
     private String patronFullName;

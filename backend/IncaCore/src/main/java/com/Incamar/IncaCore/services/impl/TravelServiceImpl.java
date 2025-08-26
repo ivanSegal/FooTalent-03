@@ -28,25 +28,40 @@ public class TravelServiceImpl implements TravelService {
     public TravelResponseDto create(TravelRequestDto dto) {
         ServiceTicketDetail detail = detailRepo.findById(dto.getServiceTicketDetailId())
                 .orElseThrow(() -> new ResourceNotFoundException("Detalle no encontrado: " + dto.getServiceTicketDetailId()));
-
         Travel entity = mapper.toEntity(dto, detail);
         return mapper.toDto(travelRepo.save(entity));
     }
 
     @Override
     public List<TravelResponseDto> getByDetailId(Long detailId) {
-        return travelRepo.findByServiceTicketDetail_Id(detailId)
-                .stream()
-                .map(mapper::toDto)
-                .collect(Collectors.toList());
+        return travelRepo.findByServiceTicketDetail_Id(detailId).stream()
+                .map(t -> {
+                    TravelResponseDto dto = mapper.toDto(t);
+                    dto.setTotalTraveledTime(formatDuration(durationOf(t)));
+                    return dto;
+                })
+                .toList();
     }
 
     @Override
-    public int getTotalTraveledHours(Long detailId) {
-        List<Travel> travels = travelRepo.findByServiceTicketDetail_Id(detailId);
+    public String getTotalTraveledTime(Long detailId) {
+        Duration total = travelRepo.findByServiceTicketDetail_Id(detailId).stream()
+                .map(this::durationOf)
+                .reduce(Duration.ZERO, Duration::plus);
+        return formatDuration(total);
+    }
 
-        return travels.stream()
-                .mapToInt(t -> (int) Duration.between(t.getDepartureTime(), t.getArrivalTime()).toHours())
-                .sum();
+    private static String formatDuration(Duration d) {
+        long hours = d.toHours();
+        long minutes = d.minusHours(hours).toMinutes();
+        return String.format("%02d:%02d", hours, minutes);
+    }
+
+    private Duration durationOf(Travel t) {
+        if (t.getDepartureTime() == null || t.getArrivalTime() == null) {
+            return Duration.ZERO;
+        }
+        Duration d = Duration.between(t.getDepartureTime(), t.getArrivalTime());
+        return d.isNegative() ? Duration.ZERO : d;
     }
 }

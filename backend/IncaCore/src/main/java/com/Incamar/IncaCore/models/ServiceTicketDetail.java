@@ -32,9 +32,6 @@ public class ServiceTicketDetail {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "hours_traveled")
-    private Integer hoursTraveled;
-
     @Column(name = "patron_fullname")
     private String patronFullName;
 

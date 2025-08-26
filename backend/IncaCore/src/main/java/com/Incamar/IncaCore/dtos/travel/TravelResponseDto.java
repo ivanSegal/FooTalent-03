@@ -23,6 +23,9 @@ public class TravelResponseDto {
     @Schema(example = "12:45")
     private LocalTime arrivalTime;
 
+    @Schema(example = "04:15")
+    private String totalTraveledTime;
+
     @Schema(description = "ID del detalle de la boleta asociado", example = "12")
     private Long serviceTicketDetailId;
 }
