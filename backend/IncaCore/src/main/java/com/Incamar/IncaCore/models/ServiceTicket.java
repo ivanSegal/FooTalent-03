@@ -15,13 +15,12 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
-@Table(name = "boletaServicio")
+@Table(name = "service_ticket")
 public class ServiceTicket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // obligatorios (reglas simples de dominio)
     @NotNull
     @Column(nullable = false)
     private Long travelNro;
@@ -38,7 +37,6 @@ public class ServiceTicket {
     @Column(nullable = false, length = 120)
     private String solicitedBy;
 
-    // El patrón se valida en el DTO (entrada)
     @Column(nullable = false, length = 32)
     private String reportTravelNro;
 
@@ -52,9 +50,27 @@ public class ServiceTicket {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "vessel_id", nullable = false)
-    private Vessel boat;
+    private Vessel vessel;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "responsible_id", nullable = false)
     private User responsible;
+
+    // ---------- 1 : 1 con detalles ----------
+    @OneToOne(mappedBy = "serviceTicket",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
+    private ServiceTicketDetail detail;
+
+    /**
+     * Helper para mantener ambos lados sincronizados
+     */
+    public void setDetail(ServiceTicketDetail detail) {
+        this.detail = detail;
+        if (detail != null) {
+            detail.setServiceTicket(this);
+        }
+
+    }
 }

@@ -1,5 +1,6 @@
 package com.Incamar.IncaCore.dtos.serviceTicket;
 
+import com.Incamar.IncaCore.dtos.serviceTicketDetail.ServiceTicketDetailResponseDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
@@ -21,6 +22,8 @@ public class ServiceTicketResponseDto {
     private String code;
     private Long checkingNro;
 
-    private String boatName;
+    private String vesselName;
     private String responsibleUsername;
+    private Long detailId;
+
 }

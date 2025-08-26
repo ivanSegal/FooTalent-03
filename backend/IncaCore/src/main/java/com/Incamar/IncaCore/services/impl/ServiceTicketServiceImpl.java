@@ -2,7 +2,6 @@ package com.Incamar.IncaCore.services.impl;
 
 import com.Incamar.IncaCore.dtos.serviceTicket.ServiceTicketRequestDto;
 import com.Incamar.IncaCore.dtos.serviceTicket.ServiceTicketResponseDto;
-import com.Incamar.IncaCore.dtos.users.JwtDataDto;
 import com.Incamar.IncaCore.exceptions.ResourceNotFoundException;
 import com.Incamar.IncaCore.mappers.ServiceTicketMapper;
 import com.Incamar.IncaCore.models.ServiceTicket;
@@ -14,7 +13,6 @@ import com.Incamar.IncaCore.repositories.UserRepository;
 import com.Incamar.IncaCore.services.ServiceTicketService;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -52,14 +50,14 @@ public class ServiceTicketServiceImpl implements ServiceTicketService {
     @Override
     public ServiceTicketResponseDto createBoletaServicio(ServiceTicketRequestDto requestDto) {
 
-        Vessel boat = vesselRepository.findById(requestDto.getBoatId())
+        Vessel vessel = vesselRepository.findById(requestDto.getVesselId())
                 .orElseThrow(() -> new ResourceNotFoundException("Embarcación asociada a la boleta de servicio no encontrada."));
 
-        User responsible = authService.getAuthenticatedUser().orElseThrow(()->new  ResourceNotFoundException("Usuario no encontraado"));
+        User responsible = authService.getAuthenticatedUser().orElseThrow(()->new  ResourceNotFoundException("Usuario no encontrado."));
 
         validateTravelConsistency(requestDto.getTravelNro(), requestDto.getReportTravelNro());
 
-        ServiceTicket entity = mapper.toEntity(requestDto, boat, responsible);
+        ServiceTicket entity = mapper.toEntity(requestDto, vessel, responsible);
         return mapper.toDTO(serviceTicketRepository.save(entity));
     }
 
@@ -68,10 +66,10 @@ public class ServiceTicketServiceImpl implements ServiceTicketService {
         ServiceTicket entity = serviceTicketRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Boleta de servicio no encontrada."));
 
-        if (requestDto.getBoatId() != null) {
-            Vessel boat = vesselRepository.findById(requestDto.getBoatId())
+        if (requestDto.getVesselId() != null) {
+            Vessel vessel = vesselRepository.findById(requestDto.getVesselId())
                     .orElseThrow(() -> new ResourceNotFoundException("Embarcación no encontrada."));
-            entity.setBoat(boat);
+            entity.setVessel(vessel);
         }
 
         Long effectiveTravelNro = requestDto.getTravelNro() != null ? requestDto.getTravelNro() : entity.getTravelNro();
@@ -99,7 +97,7 @@ public class ServiceTicketServiceImpl implements ServiceTicketService {
 
     @Override
     public Page<ServiceTicketResponseDto> searchBoletaServicioByBoat(String boatName, Pageable pageable) {
-        return serviceTicketRepository.findByBoat_NameContainingIgnoreCase(boatName, pageable)
+        return serviceTicketRepository.findByVessel_NameContainingIgnoreCase(boatName, pageable)
                 .map(mapper::toDTO);
     }
 

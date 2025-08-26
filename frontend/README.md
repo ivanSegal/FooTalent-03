@@ -69,42 +69,29 @@ Estas instrucciones te guiarán para obtener una copia de este proyecto en funci
 
 
 <!-- RAMAS -->
-## 🏷️ Guía de ramas
+## 🏷️ Estrategia de Ramas (Branching Strategy)
 
-- **`main`**: Versión estable en producción.  
-- **`develop`**: Integración continua de nuevas funcionalidades.  
-- **`feature/<descripción>`**: Desarrollo de funcionalidades específicas.  
-- **`hotfix/<descripción>`**: Correcciones críticas en producción.  
-- **`release/<versión>`**: Preparación de versiones para `main`.
+Para mantener un flujo de trabajo organizado se utilizó una estrategia basada en **épicas semanales** y **ramas de tareas**:
 
-<p align="right">(<a href="#readme-top">Volver al inicio</a>)</p>
+- **Rama Principal de la Épica**:  
+  Cada semana contó con una rama que centralizó el trabajo del issue.  
+  - Semana 3 → `feature/frontend-week3-ui-conf-maquetar`  
+  - Semana 4 → `epic/frontend-week4-ui-backend-integration`  
+
+- **Ramas de Tareas**:  
+  Cada tarea o sub-tarea (componentes, vistas, integración con backend) se desarrolló en una rama propia, partiendo siempre de la rama de la épica.  
+  Ejemplo: `feature/button-component`, `feature/user-list-view`.
+
+- **Pull Requests (PRs)**:  
+  Los PRs de las tareas se dirigieron a la rama de la épica, **no directamente a `develop`**.  
+
+- **Limpieza y Fusión Final**:  
+  Una vez aprobado y fusionado el PR de una tarea, la rama se eliminaba.  
+  Al completar todas las tareas, se hacía un PR final de la rama de la épica hacia `develop`.
+
+✅ Con esto se logró mantener el repositorio limpio, organizado y con un control claro de los avances semanales.
 
 <!-- COMMITS -->
-
-## ✍️ Convención de commits
-
-Usamos **Conventional Commits** para estandarizar mensajes y facilitar el historial:
-
-```bash
-<tipo>(<scope opcional>): mensaje breve
-```
-
-- **feat**: nueva funcionalidad
-- **fix**: corrección de errores
-- **docs**: cambios en documentación
-- **style**: formato, espaciado, sin lógica
-- **refactor**: refactorización de código
-- **test**: añadir o modificar tests
-- **chore**: tareas de mantenimiento
-
-**Ejemplos:**
-
-```bash
-feat(auth): implementar flujo de login
-fix(user): corregir validación de email vacío
-docs: actualizar sección de instalación en README
-```
-<p align="right">(<a href="#readme-top">Volver al inicio</a>)</p>
 
 <!-- FLUJO DE TRABAJO -->
 
