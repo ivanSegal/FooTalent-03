@@ -14,6 +14,7 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { Bar } from "react-chartjs-2";
+import Sidebar from "../sidebar/sidebar";
 
 ChartJS.register(
   LineElement,
@@ -158,7 +159,9 @@ export default function DashboardPage() {
   );
 
   return (
-    <main className="min-h-screen bg-gray-50 p-8">
+    <>
+    <Sidebar />
+    <main className="min-h-screen bg-gray-50 p-8 ml-16">
       <h1 className="mb-6 text-3xl font-bold text-[color:var(--color-primary-500)]">Dashboard</h1>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-12">
         {/* Row 1: 3 cards of 4 columns */}
@@ -365,5 +368,7 @@ export default function DashboardPage() {
         </section>
       </div>
     </main>
+    </>
+    
   );
 }
