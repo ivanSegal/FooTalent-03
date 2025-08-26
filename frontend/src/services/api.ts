@@ -23,7 +23,6 @@ api.interceptors.request.use(
   },
 );
 
-
 // Evita múltiples redirecciones simultáneas
 let isLoggingOut = false;
 
@@ -40,8 +39,10 @@ api.interceptors.response.use(
         const out: Record<string, string> = {};
         for (const item of val) {
 
+
           if (!item) continue;
           if (typeof item === "object") {
+
 
             // Support shapes: { field, message } | { param, msg } | { property, constraints }
             const obj = item as Record<string, unknown>;
@@ -53,6 +54,7 @@ api.interceptors.response.use(
               | string
               | undefined;
             if (key && msg) out[String(key)] = String(msg);
+
 
             continue;
           }
@@ -108,6 +110,7 @@ api.interceptors.response.use(
     } catch {
       // noop
     }
+
     // Common backend shapes: {message, success, errors}, {error: {message}}, or validation map
     if (data) {
       if (typeof data.message === "string") err.message = data.message;
@@ -133,6 +136,7 @@ api.interceptors.response.use(
           }
         }
       } catch {}
+
       // Some APIs place detail at data.detail or data.title
       if (
         typeof data.detail === "string" &&
