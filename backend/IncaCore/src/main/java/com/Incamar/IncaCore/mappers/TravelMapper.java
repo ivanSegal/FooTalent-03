@@ -15,6 +15,11 @@ public interface TravelMapper {
     @Mapping(target = "serviceTicketDetail", source = "detail")
     Travel toEntity(TravelRequestDto dto, ServiceTicketDetail detail);
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "serviceTicketDetail", ignore = true)
+    void updateFromDto(TravelRequestDto dto, @MappingTarget Travel entity);
+
     @Mapping(target = "serviceTicketDetailId", source = "serviceTicketDetail.id")
     @Mapping(target = "totalTraveledTime", ignore = true )
     TravelResponseDto toDto(Travel entity);

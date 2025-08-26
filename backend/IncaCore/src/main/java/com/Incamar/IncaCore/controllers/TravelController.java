@@ -1,8 +1,6 @@
 package com.Incamar.IncaCore.controllers;
 
-import com.Incamar.IncaCore.documentation.travel.CreateTravelEndpointDoc;
-import com.Incamar.IncaCore.documentation.travel.GetTotalHoursByDetailEndpointDoc;
-import com.Incamar.IncaCore.documentation.travel.GetTravelsByDetailEndpointDoc;
+import com.Incamar.IncaCore.documentation.travel.*;
 import com.Incamar.IncaCore.dtos.travel.TravelRequestDto;
 import com.Incamar.IncaCore.dtos.travel.TravelResponseDto;
 import com.Incamar.IncaCore.services.TravelService;
@@ -38,6 +36,21 @@ public class TravelController {
     @GetMapping("/detail/{detailId}/total-hours")
     public ResponseEntity<String> getTotalHours(@PathVariable Long detailId) {
         return ResponseEntity.ok(travelService.getTotalTraveledTime(detailId));
+    }
+
+    @UpdateTravelEndpointDoc
+    @PutMapping("/{id}")
+    public ResponseEntity<TravelResponseDto> update(
+            @PathVariable Long id,
+            @Validated @RequestBody TravelRequestDto dto) {
+        return ResponseEntity.ok(travelService.update(id, dto));
+    }
+
+    @DeleteTravelEndpointDoc
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        travelService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
 

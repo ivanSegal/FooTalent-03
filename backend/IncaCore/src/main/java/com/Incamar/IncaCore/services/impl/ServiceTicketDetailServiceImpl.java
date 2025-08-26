@@ -40,7 +40,7 @@ public class ServiceTicketDetailServiceImpl implements ServiceTicketDetailServic
         ServiceTicketDetail saved = detailRepo.save(entity);
 
         ServiceTicketDetailResponseDto response = mapper.toDto(saved);
-        response.setHoursTraveled(travelService.getTotalTraveledTime(saved.getId())); // 👈 seteo manual
+        response.setHoursTraveled(travelService.getTotalTraveledTime(saved.getId()));
 
         return response;
     }
@@ -51,7 +51,7 @@ public class ServiceTicketDetailServiceImpl implements ServiceTicketDetailServic
                 .orElseThrow(() -> new ResourceNotFoundException("ServiceTicketDetail no encontrado: " + id));
 
         ServiceTicketDetailResponseDto response = mapper.toDto(entity);
-        response.setHoursTraveled(travelService.getTotalTraveledTime(entity.getId())); // 👈 seteo manual
+        response.setHoursTraveled(travelService.getTotalTraveledTime(entity.getId()));
 
         return response;
     }
@@ -76,7 +76,7 @@ public class ServiceTicketDetailServiceImpl implements ServiceTicketDetailServic
         ServiceTicketDetail saved = detailRepo.save(entity);
 
         ServiceTicketDetailResponseDto response = mapper.toDto(saved);
-        response.setHoursTraveled(travelService.getTotalTraveledTime(saved.getId())); // 👈 seteo manual
+        response.setHoursTraveled(travelService.getTotalTraveledTime(saved.getId()));
 
         return response;
     }
@@ -94,7 +94,7 @@ public class ServiceTicketDetailServiceImpl implements ServiceTicketDetailServic
         return detailRepo.findAll(pageable)
                 .map(entity -> {
                     ServiceTicketDetailResponseDto dto = mapper.toDto(entity);
-                    dto.setHoursTraveled(travelService.getTotalTraveledTime(entity.getId())); // 👈 seteo manual
+                    dto.setHoursTraveled(travelService.getTotalTraveledTime(entity.getId()));
                     return dto;
                 });
     }
@@ -105,7 +105,7 @@ public class ServiceTicketDetailServiceImpl implements ServiceTicketDetailServic
                 .orElseThrow(() -> new ResourceNotFoundException("No existe detalle para ServiceTicket con id: " + serviceTicketId));
 
         ServiceTicketDetailResponseDto response = mapper.toDto(entity);
-        response.setHoursTraveled(travelService.getTotalTraveledTime(entity.getId())); // 👈 seteo manual
+        response.setHoursTraveled(travelService.getTotalTraveledTime(entity.getId()));
 
         return response;
     }

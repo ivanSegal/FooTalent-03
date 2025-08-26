@@ -10,4 +10,6 @@ public interface TravelService {
     TravelResponseDto create(TravelRequestDto dto);
     List<TravelResponseDto> getByDetailId(Long detailId);
     String getTotalTraveledTime(Long detailId);
+    TravelResponseDto update(Long id, TravelRequestDto dto);
+    void delete(Long id);
 }
