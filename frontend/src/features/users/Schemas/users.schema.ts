@@ -27,7 +27,7 @@ export const createUserSchema = z.object({
     .max(100, 'La contraseña no puede exceder 100 caracteres')
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, 'La contraseña debe contener al menos una minúscula, una mayúscula y un número'),
   
-  role: z.enum(['ADMIN', 'WAREHOUSE_STAFF', 'OPERATIONS_MANAGER'], {
+  role: z.enum(['ADMIN', 'SUPERVISOR', 'OPERATOR'], {
   message: 'Seleccione un rol válido'
 }),
   department: z.string().optional(),
@@ -40,7 +40,7 @@ export const updateUserSchema = createUserSchema.partial().extend({
 
 // Schema para filtros de usuarios
 export const userFiltersSchema = z.object({
-  role: z.enum(['ADMIN', 'WAREHOUSE_STAFF', 'OPERATIONS_MANAGER']).optional(),
+  role: z.enum(['ADMIN', 'SUPERVISOR', 'OPERATOR']).optional(),
   accountStatus: z.enum(['ACTIVE', 'INACTIVE', 'SUSPENDED']).optional(),
   department: z.string().optional(),
   search: z.string().optional(),
@@ -61,8 +61,8 @@ export type PaginationParamsForm = z.infer<typeof paginationParamsSchema>;
 // Constantes para roles
 export const USER_ROLES = {
   ADMIN: 'Administrador',
-  WAREHOUSE_STAFF: 'Personal de Almacén',
-  OPERATIONS_MANAGER: 'Gerente de Operaciones'
+  SUPERVISOR: 'Encargado',
+  OPERATOR: 'Personal'
 } as const;
 
 // Constantes para estados de cuenta

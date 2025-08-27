@@ -17,12 +17,11 @@ export const EditUserModal: React.FC<{
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const roles = [
+   const roles = [
     { value: 'ADMIN', label: 'Administrador' },
-    { value: 'WAREHOUSE_STAFF', label: 'Personal de Almacén' },
-    { value: 'OPERATIONS_MANAGER', label: 'Gerente de Operaciones' }
+    { value: 'SUPERVISOR', label: 'Encargado' },
+    { value: 'OPERATOR', label: 'Personal' }
   ];
-
   React.useEffect(() => {
     if (user) {
       setFormData({
@@ -106,7 +105,8 @@ export const EditUserModal: React.FC<{
                 type="text"
                 value={formData.fullName}
                 onChange={(e) => handleInputChange('fullName', e.target.value)}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 
+                  focus:ring-blue-500 focus:border-transparent ${
                   errors.fullName ? 'border-red-300' : 'border-gray-300'
                 }`}
               />
@@ -123,7 +123,8 @@ export const EditUserModal: React.FC<{
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 
+                  focus:ring-blue-500 focus:border-transparent ${
                   errors.email ? 'border-red-300' : 'border-gray-300'
                 }`}
               />
@@ -140,7 +141,8 @@ export const EditUserModal: React.FC<{
                 type="text"
                 value={formData.username}
                 onChange={(e) => handleInputChange('username', e.target.value)}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 
+                  focus:ring-blue-500 focus:border-transparent ${
                   errors.username ? 'border-red-300' : 'border-gray-300'
                 }`}
               />
@@ -157,7 +159,8 @@ export const EditUserModal: React.FC<{
                 <select
                   value={formData.role}
                   onChange={(e) => handleInputChange('role', e.target.value)}
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 
+                    focus:ring-blue-500 focus:border-transparent appearance-none bg-white ${
                     errors.role ? 'border-red-300' : 'border-gray-300'
                   }`}
                 >
@@ -169,8 +172,10 @@ export const EditUserModal: React.FC<{
                   ))}
                 </select>
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" 
+                  viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                    d="M19 9l-7 7-7-7" />
                   </svg>
                 </div>
               </div>
@@ -185,14 +190,16 @@ export const EditUserModal: React.FC<{
               type="button"
               onClick={handleClose}
               disabled={loading}
-              className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors"
+              className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 
+              rounded-lg font-medium hover:bg-gray-50 transition-colors"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-4 py-2 text-white rounded-lg font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+              className="flex-1 px-4 py-2 text-white rounded-lg font-medium hover:opacity-90 
+              transition-opacity flex items-center justify-center gap-2"
               style={{ backgroundColor: '#496490' }}
             >
               {loading && <LoadingOutlined spin />}

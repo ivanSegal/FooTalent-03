@@ -29,19 +29,19 @@ export const UsersList: React.FC<UsersListProps> = ({
   searchTerm = "",
   hasValidToken = true,
 }) => {
-  const getRoleStyle = (role: string): string => {
-    switch (role) {
-      case "ADMIN":
-        return "border border-red-200 bg-red-100 text-red-800";
-      case "WAREHOUSE_STAFF":
-        return "border border-blue-200 bg-blue-100 text-blue-800";
-      case "OPERATIONS_MANAGER":
-        return "border border-green-200 bg-green-100 text-green-800";
-      default:
-        return "border border-gray-200 bg-gray-100 text-gray-800";
-    }
-  };
-
+  
+const getRoleStyle = (role: string): string => {
+  switch (role) {
+    case "ADMIN":
+      return "border border-red-200 bg-red-100 text-red-800";
+    case "SUPERVISOR":
+      return "border border-blue-200 bg-blue-100 text-blue-800";
+    case "OPERATOR":
+      return "border border-green-200 bg-green-100 text-green-800";
+    default:
+      return "border border-gray-200 bg-gray-100 text-gray-800";
+  }
+};
   const getStatusIndicatorColor = (accountStatus: string): string => {
     switch (accountStatus) {
       case "ACTIVE":
