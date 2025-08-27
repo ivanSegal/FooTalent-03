@@ -2,6 +2,7 @@ package com.Incamar.IncaCore.controllers;
 
 import com.Incamar.IncaCore.dtos.vesselItem.VesselItemReq;
 import com.Incamar.IncaCore.dtos.vesselItem.VesselItemRes;
+import com.Incamar.IncaCore.dtos.vesselItem.VesselItemSearchReq;
 import com.Incamar.IncaCore.dtos.vesselItem.VesselItemUpdateReq;
 import com.Incamar.IncaCore.services.VesselItemService;
 import com.Incamar.IncaCore.utils.ApiResult;
@@ -27,8 +28,8 @@ public class VesselItemController {
 
     @SecurityRequirement(name = "bearer-key")
     @GetMapping
-    public ResponseEntity<?> getAll(@ParameterObject Pageable pageable){
-        Page<VesselItemRes> response = vesselItemService.getAll(pageable);
+    public ResponseEntity<?> getAllWithSearch(@ParameterObject @Valid VesselItemSearchReq request, @ParameterObject Pageable pageable){
+        Page<VesselItemRes> response = vesselItemService.getAllWithSearch(request,pageable);
         return ResponseEntity.ok()
                 .body(ApiResult.success(response,"Operación exitosa"));
     }
