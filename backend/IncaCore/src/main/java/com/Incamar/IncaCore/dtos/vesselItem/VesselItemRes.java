@@ -8,6 +8,7 @@ public record VesselItemRes(
         Integer accumulatedHours,
         Integer usefulLifeHours,
         Integer alertHours,
-        String materialType
+        String materialType,
+        Long vesselId
 ) {
 }

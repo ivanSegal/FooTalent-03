@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/api/vassel-item")
+@RequestMapping("/api/vessel-item")
 @RequiredArgsConstructor
 @Tag(name = "04 - Items Embarcaciones",
         description = "Endpoints para gestión de items de embarcaciones")
