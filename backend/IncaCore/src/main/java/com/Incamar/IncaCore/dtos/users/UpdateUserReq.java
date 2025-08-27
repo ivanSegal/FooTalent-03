@@ -19,7 +19,7 @@ public record UpdateUserReq(
         @Pattern(regexp = "^[A-Za-zñáéíóúÁÉÍÓÚ]+(?: [A-Za-zñáéíóúÁÉÍÓÚ]+)*$", message = "El apellido contiene caracteres no permitidos")
         String lastName,
 
-        @Schema(description = "Rol del usuario. Valores permitidos: ADMIN, OPERATIONS_MANAGER, WAREHOUSE_STAFF", example = "ADMIN", allowableValues = {"ADMIN", "OPERATIONS_MANAGER", "WAREHOUSE_STAFF"})
+        @Schema(description = "Rol del usuario. Valores permitidos: ADMIN, SUPERVISOR, OPERATOR", example = "ADMIN", allowableValues = {"ADMIN", "SUPERVISOR", "OPERATOR"})
         @NotNull(message = "El rol del usuaio es requerido")
         Role role,
 

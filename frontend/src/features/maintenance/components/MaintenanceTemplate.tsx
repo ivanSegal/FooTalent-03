@@ -3,7 +3,7 @@ import { Document, Page, Text, View, StyleSheet, Image, Font } from "@react-pdf/
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 
-import LogoLogin from "@/assets/images/LogoLogin.png";
+import LogoLogin from "@/assets/images/logo-incacore.svg";
 
 // Registrar la fuente "DM Sans" desde archivos locales para evitar errores de formato/CORS
 let dmSansRegistered = false;
@@ -149,7 +149,7 @@ export const MaintenanceTemplate: React.FC<{ data: MaintenanceData; logoSrc?: st
   const logoDefault: string =
     typeof (LogoLogin as unknown) === "string"
       ? (LogoLogin as unknown as string)
-      : (LogoLogin as { src?: string }).src || "/LogoLogin.png";
+      : (LogoLogin as { src?: string }).src || "/logo-incacore.svg";
   const rows: { label: string; value: string }[] = [
     { label: "ID", value: safe(data.id) },
     { label: "Embarcación", value: safe(data.vesselName) },

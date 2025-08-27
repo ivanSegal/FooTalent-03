@@ -10,6 +10,15 @@ import {
   type ServiceTicketListItem,
   serviceTicketService,
   ServiceTicketTemplate,
+
+  // Nuevos imports para Detalle
+  ServiceTicketDetailForm,
+  serviceTicketDetailService,
+  type ServiceTicketDetail,
+  // Imports para Travels
+  ServiceTicketTravelForm,
+  serviceTicketTravelService,
+  type ServiceTicketTravel,
 } from "@/features/service-ticket";
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import PDFGenerator from "@/components/pdf/PDFGenerator";
@@ -28,6 +37,16 @@ export default function ServiceTicketList() {
   const [current, setCurrent] = useState<ServiceTicketListItem | null>(null);
   const [dialog, setDialog] = useState(false);
 
+  // Estado para Detalles de Boleta
+  const [detailDialog, setDetailDialog] = useState(false);
+  const [detailTicket, setDetailTicket] = useState<ServiceTicketListItem | null>(null);
+
+  // Estado para Travels del Detail
+  const [detailEntity, setDetailEntity] = useState<ServiceTicketDetail | null>(null); // único
+  const [travelItems, setTravelItems] = useState<ServiceTicketTravel[]>([]);
+  const [travelCurrent, setTravelCurrent] = useState<ServiceTicketTravel | null>(null);
+  const [travelLoading, setTravelLoading] = useState(false);
+
   // filters
   const [search, setSearch] = useState("");
   const [dateRange, setDateRange] = useState<[Dayjs, Dayjs] | null>(null);
@@ -42,7 +61,9 @@ export default function ServiceTicketList() {
       const mSearch =
         !term ||
         i.vesselAttended.toLowerCase().includes(term) ||
-        i.boatName.toLowerCase().includes(term) ||
+
+        i.vesselName.toLowerCase().includes(term) ||
+
         i.solicitedBy.toLowerCase().includes(term) ||
         i.responsibleUsername.toLowerCase().includes(term) ||
         i.reportTravelNro.toLowerCase().includes(term) ||
@@ -86,6 +107,40 @@ export default function ServiceTicketList() {
     void refetch();
   };
 
+  // Abrir modal de detalles para una boleta
+  const openDetails = async (ticket: ServiceTicketListItem) => {
+    setDetailTicket(ticket);
+    setDetailDialog(true);
+    setDetailEntity(null);
+    setTravelItems([]);
+    setTravelCurrent(null);
+
+    try {
+      // Obtener (o crear) el único detalle
+      const detail = await serviceTicketDetailService.getOneByServiceTicket(ticket.id);
+      if (!detail) {
+        // si no existe, preparamos el form vacío; el usuario lo creará con el form
+        setDetailEntity(null);
+      } else {
+        setDetailEntity(detail);
+        // cargar travels
+        setTravelLoading(true);
+        const travels = await serviceTicketTravelService.listByDetail(detail.id);
+        setTravelItems(travels);
+      }
+    } catch (e) {
+      await showAlert(
+        "No se pudieron cargar los detalles",
+        (e as Error)?.message || "Intenta nuevamente.",
+        "error",
+      );
+    } finally {
+      setTravelLoading(false);
+    }
+  };
+
+  // Columnas principales
+
   const columns: ColumnsType<ServiceTicketListItem> = [
     {
       title: "ID",
@@ -118,12 +173,16 @@ export default function ServiceTicketList() {
               : undefined
           : undefined,
     },
-    { title: "Embarcación", dataIndex: "vesselAttended", key: "vesselAttended" },
+
+    { title: "Embarcación atendida", dataIndex: "vesselAttended", key: "vesselAttended" },
+
     { title: "Solicitado por", dataIndex: "solicitedBy", key: "solicitedBy" },
     { title: "Reporte N°", dataIndex: "reportTravelNro", key: "reportTravelNro" },
     { title: "Código", dataIndex: "code", key: "code" },
     { title: "Control N°", dataIndex: "checkingNro", key: "checkingNro", width: 110 },
-    { title: "Barco", dataIndex: "boatName", key: "boatName" },
+
+    { title: "Embarcación", dataIndex: "vesselName", key: "vesselName" },
+
     { title: "Responsable", dataIndex: "responsibleUsername", key: "responsibleUsername" },
     {
       title: "Acciones",
@@ -131,6 +190,13 @@ export default function ServiceTicketList() {
       align: "right" as const,
       render: (_: unknown, record) => (
         <Space size="small" onClick={(e) => e.stopPropagation()}>
+
+          <Tooltip title="Detalle">
+            <Button size="small" type="text" onClick={() => void openDetails(record)}>
+              Detalle
+            </Button>
+          </Tooltip>
+
           <Tooltip title="Imprimir / Vista previa">
             <PDFGenerator
               template={ServiceTicketTemplate}
@@ -174,6 +240,48 @@ export default function ServiceTicketList() {
       ),
     },
   ];
+
+  const travelColumns: ColumnsType<ServiceTicketTravel> = [
+    { title: "Origen", dataIndex: "origin", key: "origin" },
+    { title: "Destino", dataIndex: "destination", key: "destination" },
+    { title: "Salida", dataIndex: "departureTime", key: "departureTime", width: 110 },
+    { title: "Llegada", dataIndex: "arrivalTime", key: "arrivalTime", width: 110 },
+    { title: "Total", dataIndex: "totalTraveledTime", key: "totalTraveledTime", width: 90 },
+    {
+      title: "Acciones",
+      key: "actions",
+      align: "right" as const,
+      render: (_: unknown, rec) => (
+        <Space size="small">
+          <Button size="small" type="text" onClick={() => setTravelCurrent(rec)}>
+            Editar
+          </Button>
+          <Popconfirm
+            title="Eliminar viaje"
+            okText="Eliminar"
+            cancelText="Cancelar"
+            onConfirm={async () => {
+              try {
+                await serviceTicketTravelService.remove(rec.id);
+                setTravelItems((prev) => prev.filter((d) => d.id !== rec.id));
+              } catch (e) {
+                await showAlert(
+                  "Error al eliminar",
+                  (e as Error)?.message || "No se pudo eliminar el viaje",
+                  "error",
+                );
+              }
+            }}
+          >
+            <Button size="small" type="text" danger>
+              Eliminar
+            </Button>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
+
 
   return (
     <main className="min-h-screen bg-gray-50 p-8">
@@ -240,8 +348,126 @@ export default function ServiceTicketList() {
         onCancel={onClose}
         footer={null}
       >
+
+        {current?.id && (
+          <div className="mb-3 flex justify-end">
+            <Button onClick={() => void openDetails(current)}>Detalle</Button>
+          </div>
+        )}
         <ServiceTicketForm items={items} setItems={setItems} current={current} onClose={onClose} />
       </Modal>
+
+      {/* Modal de Detalles */}
+      <Modal
+        open={detailDialog}
+        onCancel={() => {
+          setDetailDialog(false);
+          setDetailTicket(null);
+          setDetailEntity(null);
+          setTravelItems([]);
+          setTravelCurrent(null);
+        }}
+        footer={null}
+        width={900}
+        title={
+          <div className="mb-2 text-center md:text-left">
+            <div className="primary border-b-2 border-blue-600 pb-2">
+              <h2 className="text-900 mb-2 flex items-center justify-center text-2xl font-bold text-gray-900 md:justify-start">
+                {detailTicket ? `Detalle de Boleta #${detailTicket.id}` : "Detalle"}
+              </h2>
+              {detailTicket && (
+                <p className="text-sm text-gray-600">{`${detailTicket.vesselName} — ${detailTicket.travelDate}`}</p>
+              )}
+            </div>
+          </div>
+        }
+      >
+        {detailTicket && (
+          <div className="space-y-6">
+            {/* Sección: Detalle único */}
+            <div className="rounded-md border border-gray-200 bg-white p-3">
+              <div className="mb-2 flex items-center justify-between">
+                <h3 className="text-lg font-semibold">
+                  {detailEntity ? `Detalle #${detailEntity.id}` : "Nuevo detalle"}
+                </h3>
+                {/* Se elimina botón 'Nuevo' para evitar múltiples detalles por boleta */}
+              </div>
+              <ServiceTicketDetailForm
+                serviceTicketId={detailTicket.id}
+                current={detailEntity}
+                onSaved={async (saved) => {
+                  setDetailEntity(saved);
+                  // Actualizar items legacy si se usan en alguna parte
+                  // setDetailItems([saved]);
+                  // Cargar travels del nuevo/actual detail
+                  setTravelLoading(true);
+                  try {
+                    const travels = await serviceTicketTravelService.listByDetail(saved.id);
+                    setTravelItems(travels);
+                  } finally {
+                    setTravelLoading(false);
+                  }
+                }}
+              />
+            </div>
+
+            {/* Sección: Travels del detalle */}
+            <div className="rounded-md border border-gray-200 bg-white p-3">
+              <div className="mb-2 flex items-center justify-between">
+                <h3 className="text-base font-semibold">Viajes</h3>
+                <Button
+                  onClick={() => setTravelCurrent(null)}
+                  type="dashed"
+                  disabled={!detailEntity}
+                >
+                  Nuevo viaje
+                </Button>
+              </div>
+
+              {detailEntity ? (
+                <ServiceTicketTravelForm
+                  serviceTicketDetailId={detailEntity.id}
+                  current={travelCurrent}
+                  onSaved={(saved) => {
+                    setTravelItems((prev) => {
+                      const idx = prev.findIndex((d) => d.id === saved.id);
+                      if (idx >= 0) {
+                        const copy = [...prev];
+                        copy[idx] = saved;
+                        return copy;
+                      }
+                      return [saved, ...prev];
+                    });
+                    setTravelCurrent(null);
+                  }}
+                  onClose={() => setTravelCurrent(null)}
+                />
+              ) : (
+                <p className="text-sm text-gray-600">
+                  Guarda el detalle para habilitar el registro de viajes.
+                </p>
+              )}
+
+              <div className="mt-3">
+                <Table
+                  size="small"
+                  rowKey="id"
+                  loading={travelLoading}
+                  columns={travelColumns}
+                  dataSource={travelItems}
+                  pagination={{ pageSize: 5, showSizeChanger: false }}
+                />
+                {!detailEntity && (
+                  <p className="mt-2 text-xs text-gray-500">
+                    Crea y guarda el detalle antes de registrar viajes.
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </Modal>
+
     </main>
   );
 }

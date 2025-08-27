@@ -28,21 +28,24 @@ public class MaintenanceOrderController {
     private final MaintenanceOrderService maintenanceOrderService;
 
     @GetAllMaintenanceOrdersEndpointDoc
-    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERVISOR', 'OPERADOR')")
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','MAINTENANCE') OR " +
+            "@securityService.hasRoleAndDepartment('OPERATOR','MAINTENANCE') ")
     @GetMapping
     public ResponseEntity<Page<MaintenanceOrderResponseDto>> getAllMaintenanceOrders(@ParameterObject Pageable pageable) {
         return ResponseEntity.ok(maintenanceOrderService.getAllMaintenanceOrders(pageable));
     }
 
     @GetMaintenanceOrderByIdEndpointDoc
-    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERVISOR', 'OPERADOR')")
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','MAINTENANCE') OR " +
+            "@securityService.hasRoleAndDepartment('OPERATOR','MAINTENANCE') ")
     @GetMapping("/{id}")
     public ResponseEntity<MaintenanceOrderResponseDto> getMaintenanceOrderById(@PathVariable Long id) {
         return ResponseEntity.ok(maintenanceOrderService.getMaintenanceOrderById(id));
     }
 
     @CreateMaintenanceOrderEndpointDoc
-    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERVISOR', 'OPERADOR')")
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','MAINTENANCE') OR " +
+            "@securityService.hasRoleAndDepartment('OPERATOR','MAINTENANCE') ")
     @PostMapping
     public ResponseEntity<ApiResult<?>> createMaintenanceOrder(@Validated(MaintenanceOrderRequestDto.Create.class) @RequestBody MaintenanceOrderRequestDto requestDto
             , Authentication authentication) {
@@ -53,7 +56,7 @@ public class MaintenanceOrderController {
     }
 
     @UpdateMaintenanceOrderEndpointDoc
-    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERVISOR')")
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','MAINTENANCE')")
     @PutMapping("/{id}")
     public ResponseEntity<MaintenanceOrderResponseDto> updateMaintenanceOrder(@PathVariable Long id, @Valid @RequestBody MaintenanceOrderRequestDto requestDto) {
         MaintenanceOrderResponseDto updatedOrder = maintenanceOrderService.editMaintenanceOrder(id, requestDto);
@@ -68,7 +71,8 @@ public class MaintenanceOrderController {
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERVISOR', 'OPERADOR')")
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','MAINTENANCE') OR " +
+            "@securityService.hasRoleAndDepartment('OPERATOR','MAINTENANCE') ")
     @SearchMaintenanceOrdersEndpointDoc
     @GetMapping("/search")
     public ResponseEntity<Page<MaintenanceOrderResponseDto>> searchMaintenanceOrderByVessel(@RequestParam(
