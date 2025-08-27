@@ -20,7 +20,7 @@ import java.lang.annotation.*;
         summary = "Obtener todas las ordenes de mantenimiento",
         description = """
         Retorna una lista completa de ordenes de mantenimiento registradas en el sistema. \s
-        Accesible para usuarios con roles: <strong>ADMIN, SUPERVISOR o OPERADOR</strong>
+        Accesible para usuarios con roles: <strong>ADMIN, SUPERVISOR o OPERATOR</strong>
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )

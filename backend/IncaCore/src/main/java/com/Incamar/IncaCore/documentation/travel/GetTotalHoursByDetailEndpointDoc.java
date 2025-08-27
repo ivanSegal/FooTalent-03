@@ -17,7 +17,7 @@ import java.lang.annotation.*;
         description = """
         Retorna la lista de viajes registrados para un `ServiceTicketDetail` específico, \
         incluyendo origen, destino, hora de salida y llegada. \
-        Accesible a usuarios con roles: <strong>ADMIN, PATRON, SUPERVISOR</strong>.
+        Accesible a usuarios con roles: <strong>ADMIN, OPERATOR, SUPERVISOR</strong>.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )

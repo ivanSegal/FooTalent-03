@@ -30,7 +30,7 @@ import java.lang.annotation.*;
           <code>startedAt (dd-MM-yyyy)</code>,<code>finishedAt (dd-MM-yyyy)</code>,<code>maintenanceReason</code>.</li>
         </ul>
         Crea una nueva orden de mantenimiento en el sistema especificando id de Embarcacion, tipo de mantenimiento, estado y descripcion.\s
-        Requiere autenticación de usuarios con rol <strong>ADMIN, SUPERVISOR o OPERADOR</strong> y \
+        Requiere autenticación de usuarios con rol <strong>ADMIN, SUPERVISOR o OPERATOR</strong> y \
         pertenecientes al departamento <strong>MANTENIMIENTO</strong>
         """,
         security = @SecurityRequirement(name = "bearer-key")

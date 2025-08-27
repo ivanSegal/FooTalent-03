@@ -20,7 +20,7 @@ import java.lang.annotation.*;
         summary = "Obtener orden de mantenimiento por ID",
         description = """
         Devuelve los detalles de una orden de mantenimiento específica mediante su ID. \s
-        Accesible para usuarios con roles: <strong>ADMIN, SUPERVISOR o OPERADOR</strong>
+        Accesible para usuarios con roles: <strong>ADMIN, SUPERVISOR o OPERATOR</strong>
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )

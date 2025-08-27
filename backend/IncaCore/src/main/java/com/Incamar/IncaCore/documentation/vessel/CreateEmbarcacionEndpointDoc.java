@@ -19,7 +19,7 @@ import java.lang.annotation.*;
         Crea una nueva embarcación especificando nombre, número de registro (matricula), ISMM, \
         estado de bandera, distintivo, puerto de registro, RIF, tipo de servicio, \
         material de construcción, tipo de popa, tipo de combustible y horas de navegación. \
-        Requiere autenticación de usuarios con rol <strong>ADMIN</strong>.
+        Requiere autenticación de usuarios con rol <strong>ADMIN, OPERATOR, SUPERVISOR</strong>.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )

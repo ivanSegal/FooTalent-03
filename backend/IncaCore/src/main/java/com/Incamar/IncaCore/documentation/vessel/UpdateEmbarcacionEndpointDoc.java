@@ -20,7 +20,7 @@ import java.lang.annotation.*;
         summary = "Actualizar embarcación",
         description = """
         Actualiza la información de una embarcación existente identificada por su ID. \
-        Accesible solo para usuarios autorizados con rol <strong>ADMIN.</strong>
+        Accesible solo para usuarios autorizados con rol <strong>ADMIN, SUPERVISOR.</strong>
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )

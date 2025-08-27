@@ -20,7 +20,7 @@ import java.lang.annotation.*;
         description = """
         Retorna una lista paginada de boletas de servicio cuyo nombre de embarcación coincida parcialmente \
         (ignorando mayúsculas) con el valor del parámetro `boatName`. \
-        Accesible para usuarios con rol <strong>ADMIN, ADMINISTRATIVO, PATRON o SUPERVISOR</strong>.
+        Accesible para usuarios con rol <strong>ADMIN, OPERATOR, SUPERVISOR</strong>.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )

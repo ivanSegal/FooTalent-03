@@ -19,7 +19,7 @@ import java.lang.annotation.*;
         summary = "Obtener boleta de servicio por ID",
         description = """
         Devuelve los detalles de una boleta de servicio específica mediante su ID. \
-        Accesible para usuarios con roles: <strong>ADMIN, ADMINISTRATIVO, PATRON o SUPERVISOR</strong>.
+        Accesible para usuarios con roles: <strong>ADMIN, OPERATOR, SUPERVISOR</strong>.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )
