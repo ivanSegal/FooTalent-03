@@ -22,7 +22,7 @@
   <table style="margin: 0 auto; border-collapse: collapse;">
     <tr style="vertical-align: middle;">
       
-    <!-- Logo alineado a la izquierda -->
+  <!-- Logo alineado a la izquierda -->
   <td style="padding-right: 15px;">
         <img 
           src="https://github.com/Jhone-fori-freelancer/FOO-TALENT-DOCUMENTACION-PROJECT-MANAGER/blob/98e30ad3b51afd7cee89ffffb8559f488367ce19/IMG/logo-incacore.svg" 
@@ -31,7 +31,7 @@
         />
       </td>
 
-    <!-- Título alineado a la derecha -->
+  <!-- Título alineado a la derecha -->
   <td style="padding-left: 15px;">
         <h1 style="color: #007bff; font-size: 2.8rem; margin: 0; text-align: left;">
           <a 
@@ -43,7 +43,7 @@
         </h1>
       </td>
 
-    </tr>
+  </tr>
   </table>
 </div>
 
