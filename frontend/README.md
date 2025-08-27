@@ -4,13 +4,14 @@
 <br />
 <div align="center">
   <a href=#>
-    <img src="src/assets/images/Logo.png" alt="Logo" width="100" height="100">
+    <img src="src/assets/images/logo-incacore.svg" alt="Logo" width="100" height="100">
   </a>
 
   <h3 align="center">IncaCore - FrontEnd</h3>
 </div>
 
 <!-- Acerca del Proyecto -->
+
 ## Acerca de
 
 Bienvenido al corazón visual de IncaCore, la aplicación web del presente proyecto. Esta carpeta contiene todos los componentes, estructuras y módulos que dan vida a la interfaz de usuario.
@@ -19,20 +20,16 @@ IncaCore es una aplicación que digitaliza y optimiza la gestión del mantenimie
 
 <p align="right">(<a href="#readme-top">Volver al inicio</a>)</p>
 
-
-
 ### Front-End construido con
 
-
-* [![Next][Next.js]][Next-url]
-* [![React][React.js]][React-url]
-* [![TypeScript][TypeScript.org]][TypeScript-url]
+- [![Next][Next.js]][Next-url]
+- [![React][React.js]][React-url]
+- [![TypeScript][TypeScript.org]][TypeScript-url]
 
 <p align="right">(<a href="#readme-top">Volver al inicio</a>)</p>
 
-
-
 <!-- Empezando -->
+
 ## Empezando
 
 Estas instrucciones te guiarán para obtener una copia de este proyecto en funcionamiento en tu máquina local para propósitos de desarrollo y pruebas.
@@ -46,7 +43,7 @@ Estas instrucciones te guiarán para obtener una copia de este proyecto en funci
 2. Cambiar a la carpeta frontend
    ```sh
    cd /frontend
-   ```  
+   ```
 3. Instalar los paquetes NPM
    ```sh
    npm install
@@ -55,71 +52,80 @@ Estas instrucciones te guiarán para obtener una copia de este proyecto en funci
 <p align="right">(<a href="#readme-top">Volver al inicio</a>)</p>
 
 <!-- ESTRUCTURA -->
+
 ## 🚀 Estructura del proyecto
 
-- **`components/`**: Componentes reutilizables (botones, tarjetas, modales…).  
-- **`layouts/`**: Plantillas de diseño y estructuras de página.  
-- **`modules/`**: Lógica de dominio (registro de horas, mantenimiento, alertas…).  
-- **`styles/`**: Temas, variables y utilidades de estilos (TailwindCSS, SASS…).  
-- **`utils/`**: Helpers y funciones auxiliares.  
+- **`components/`**: Componentes reutilizables (botones, tarjetas, modales…).
+- **`layouts/`**: Plantillas de diseño y estructuras de página.
+- **`modules/`**: Lógica de dominio (registro de horas, mantenimiento, alertas…).
+- **`styles/`**: Temas, variables y utilidades de estilos (TailwindCSS, SASS…).
+- **`utils/`**: Helpers y funciones auxiliares.
 - **`assets/`**: Imágenes, fuentes y recursos estáticos.
 
 <p align="right">(<a href="#readme-top">Volver al inicio</a>)</p>
 
-
-
 <!-- RAMAS -->
+
+
 ## 🏷️ Guía de ramas
 
-- **`main`**: Versión estable en producción.  
-- **`develop`**: Integración continua de nuevas funcionalidades.  
-- **`feature/<descripción>`**: Desarrollo de funcionalidades específicas.  
-- **`hotfix/<descripción>`**: Correcciones críticas en producción.  
+- **`main`**: Versión estable en producción.
+- **`develop`**: Integración continua de nuevas funcionalidades.
+- **`feature/<descripción>`**: Desarrollo de funcionalidades específicas.
+- **`hotfix/<descripción>`**: Correcciones críticas en producción.
 - **`release/<versión>`**: Preparación de versiones para `main`.
 
-<p align="right">(<a href="#readme-top">Volver al inicio</a>)</p>
+## 🏷️ Estrategia de Ramas (Branching Strategy)
 
-<!-- COMMITS -->
+Para mantener un flujo de trabajo organizado se utilizó una estrategia basada en **épicas semanales** y **ramas de tareas**:
 
-## ✍️ Convención de commits
 
-Usamos **Conventional Commits** para estandarizar mensajes y facilitar el historial:
+- **Rama Principal de la Épica**:  
+  Cada semana contó con una rama que centralizó el trabajo del issue.  
+  - Semana 3 → `feature/frontend-week3-ui-conf-maquetar`  
+  - Semana 4 → `epic/frontend-week4-ui-backend-integration`  
 
-```bash
-<tipo>(<scope opcional>): mensaje breve
-```
+- **Ramas de Tareas**:  
+  Cada tarea o sub-tarea (componentes, vistas, integración con backend) se desarrolló en una rama propia, partiendo siempre de la rama de la épica.  
+  Ejemplo: `feature/button-component`, `feature/user-list-view`.
 
-- **feat**: nueva funcionalidad
-- **fix**: corrección de errores
-- **docs**: cambios en documentación
-- **style**: formato, espaciado, sin lógica
-- **refactor**: refactorización de código
-- **test**: añadir o modificar tests
-- **chore**: tareas de mantenimiento
+- **Pull Requests (PRs)**:  
+  Los PRs de las tareas se dirigieron a la rama de la épica, **no directamente a `develop`**.  
 
-**Ejemplos:**
+- **Limpieza y Fusión Final**:  
+  Una vez aprobado y fusionado el PR de una tarea, la rama se eliminaba.  
+  Al completar todas las tareas, se hacía un PR final de la rama de la épica hacia `develop`.
+
+✅ Con esto se logró mantener el repositorio limpio, organizado y con un control claro de los avances semanales.
+
 
 ```bash
 feat(auth): implementar flujo de login
 fix(user): corregir validación de email vacío
 docs: actualizar sección de instalación en README
 ```
+
 <p align="right">(<a href="#readme-top">Volver al inicio</a>)</p>
+
+<!-- COMMITS -->
+
 
 <!-- FLUJO DE TRABAJO -->
 
 ## 🔄 Flujo de trabajo
 
-1. **Crear rama** desde `develop`  
+1. **Crear rama** desde `develop`
+
 ```bash
-   git checkout develop  
-   git checkout -b feature/nombre-descriptivo  
+   git checkout develop
+   git checkout -b feature/nombre-descriptivo
 ```
-2. Desarrollar con commits frecuentes siguiendo la convención.  
-3. **Pull Request**: abrir PR a `develop`, etiquetar revisores y describir cambios.  
-4. **Merge** tras aprobación y tests verdes.  
-5. **Release**: cuando `develop` esté listo, crear `release/vX.Y.Z`, probar y merge a `main`.  
-6. **Hotfix**: para bugs en producción, crear `hotfix/<descripción>`, corregir, merge a `main` y luego a `develop`.  
+
+2. Desarrollar con commits frecuentes siguiendo la convención.
+3. **Pull Request**: abrir PR a `develop`, etiquetar revisores y describir cambios.
+4. **Merge** tras aprobación y tests verdes.
+5. **Release**: cuando `develop` esté listo, crear `release/vX.Y.Z`, probar y merge a `main`.
+6. **Hotfix**: para bugs en producción, crear `hotfix/<descripción>`, corregir, merge a `main` y luego a `develop`.
 
 <p align="right">(<a href="#readme-top">Volver al inicio</a>)</p>
 
@@ -130,16 +136,16 @@ docs: actualizar sección de instalación en README
 **Dominio**: `https://incacore.vercel.app/`
 **Puertos**: `3000`
 
-
 <!-- EQUIPO -->
+
 ## 👥 Equipo Frontend
 
-| Nombre                       | Rol                     |
-|------------------------------|-------------------------|
-| Alfredo Castillo             | Desarrollador Frontend  |
-| Luis Angel Quispe Navarro    | Desarrollador Frontend  |
-| Nataly Castañeda             | Desarrolladora Frontend |
-| Massimo Boschetti            | Desarrollador Frontend |
+| Nombre                    | Rol                     |
+| ------------------------- | ----------------------- |
+| Alfredo Castillo          | Desarrollador Frontend  |
+| Luis Angel Quispe Navarro | Desarrollador Frontend  |
+| Nataly Castañeda          | Desarrolladora Frontend |
+| Massimo Boschetti         | Desarrollador Frontend  |
 
 > _“Gracias por acompañarnos en esta travesía digital. ¡Naveguemos juntos hacia un producto impecable!”_
 

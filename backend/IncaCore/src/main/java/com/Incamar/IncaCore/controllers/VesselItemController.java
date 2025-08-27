@@ -2,6 +2,7 @@ package com.Incamar.IncaCore.controllers;
 
 import com.Incamar.IncaCore.dtos.vesselItem.VesselItemReq;
 import com.Incamar.IncaCore.dtos.vesselItem.VesselItemRes;
+import com.Incamar.IncaCore.dtos.vesselItem.VesselItemSearchReq;
 import com.Incamar.IncaCore.dtos.vesselItem.VesselItemUpdateReq;
 import com.Incamar.IncaCore.services.VesselItemService;
 import com.Incamar.IncaCore.utils.ApiResult;
@@ -13,6 +14,7 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -26,14 +28,18 @@ public class VesselItemController {
     private final VesselItemService vesselItemService;
 
     @SecurityRequirement(name = "bearer-key")
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
+            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @GetMapping
-    public ResponseEntity<?> getAll(@ParameterObject Pageable pageable){
-        Page<VesselItemRes> response = vesselItemService.getAll(pageable);
+    public ResponseEntity<?> getAllWithSearch(@ParameterObject @Valid VesselItemSearchReq request, @ParameterObject Pageable pageable){
+        Page<VesselItemRes> response = vesselItemService.getAllWithSearch(request,pageable);
         return ResponseEntity.ok()
                 .body(ApiResult.success(response,"Operación exitosa"));
     }
 
     @SecurityRequirement(name = "bearer-key")
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
+            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id){
         VesselItemRes response = vesselItemService.getById(id);
@@ -42,6 +48,8 @@ public class VesselItemController {
     }
 
     @SecurityRequirement(name = "bearer-key")
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
+            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody VesselItemReq request){
         vesselItemService.create(request);
@@ -50,6 +58,7 @@ public class VesselItemController {
     }
 
     @SecurityRequirement(name = "bearer-key")
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL')")
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody VesselItemUpdateReq request){
         vesselItemService.update(id,request);
