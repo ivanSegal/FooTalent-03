@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.lang.annotation.*;
 
@@ -13,7 +14,11 @@ import java.lang.annotation.*;
 @Documented
 @Operation(
         summary = "Obtener movimiento de inventario por ID",
-        description = "Recupera la información de un movimiento de inventario existente mediante su identificador único."
+        description = """
+                Recupera la información de un movimiento de inventario existente mediante su identificador único. \
+                Accesible para usuarios con roles: <strong>OPERATOR, SUPERVISOR o ADMIN</strong>.
+""",
+        security = @SecurityRequirement(name = "bearer-key")
 )
 @ApiResponses(value = {
         @ApiResponse(

@@ -19,7 +19,7 @@ import java.lang.annotation.*;
         summary = "Actualizar boleta de servicio",
         description = """
         Actualiza la información de una boleta de servicio existente identificada por su ID. \
-        Accesible solo para usuarios autorizados con rol <strong>ADMIN, PATRON o SUPERVISOR.</strong>
+        Accesible solo para usuarios autorizados con rol <strong>ADMIN,SUPERVISOR.</strong>
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )

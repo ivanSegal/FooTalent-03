@@ -19,7 +19,7 @@ import java.lang.annotation.*;
         summary = "Obtener todas las boletas de servicio",
         description = """
         Retorna una lista paginada de boletas de servicio registradas en el sistema. \
-        Accesible para usuarios con roles: <strong>ADMIN, ADMINISTRATIVO, PATRON o SUPERVISOR</strong>.
+        Accesible para usuarios con roles: <strong>ADMIN, OPERATOR, SUPERVISOR</strong>.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )

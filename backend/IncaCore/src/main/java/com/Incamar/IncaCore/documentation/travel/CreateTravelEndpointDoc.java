@@ -17,7 +17,7 @@ import java.lang.annotation.*;
         description = """
         Calcula la cantidad total de horas recorridas a partir de todos los viajes \
         registrados en un `ServiceTicketDetail`. \
-        Accesible a usuarios con roles: <strong>ADMIN, PATRON, SUPERVISOR</strong>.
+        Accesible a usuarios con roles: <strong>ADMIN, OPERATOR, SUPERVISOR</strong>.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )

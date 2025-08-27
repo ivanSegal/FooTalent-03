@@ -17,7 +17,7 @@ import java.lang.annotation.*;
         description = """
         Permite modificar los datos de un viaje existente (origen, destino, \
         hora de salida y hora de llegada). \
-        Accesible a usuarios con roles: <strong>ADMIN, PATRON, SUPERVISOR</strong>.
+        Accesible a usuarios con roles: <strong>ADMIN, SUPERVISOR</strong>.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )
