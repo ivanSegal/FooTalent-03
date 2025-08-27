@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -36,7 +37,7 @@ public class InventoryMovementResponseDto {
     private String reason;
 
     @Schema(description = "ID del usuario responsable", example = "5")
-    private Long responsibleId;
+    private UUID responsibleId;
 
     @Schema(description = "Nombre del usuario responsable", example = "Claudia Ramos")
     private String responsibleName;

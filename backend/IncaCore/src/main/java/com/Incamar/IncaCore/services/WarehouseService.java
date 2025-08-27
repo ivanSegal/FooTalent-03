@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 
 
-public interface IWarehouseService {
+public interface WarehouseService {
 
    WarehouseResponseDto create(WarehouseRequestDto warehouseRequestDto);
    WarehouseResponseDto getWarehouseById(Long id);

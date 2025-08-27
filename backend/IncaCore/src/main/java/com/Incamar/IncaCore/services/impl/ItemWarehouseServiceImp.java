@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class ItemWarehouseService implements IItemWarehouseService {
+public class ItemWarehouseServiceImp implements IItemWarehouseService {
 
     private final ItemWarehouseMapper itemWarehouseMapper;
     private final ItemWarehouseRepository itemWarehouseRepository;

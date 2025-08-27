@@ -3,7 +3,7 @@ package com.Incamar.IncaCore.controllers;
 import com.Incamar.IncaCore.documentation.warehouse.*;
 import com.Incamar.IncaCore.dtos.warehouse.WarehouseRequestDto;
 import com.Incamar.IncaCore.dtos.warehouse.WarehouseResponseDto;
-import com.Incamar.IncaCore.services.IWarehouseService;
+import com.Incamar.IncaCore.services.WarehouseService;
 import com.Incamar.IncaCore.utils.ApiResult;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
         description = "Endpoints para gestión de almacenes")
 public class WarehouseController {
 
-    private final IWarehouseService warehouseService;
+    private final WarehouseService warehouseService;
 
     @CreateWarehouseEndpointDoc
     @PostMapping("/create")

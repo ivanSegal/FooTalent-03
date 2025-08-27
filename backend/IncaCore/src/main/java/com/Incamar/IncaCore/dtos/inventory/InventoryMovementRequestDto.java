@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -39,7 +40,7 @@ public class InventoryMovementRequestDto {
     @NotBlank(message = "La razón es obligatoria")
     private String reason;
 
-    @Schema(description = "ID del usuario responsable", example = "5")
+    @Schema(description = "ID del usuario responsable", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
     @NotNull(message = "El ID del usuario responsable es obligatorio")
-    private Long responsibleId;
+    private UUID responsibleId;
 }

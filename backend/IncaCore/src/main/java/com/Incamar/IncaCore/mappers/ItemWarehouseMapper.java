@@ -17,7 +17,6 @@ public interface ItemWarehouseMapper {
     @Mapping(target = "warehouse", expression = "java(mapWarehouse(requestDto.getWarehouseId()))")
     ItemWarehouse toEntity(ItemWarehouseRequestDto requestDto);
 
-
     @Mapping(target = "warehouseName", source = "warehouse.name")
     ItemWarehouseResponseDto toResponseDto(ItemWarehouse itemWarehouse);
 
@@ -26,9 +25,7 @@ public interface ItemWarehouseMapper {
     void updateEntityFromDto(ItemWarehouseUpdateDto updateDto, @MappingTarget ItemWarehouse entity);
 
     default Warehouse mapWarehouse(Long warehouseId) {
-        if (warehouseId == null) {
-            return null;
-        }
+        if (warehouseId == null) return null;
         Warehouse warehouse = new Warehouse();
         warehouse.setId(warehouseId);
         return warehouse;

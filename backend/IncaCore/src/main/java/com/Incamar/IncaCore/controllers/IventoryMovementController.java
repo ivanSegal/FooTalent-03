@@ -1,9 +1,6 @@
 package com.Incamar.IncaCore.controllers;
 
-import com.Incamar.IncaCore.documentation.inventory.CreateInventoryMovementEndpointDoc;
-import com.Incamar.IncaCore.documentation.inventory.DeleteInventoryMovementEndpointDoc;
-import com.Incamar.IncaCore.documentation.inventory.GetAllInventoryMovementsEndpointDoc;
-import com.Incamar.IncaCore.documentation.inventory.GetInventoryMovementByIdEndpointDoc;
+import com.Incamar.IncaCore.documentation.inventory.*;
 import com.Incamar.IncaCore.dtos.inventory.InventoryMovementRequestDto;
 import com.Incamar.IncaCore.dtos.inventory.InventoryMovementResponseDto;
 import com.Incamar.IncaCore.dtos.itemwarehouse.ItemWarehouseResponseDto;
@@ -54,6 +51,7 @@ public class IventoryMovementController {
         return ResponseEntity.ok(ApiResult.success(inventoryMovementService.getAllInventoryMovement(pageable),"Se visualizan exitosamente todos los movimientos de inventario."));
     }
 
+    @SearchInventoryMovementsEndpointDoc
     @GetMapping("/search")
     public ResponseEntity<ApiResult<?>> searchInventory(@RequestParam("nombre") String nameItem, @ParameterObject Pageable pageable) {
         Page<InventoryMovementResponseDto> result = inventoryMovementService.searchIventoryByName(nameItem, pageable);

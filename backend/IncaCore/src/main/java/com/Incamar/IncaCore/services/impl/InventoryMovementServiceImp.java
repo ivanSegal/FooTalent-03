@@ -2,17 +2,13 @@ package com.Incamar.IncaCore.services.impl;
 
 import com.Incamar.IncaCore.dtos.inventory.InventoryMovementRequestDto;
 import com.Incamar.IncaCore.dtos.inventory.InventoryMovementResponseDto;
-import com.Incamar.IncaCore.dtos.itemwarehouse.ItemWarehouseResponseDto;
 import com.Incamar.IncaCore.enums.MovementType;
 import com.Incamar.IncaCore.exceptions.ResourceNotFoundException;
 import com.Incamar.IncaCore.mappers.InventoryMovementMapper;
 import com.Incamar.IncaCore.models.InventoryMovement;
-import com.Incamar.IncaCore.models.ItemWarehouse;
 import com.Incamar.IncaCore.repositories.InventoryMovementRepository;
-import com.Incamar.IncaCore.repositories.ItemWarehouseRepository;
 import com.Incamar.IncaCore.repositories.UserRepository;
 import com.Incamar.IncaCore.services.InventoryMovementService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +19,7 @@ import org.springframework.stereotype.Service;
 public class  InventoryMovementServiceImp implements InventoryMovementService {
 
     private final InventoryMovementRepository inventoryMovementRepository;
-    private final ItemWarehouseService itemWarehouseService;
+    private final ItemWarehouseServiceImp itemWarehouseServiceImp;
     private final InventoryMovementMapper inventoryMovementMapper;
     private final UserRepository userRepository;
 
@@ -34,9 +30,9 @@ public class  InventoryMovementServiceImp implements InventoryMovementService {
             throw new ResourceNotFoundException("Usuario no encontrado con id: " + inventoryMovementRequestDto.getResponsibleId());
         }
         if(inventoryMovementRequestDto.getMovementType().equals(MovementType.ENTRADA)) {
-            itemWarehouseService.increaseStock(inventoryMovementRequestDto.getItemWarehouseId(), inventoryMovementRequestDto.getQuantity());
+            itemWarehouseServiceImp.increaseStock(inventoryMovementRequestDto.getItemWarehouseId(), inventoryMovementRequestDto.getQuantity());
         } else {
-            itemWarehouseService.decreaseStock(inventoryMovementRequestDto.getItemWarehouseId(), inventoryMovementRequestDto.getQuantity());
+            itemWarehouseServiceImp.decreaseStock(inventoryMovementRequestDto.getItemWarehouseId(), inventoryMovementRequestDto.getQuantity());
         }
         InventoryMovement inventoryMovement = inventoryMovementMapper.toEntity(inventoryMovementRequestDto);
         inventoryMovementRepository.save(inventoryMovement);

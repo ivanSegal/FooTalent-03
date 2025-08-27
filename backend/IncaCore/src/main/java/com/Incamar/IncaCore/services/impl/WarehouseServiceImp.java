@@ -8,7 +8,7 @@ import com.Incamar.IncaCore.exceptions.ResourceNotFoundException;
 import com.Incamar.IncaCore.mappers.WarehouseMapper;
 import com.Incamar.IncaCore.models.Warehouse;
 import com.Incamar.IncaCore.repositories.WarehouseRepository;
-import com.Incamar.IncaCore.services.IWarehouseService;
+import com.Incamar.IncaCore.services.WarehouseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class WarehouseService implements IWarehouseService {
+public class WarehouseServiceImp implements WarehouseService {
 
     private WarehouseRepository warehouseRepository;
 

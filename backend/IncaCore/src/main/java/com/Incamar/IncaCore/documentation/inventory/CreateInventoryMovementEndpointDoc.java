@@ -42,7 +42,7 @@ import java.lang.annotation.*;
                         "quantity": 50,
                         "date": "2025-08-26",
                         "reason": "Reposición de stock",
-                        "responsibleId": 5,
+                        "responsibleId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
                         "responsibleName": "Jose Gonzales"
                       }
                     }

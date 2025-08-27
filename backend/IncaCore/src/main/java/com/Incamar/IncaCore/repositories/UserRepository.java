@@ -41,5 +41,5 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     UUID id(UUID id);
 
-  boolean existsById( Long responsibleId);
+  boolean existsById( UUID responsibleId);
 }

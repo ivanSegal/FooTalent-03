@@ -44,7 +44,7 @@ import java.lang.annotation.*;
                         "quantity": 100,
                         "date": "2025-08-26",
                         "reason": "Reposición de stock",
-                        "responsibleId": 5,
+                        "responsibleId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
                         "responsibleName": "Claudia Ramos"
                       },
                       {
@@ -55,7 +55,7 @@ import java.lang.annotation.*;
                         "quantity": 50,
                         "date": "2025-08-25",
                         "reason": "Pedido de cliente",
-                        "responsibleId": 6,
+                        "responsibleId": "3fa85f64-5717-4562-b3fc-2c963f66af46",
                         "responsibleName": "Juan Pérez"
                       }
                     ],
