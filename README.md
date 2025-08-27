@@ -206,122 +206,9 @@
 
 
 
-## 👥 Equipo y Tecnologías
 
-<table align="center">
-  <tr>
-    <td colspan="4" align="center"><h2>🖥️ Backend Team</h2></td>
-  </tr>
-  
-  <!-- Fila 1: 3 perfiles -->
-  <tr>
-    <td></td> <!-- Celda vacía para centrar -->
-    
-  <!-- Diana Mayorga -->
-  <td align="center">
-      <img src="https://images.weserv.nl/?url=github.com/dianamayorga.png&h=100&w=100&fit=cover&mask=circle" width="100" /><br/>
-      <strong>Diana Mayorga</strong><br/>
-      Backend Node + Java<br/>
-      <!-- Reemplazar # con LinkedIn: Ejemplo: http://linkedin.com/in/dianamayorga -->
-      <a href="#">
-        <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white" />
-      </a>
-      <!-- Reemplazar # con GitHub: Ejemplo: http://github.com/dianamayorga -->
-      <a href="#">
-        <img src="https://img.shields.io/badge/GitHub-100000?style=flat&logo=github&logoColor=white" />
-      </a>
-    </td>
-
-  <!-- Sonny Pimentel (ACTUALIZADO) -->
-  <td align="center">
-      <img src="https://avatars.githubusercontent.com/u/20480987?v=4.png&h=100&w=100&fit=cover&mask=circle" width="100" /><br/>
-      <strong>Sonny Pimentel</strong><br/>
-      Backend Node + Java<br/>
-      <a href="https://www.linkedin.com/in/sonny-pimentel/">
-        <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white" />
-      </a>
-      <a href="https://github.com/spimentel1201">
-        <img src="https://img.shields.io/badge/GitHub-100000?style=flat&logo=github&logoColor=white" />
-      </a>
-    </td>
-
-  <!-- Claudia Ramos -->
-  <td align="center">
-      <img src="https://images.weserv.nl/?url=github.com/claudiaramos.png&h=100&w=100&fit=cover&mask=circle" width="100" /><br/>
-      <strong>Claudia Ramos</strong><br/>
-      Backend Java<br/>
-      <a href="#">
-        <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white" />
-      </a>
-      <a href="#">
-        <img src="https://img.shields.io/badge/GitHub-100000?style=flat&logo=github&logoColor=white" />
-      </a>
-    </td>
-    
-  <td></td> <!-- Celda vacía para centrar -->
-  </tr>
-
-  <!-- Fila 2: 3 perfiles -->
-  <tr>
-    <td></td> <!-- Celda vacía -->
-    
-  <!-- Iván Segal (ACTUALIZADO) -->
-  <td align="center">
-      <img src="https://images.weserv.nl/?url=github.com/ivansegal.png&h=100&w=100&fit=cover&mask=circle" width="100" /><br/>
-      <strong>Iván Segal</strong><br/>
-      Backend Java<br/>
-      <a href="https://www.linkedin.com/in/iván-segal-3b94a920a/">
-        <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white" />
-      </a>
-      <a href="https://github.com/ivanSegal">
-        <img src="https://img.shields.io/badge/GitHub-100000?style=flat&logo=github&logoColor=white" />
-      </a>
-    </td>
-
-  <!-- Edgar Camberos -->
-  <td align="center">
-      <img src="https://images.weserv.nl/?url=github.com/edgarcamberos.png&h=100&w=100&fit=cover&mask=circle" width="100" /><br/>
-      <strong>Edgar Camberos</strong><br/>
-      Backend Java<br/>
-      <a href="#">
-        <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white" />
-      </a>
-      <a href="#">
-        <img src="https://img.shields.io/badge/GitHub-100000?style=flat&logo=github&logoColor=white" />
-      </a>
-    </td>
-
-  <!-- José Ajuriagogeascoa -->
-  <td align="center">
-      <img src="https://images.weserv.nl/?url=github.com/joseajuriagogeascoa.png&h=100&w=100&fit=cover&mask=circle" width="100" /><br/>
-      <strong>José Ajuriagogeascoa</strong><br/>
-      Backend Node/.NET/Java<br/>
-      <a href="#">
-        <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white" />
-      </a>
-      <a href="#">
-        <img src="https://img.shields.io/badge/GitHub-100000?style=flat&logo=github&logoColor=white" />
-      </a>
-    </td>
-    
-  <td></td> <!-- Celda vacía -->
-  </tr>
-
-  <!-- Tecnologías -->
-  <tr>
-    <td colspan="4" align="center" style="padding: 15px 0;">
-      <h2 align="center">Tecnologías Utilizadas - Backend</h2>
-      <div style="max-width: 100%; display: flex; flex-wrap: wrap; justify-content: center; gap: 4px;">
-        <img src="https://img.shields.io/badge/-Node.js-339933?style=flat&logo=nodedotjs&logoColor=white" alt="Node.js">
-        <img src="https://img.shields.io/badge/-Java-ED8B00?style=flat&logo=openjdk&logoColor=white" alt="Java">
-        <img src="https://img.shields.io/badge/-.NET-512BD4?style=flat&logo=dotnet&logoColor=white" alt=".NET">
-        <img src="https://img.shields.io/badge/-NestJS-E0234E?style=flat&logo=nestjs&logoColor=white" alt="NestJS">
-        <img src="https://img.shields.io/badge/-PostgreSQL-4169E1?style=flat&logo=postgresql&logoColor=white" alt="PostgreSQL">
-      </div>
-    </td>
-  </tr>
-</table>
-
+<!-- ===================== SEPARADOR ===================== -->
+<hr style="border: 1px solid #ddd; margin: 30px 0;">
 
 
 
@@ -335,7 +222,108 @@
   <!-- Fila 1: 2 perfiles -->
   <tr>
     <td></td> <!-- Celda vacía para centrar -->
-    
+    ## 👥 Equipo y Tecnologías
+
+<table align="center" style="border-collapse: collapse; margin: 20px auto; text-align: center;">
+
+  <!-- ================== TÍTULO DEL EQUIPO ================== -->
+  <tr>
+    <td colspan="5" align="center" style="padding: 15px 0;">
+      <h2>🖥️ Backend Team</h2>
+    </td>
+  </tr>
+
+  <!-- ================== FILA ÚNICA: TODO EL EQUIPO ================== -->
+  <tr>
+    <!-- Iván Segal -->
+    <td align="center" style="padding: 10px;">
+      <img src="https://images.weserv.nl/?url=github.com/ivansegal.png&h=80&w=80&fit=cover&mask=circle" width="80" height="80"/><br/>
+      <strong>Iván Segal</strong><br/>
+      Backend Java<br/>
+      <a href="https://www.linkedin.com/in/iván-segal-3b94a920a/">
+        <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white"/>
+      </a>
+      <a href="https://github.com/ivanSegal">
+        <img src="https://img.shields.io/badge/GitHub-100000?style=flat&logo=github&logoColor=white"/>
+      </a>
+    </td>
+
+  <!-- Claudia Ramos -->
+  <td align="center" style="padding: 10px;">
+      <img src="https://images.weserv.nl/?url=github.com/claudiaramos.png&h=80&w=80&fit=cover&mask=circle" width="80" height="80"/><br/>
+      <strong>Claudia Ramos</strong><br/>
+      Backend Java<br/>
+      <a href="#">
+        <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white"/>
+      </a>
+      <a href="#">
+        <img src="https://img.shields.io/badge/GitHub-100000?style=flat&logo=github&logoColor=white"/>
+      </a>
+    </td>
+
+  <!-- Sonny Pimentel -->
+  <td align="center" style="padding: 10px;">
+      <img src="https://avatars.githubusercontent.com/u/20480987?v=4" width="80" height="80" style="border-radius: 50%;"/><br/>
+      <strong>Sonny Pimentel</strong><br/>
+      Backend Node + Java<br/>
+      <a href="https://www.linkedin.com/in/sonny-pimentel/">
+        <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white"/>
+      </a>
+      <a href="https://github.com/spimentel1201">
+        <img src="https://img.shields.io/badge/GitHub-100000?style=flat&logo=github&logoColor=white"/>
+      </a>
+    </td>
+
+  <!-- Edgar Camberos -->
+  <td align="center" style="padding: 10px;">
+      <img src="https://images.weserv.nl/?url=github.com/edgarcamberos.png&h=80&w=80&fit=cover&mask=circle" width="80" height="80"/><br/>
+      <strong>Edgar Camberos</strong><br/>
+      Backend Java<br/>
+      <a href="#">
+        <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white"/>
+      </a>
+      <a href="#">
+        <img src="https://img.shields.io/badge/GitHub-100000?style=flat&logo=github&logoColor=white"/>
+      </a>
+    </td>
+
+  <!-- José Ajuriagogeascoa -->
+  <td align="center" style="padding: 10px;">
+      <img src="https://images.weserv.nl/?url=github.com/joseajuriagogeascoa.png&h=80&w=80&fit=cover&mask=circle" width="80" height="80"/><br/>
+      <strong>José Ajuriagogeascoa</strong><br/>
+      Backend Node/.NET/Java<br/>
+      <a href="#">
+        <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white"/>
+      </a>
+      <a href="#">
+        <img src="https://img.shields.io/badge/GitHub-100000?style=flat&logo=github&logoColor=white"/>
+      </a>
+    </td>
+  </tr>
+
+  <!-- ================== TECNOLOGÍAS ================== -->
+  <tr>
+    <td colspan="5" align="center" style="padding: 20px 0;">
+      <h2>⚙️ Tecnologías Utilizadas - Backend</h2>
+      <div style="max-width: 100%; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px;">
+        <!-- Node.js -->
+        <img src="https://img.shields.io/badge/-Node.js-339933?style=flat&logo=nodedotjs&logoColor=white" alt="Node.js">
+        <!-- Java -->
+        <img src="https://img.shields.io/badge/-Java-ED8B00?style=flat&logo=openjdk&logoColor=white" alt="Java">
+        <!-- .NET -->
+        <img src="https://img.shields.io/badge/-.NET-512BD4?style=flat&logo=dotnet&logoColor=white" alt=".NET">
+        <!-- NestJS -->
+        <img src="https://img.shields.io/badge/-NestJS-E0234E?style=flat&logo=nestjs&logoColor=white" alt="NestJS">
+        <!-- PostgreSQL -->
+        <img src="https://img.shields.io/badge/-PostgreSQL-4169E1?style=flat&logo=postgresql&logoColor=white" alt="PostgreSQL">
+      </div>
+    </td>
+  </tr>
+</table>
+
+<!-- ================== SEPARADOR VISUAL ================== -->
+<hr style="border: 0; height: 1px; background: #ccc; margin: 40px auto; width: 80%;">
+
   <!-- Sandro Borga -->
   <td align="center">
       <img src="https://images.weserv.nl/?url=github.com/sandroborga.png&h=100&w=100&fit=cover&mask=circle" width="100" /><br/>
