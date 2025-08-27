@@ -1,6 +1,6 @@
 import React from "react";
 import { Document, Page, Text, View, StyleSheet, Image, Font } from "@react-pdf/renderer";
-import LogoLogin from "@/assets/images/LogoLogin.png";
+import LogoLogin from "@/assets/images/logo-incacore.svg";
 
 // Registrar fuente local como en MaintenanceTemplate
 let dmSansRegistered = false;
@@ -29,7 +29,7 @@ export interface ServiceTicketData {
   reportTravelNro: string;
   code: string;
   checkingNro: number;
-  boatName: string;
+  vesselName: string;
   responsibleUsername: string;
 }
 
@@ -92,7 +92,7 @@ export const ServiceTicketTemplate: React.FC<{ data: ServiceTicketData; logoSrc?
   const logoDefault: string =
     typeof (LogoLogin as unknown) === "string"
       ? (LogoLogin as unknown as string)
-      : (LogoLogin as { src?: string }).src || "/LogoLogin.png";
+      : (LogoLogin as { src?: string }).src || "/logo-incacore.svg";
 
   const rows: { label: string; value: string }[] = [
     { label: "ID", value: safe(data.id) },
@@ -103,7 +103,7 @@ export const ServiceTicketTemplate: React.FC<{ data: ServiceTicketData; logoSrc?
     { label: "Reporte de viaje", value: safe(data.reportTravelNro) },
     { label: "Código", value: safe(data.code) },
     { label: "N° Control", value: safe(data.checkingNro) },
-    { label: "Nombre del barco", value: safe(data.boatName) },
+    { label: "Nombre de embarcación", value: safe(data.vesselName) },
     { label: "Responsable", value: safe(data.responsibleUsername) },
   ];
 
@@ -115,7 +115,7 @@ export const ServiceTicketTemplate: React.FC<{ data: ServiceTicketData; logoSrc?
           <Image style={styles.logo} src={logoSrc || logoDefault} />
           <View style={styles.headerText}>
             <Text style={styles.title}>{`Boleta de Servicio${data.id ? ` #${data.id}` : ""}`}</Text>
-            <Text style={styles.subtitle}>{`Barco: ${safe(data.boatName)}`}</Text>
+            <Text style={styles.subtitle}>{`Embarcación: ${safe(data.vesselName)}`}</Text>
           </View>
         </View>
 
