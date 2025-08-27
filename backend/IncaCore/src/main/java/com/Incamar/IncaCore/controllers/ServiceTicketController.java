@@ -26,21 +26,24 @@ public class ServiceTicketController {
     private final ServiceTicketServiceImpl ticket;
 
     @GetAllServiceTicketEndpointDoc
-    @PreAuthorize("hasAnyRole('ADMIN','PATRON','SUPERVISOR','ADMINISTRATIVO')")
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
+            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @GetMapping
     public ResponseEntity<Page<ServiceTicketResponseDto>> getAll(@ParameterObject Pageable pageable) {
         return ResponseEntity.ok(ticket.getAllBoletasServicio(pageable));
     }
 
     @GetServiceTicketByIdEndpointDoc
-    @PreAuthorize("hasAnyRole('ADMIN','PATRON','SUPERVISOR','ADMINISTRATIVO')")
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
+            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @GetMapping("/{id}")
     public ResponseEntity<ServiceTicketResponseDto> getById(@PathVariable Long id) {
         return ResponseEntity.ok(ticket.getBoletaServicioById(id));
     }
 
     @CreateServiceTicketEndpointDoc
-    @PreAuthorize("hasAnyRole('ADMIN','PATRON','SUPERVISOR')")
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
+            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @PostMapping
     public ResponseEntity<ApiResult<?>> create(
             @Validated(ServiceTicketRequestDto.Create.class) @RequestBody ServiceTicketRequestDto dto) {
@@ -50,7 +53,7 @@ public class ServiceTicketController {
     }
 
     @UpdateServiceTicketEndpointDoc
-    @PreAuthorize("hasAnyRole('ADMIN','PATRON','SUPERVISOR')")
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL')")
     @PutMapping("/{id}")
     public ResponseEntity<ServiceTicketResponseDto> update(
             @PathVariable Long id,
@@ -61,7 +64,7 @@ public class ServiceTicketController {
     }
 
     @DeleteServiceTicketEndpointDoc
-    @PreAuthorize("hasAnyRole('ADMIN','PATRON','SUPERVISOR')")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         ticket.deleteBoletaServicioById(id);
@@ -69,7 +72,8 @@ public class ServiceTicketController {
     }
 
     @SearchServiceTicketByBoatEndpointDoc
-    @PreAuthorize("hasAnyRole('ADMIN','PATRON','SUPERVISOR','ADMINISTRATIVO')")
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
+            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @GetMapping("/search")
     public ResponseEntity<Page<ServiceTicketResponseDto>> searchByBoat(
             @RequestParam("vesselName") String vesselName,

@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,6 +26,8 @@ public class WarehouseController {
     private final WarehouseService warehouseService;
 
     @CreateWarehouseEndpointDoc
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','INVENTORY') OR " +
+            "@securityService.hasRoleAndDepartment('OPERATOR','INVENTORY')")
     @PostMapping("/create")
     public ResponseEntity<ApiResult<WarehouseResponseDto>> create(@Valid WarehouseRequestDto  warehouseRequestDto) {
         WarehouseResponseDto warehouseResponseDto = warehouseService.create(warehouseRequestDto);
@@ -34,6 +37,8 @@ public class WarehouseController {
     }
 
     @GetWarehouseByIdEndpointDoc
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','INVENTORY') OR " +
+            "@securityService.hasRoleAndDepartment('OPERATOR','INVENTORY')")
     @GetMapping("/{id}")
     public ResponseEntity<ApiResult<?>> getWarehouseById(@PathVariable Long id) {
         WarehouseResponseDto warehouseResponseDto = warehouseService.getWarehouseById(id);
@@ -41,6 +46,7 @@ public class WarehouseController {
     }
 
     @DeleteWarehouseEndpointDoc
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResult<?>> deleteWarehouse(@PathVariable Long id) {
         warehouseService.deleteById(id);
@@ -48,6 +54,7 @@ public class WarehouseController {
     }
 
     @UpdateWarehouseEndpointDoc
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','INVENTORY')")
     @PutMapping("/{id}")
     public ResponseEntity<ApiResult<?>> editWarehouse(@PathVariable Long id,
                                                         @Valid @RequestBody WarehouseRequestDto warehouseRequestDto) {
@@ -56,6 +63,8 @@ public class WarehouseController {
     }
 
     @GetAllWarehousesEndpointDoc
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','INVENTORY') OR " +
+            "@securityService.hasRoleAndDepartment('OPERATOR','INVENTORY')")
     @GetMapping
     public ResponseEntity<ApiResult<?>> getAllWarehouse(@ParameterObject Pageable pageable) {
         return ResponseEntity.ok(ApiResult.success(warehouseService.getAllWarehouse(pageable),"Se visualizan exitosamente todas las embarcaciones."));
@@ -63,6 +72,8 @@ public class WarehouseController {
 
 
     @SearchWarehousesEndpointDoc
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','INVENTORY') OR " +
+            "@securityService.hasRoleAndDepartment('OPERATOR','INVENTORY')")
     @GetMapping("/search")
     public ResponseEntity<ApiResult<?>> searchWarehouse(@RequestParam("nombre") String nombre, @ParameterObject Pageable pageable) {
         Page<WarehouseResponseDto> result = warehouseService.searchWarehouseByName(nombre, pageable);

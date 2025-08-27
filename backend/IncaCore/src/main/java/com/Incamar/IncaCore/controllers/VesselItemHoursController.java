@@ -13,6 +13,7 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,6 +25,8 @@ public class VesselItemHoursController {
     private final VesselItemHoursService vesselItemHoursService;
 
     @SecurityRequirement(name = "bearer-key")
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
+            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @GetMapping
     public ResponseEntity<?> getAll(@ParameterObject Pageable pageable){
         Page<VesselItemHoursRes> response = vesselItemHoursService.getAll(pageable);
@@ -32,6 +35,8 @@ public class VesselItemHoursController {
     }
 
     @SecurityRequirement(name = "bearer-key")
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
+            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @GetMapping("{id}")
     public ResponseEntity<?> getById(@PathVariable Long id){
         VesselItemHoursRes response = vesselItemHoursService.getById(id);
@@ -41,6 +46,8 @@ public class VesselItemHoursController {
     }
 
     @SecurityRequirement(name = "bearer-key")
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
+            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody VesselItemHoursReq request) {
         vesselItemHoursService.create(request);
@@ -49,6 +56,7 @@ public class VesselItemHoursController {
     }
 
     @SecurityRequirement(name = "bearer-key")
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL')")
     @PutMapping("{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody VesselItemHoursUpdateReq request){
         vesselItemHoursService.update(id,request);

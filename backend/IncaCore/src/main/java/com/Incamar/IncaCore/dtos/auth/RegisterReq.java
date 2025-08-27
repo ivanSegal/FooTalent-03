@@ -30,7 +30,7 @@ public record RegisterReq(
         @NotBlank(message = "El email es requerido")
         String email,
 
-        @Schema(description = "Rol del usuario. Valores permitidos: ADMIN, OPERATIONS_MANAGER, WAREHOUSE_STAFF", example = "ADMIN", allowableValues = {"ADMIN", "OPERATIONS_MANAGER", "WAREHOUSE_STAFF"})
+        @Schema(description = "Rol del usuario. Valores permitidos: ADMIN, SUPERVISOR, OPERATOR", example = "ADMIN", allowableValues = {"ADMIN", "SUPERVISOR", "OPERATOR"})
         @NotNull(message = "role es requerido")
         Role role,
 

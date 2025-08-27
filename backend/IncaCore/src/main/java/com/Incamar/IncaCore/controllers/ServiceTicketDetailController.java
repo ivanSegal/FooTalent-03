@@ -27,22 +27,25 @@ public class ServiceTicketDetailController {
     private final ServiceTicketDetailServiceImpl serviceTicketDetailService;
 
     @GetAllServiceTicketDetailsEndpointDoc
-    @PreAuthorize("hasAnyRole('ADMIN','OPERADOR','SUPERVISOR')")
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
+            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @GetMapping
     public ResponseEntity<Page<ServiceTicketDetailResponseDto>> getAll(@ParameterObject Pageable pageable) {
         return ResponseEntity.ok(serviceTicketDetailService.getAll(pageable));
     }
 
     @GetByIdServiceTicketDetailsEndpointDoc
-    @PreAuthorize("hasAnyRole('ADMIN','OPERADOR','SUPERVISOR')")
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
+            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @GetMapping("/{id}")
     public ResponseEntity<ServiceTicketDetailResponseDto> getSTDetailById(@PathVariable Long id){
         return ResponseEntity.ok(serviceTicketDetailService.getById(id));
     }
 
 
-        @CreateServiceTicketDetailEndpointDoc
-    @PreAuthorize("hasAnyRole('ADMIN','OPERADOR','SUPERVISOR')")
+    @CreateServiceTicketDetailEndpointDoc
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
+            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @PostMapping
     public ResponseEntity<ApiResult<?>> createServiceTicketDetail(
             @Validated(ServiceTicketRequestDto.Create.class) @RequestBody ServiceTicketDetailRequestDto dto) {
@@ -53,7 +56,7 @@ public class ServiceTicketDetailController {
     }
 
     @UpdateServiceTicketDetailEndpointDoc
-    @PreAuthorize("hasAnyRole('ADMIN','SUPERVISOR')")
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL')")
     @PutMapping("/{id}")
     public ResponseEntity<ServiceTicketDetailResponseDto> update(
             @PathVariable Long id,
@@ -63,7 +66,7 @@ public class ServiceTicketDetailController {
     }
 
     @DeleteServiceTicketDetailEndpointDoc
-    @PreAuthorize("hasAnyRole('ADMIN','SUPERVISOR')")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         serviceTicketDetailService.delete(id);
@@ -71,7 +74,8 @@ public class ServiceTicketDetailController {
     }
 
     @GetByServiceTicketIdEndpointDoc
-    @PreAuthorize("hasAnyRole('ADMIN','OPERADOR','SUPERVISOR')")
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
+            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @GetMapping("/by-ticket/{ticketId}")
     public ResponseEntity<ServiceTicketDetailResponseDto> getByServiceTicketId(@PathVariable Long ticketId) {
         return ResponseEntity.ok(serviceTicketDetailService.getByServiceTicketId(ticketId));

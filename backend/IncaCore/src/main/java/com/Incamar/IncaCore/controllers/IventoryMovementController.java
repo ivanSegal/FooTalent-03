@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -23,6 +24,8 @@ public class IventoryMovementController {
     private final InventoryMovementService inventoryMovementService;
 
     @CreateInventoryMovementEndpointDoc
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','INVENTORY') OR " +
+            "@securityService.hasRoleAndDepartment('OPERATOR','INVENTORY') ")
     @PostMapping("/create")
     public ApiResult<?> addMovement(@RequestBody @Valid InventoryMovementRequestDto inventoryMovementRequestDto) {
         InventoryMovementResponseDto responseDto = inventoryMovementService.createInventory(inventoryMovementRequestDto);
@@ -31,6 +34,8 @@ public class IventoryMovementController {
     }
 
     @GetInventoryMovementByIdEndpointDoc
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','INVENTORY') OR " +
+            "@securityService.hasRoleAndDepartment('OPERATOR','INVENTORY')")
     @GetMapping("/{id}")
     public ResponseEntity<ApiResult<?>> getInventoryMovementById(@PathVariable Long id) {
         InventoryMovementResponseDto responseDto = inventoryMovementService.getInventoryMovementById(id);
@@ -38,6 +43,7 @@ public class IventoryMovementController {
     }
 
     @DeleteInventoryMovementEndpointDoc
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResult<?>> deleteInventoryMovement(@PathVariable Long id) {
         inventoryMovementService.deleteById(id);
@@ -46,12 +52,16 @@ public class IventoryMovementController {
 
 
     @GetAllInventoryMovementsEndpointDoc
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','INVENTORY') OR " +
+            "@securityService.hasRoleAndDepartment('OPERATOR','INVENTORY')")
     @GetMapping
     public ResponseEntity<ApiResult<?>> getAllInventory(@ParameterObject Pageable pageable) {
         return ResponseEntity.ok(ApiResult.success(inventoryMovementService.getAllInventoryMovement(pageable),"Se visualizan exitosamente todos los movimientos de inventario."));
     }
 
     @SearchInventoryMovementsEndpointDoc
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','INVENTORY') OR " +
+            "@securityService.hasRoleAndDepartment('OPERATOR','INVENTORY')")
     @GetMapping("/search")
     public ResponseEntity<ApiResult<?>> searchInventory(@RequestParam("nombre") String nameItem, @ParameterObject Pageable pageable) {
         Page<InventoryMovementResponseDto> result = inventoryMovementService.searchIventoryByName(nameItem, pageable);
