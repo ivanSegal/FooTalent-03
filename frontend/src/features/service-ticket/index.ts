@@ -9,9 +9,7 @@ export * from "./types/serviceTicketDetail.types";
 export * from "./schemas/serviceTicketDetail.schema";
 export * from "./services/serviceTicketDetail.service";
 export { ServiceTicketDetailForm } from "./components/ServiceTicketDetailForm";
-// Exports para Travels
 export * from "./types/serviceTicketTravel.types";
 export * from "./schemas/serviceTicketTravel.schema";
 export * from "./services/serviceTicketTravel.service";
 export { ServiceTicketTravelForm } from "./components/ServiceTicketTravelForm";
-
