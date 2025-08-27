@@ -40,7 +40,7 @@
 
 <!-- ===================== 4. IMAGEN PORTADA ===================== -->
 <div align="center" style="margin: 40px 0;">
-  <img src="https://raw.githubusercontent.com/Jhone-fori-freelancer/FOO-TALENT-DOCUMENTACION-PROJECT-MANAGER/aff8783fa57b0f5d6837ba3af9003d5d082800ea/IMG/portada-incamar.png" alt="Portada INCACORE" width="85%" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+  <img src="https://github.com/Jhone-fori-freelancer/FOO-TALENT-DOCUMENTACION-PROJECT-MANAGER/blob/fa89fe31e750d1b5a756f2687f2ef43bf15c639a/INCACORE.jpg" alt="Portada INCACORE" width="85%" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
 </div>
 
 
