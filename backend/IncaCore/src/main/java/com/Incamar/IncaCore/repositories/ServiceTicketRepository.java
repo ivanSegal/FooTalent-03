@@ -11,6 +11,6 @@ public interface ServiceTicketRepository extends JpaRepository<ServiceTicket,Lon
 
     Page<ServiceTicket> findBySolicitedByContainingIgnoreCase(String solicitor, Pageable pageable);
     Page<ServiceTicket> findByVesselAttendedContainingIgnoreCase(String vesselAttended, Pageable pageable);
-    Page<ServiceTicket> findByBoat_NameContainingIgnoreCase(String name, Pageable pageable);
+    Page<ServiceTicket> findByVessel_NameContainingIgnoreCase(String name, Pageable pageable);
 
 }

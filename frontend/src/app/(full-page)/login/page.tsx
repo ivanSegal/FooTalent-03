@@ -8,7 +8,7 @@ import { showAlert, showAutoAlert } from "@/utils/showAlert";
 import type { NormalizedApiError } from "@/types/api";
 import { useAuth } from "@/contexts/AuthContext";
 import Image from "next/image";
-import LogoLogin from "@/assets/images/LogoLogin.png";
+import LogoLogin from "@/assets/images/logo-incacore.svg";
 import { motion, useReducedMotion } from "framer-motion";
 import { Button, Card, Checkbox, Form, Input, Typography } from "antd";
 

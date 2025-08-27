@@ -37,7 +37,8 @@ const defaultValues: Partial<ServiceTicketFormValues> = {
   reportTravelNro: "",
   code: "",
   checkingNro: 0,
-  boatName: "",
+  vesselName: "",
+
   responsibleUsername: "",
 };
 
@@ -80,9 +81,8 @@ export const ServiceTicketForm: React.FC<Props> = ({ items, setItems, current, o
 
   const onSubmit: SubmitHandler<ServiceTicketFormValues> = async (data) => {
     try {
-      // Incluir boatId si el usuario eligió una embarcación
-      const selected = vassels.find((v) => v.name === data.boatName);
-      const payload = selected ? { ...data, boatId: selected.id } : data;
+      const selected = vassels.find((v) => v.name === data.vesselName);
+      const payload = selected ? { ...data, vesselId: selected.id } : data;
       if (current) {
         const updated = await serviceTicketService.update(current.id, payload);
         setItems(items.map((t) => (t.id === updated.id ? updated : t)));
@@ -104,7 +104,7 @@ export const ServiceTicketForm: React.FC<Props> = ({ items, setItems, current, o
           "reportTravelNro",
           "code",
           "checkingNro",
-          "boatName",
+          "vesselName",
         ];
         for (const k of keys) {
           const msg = apiErr.fieldErrors[k as string];
@@ -303,22 +303,26 @@ export const ServiceTicketForm: React.FC<Props> = ({ items, setItems, current, o
           </label>
           <Controller
             control={control}
-            name="boatName"
+
+            name="vesselName"
             render={({ field }) => (
               <Select
-                id="boatName"
+                id="vesselName"
+
                 showSearch
                 placeholder="Selecciona embarcación"
                 optionFilterProp="label"
                 value={field.value ?? undefined}
                 onChange={(val) => field.onChange(val)}
                 options={vassels.map((v) => ({ label: v.name, value: v.name }))}
-                status={errors.boatName ? "error" : undefined}
+
+                status={errors.vesselName ? "error" : undefined}
               />
             )}
           />
-          {errors.boatName && (
-            <p className="mt-1 text-xs text-red-600">{errors.boatName.message as string}</p>
+          {errors.vesselName && (
+            <p className="mt-1 text-xs text-red-600">{errors.vesselName.message as string}</p>
+
           )}
         </div>
       </div>

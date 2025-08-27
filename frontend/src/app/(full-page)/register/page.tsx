@@ -10,7 +10,7 @@ import type { NormalizedApiError } from "@/types/api";
 import { RegisterRequest } from "@/types/auth";
 import { Button, Card, Form, Input, Select, Typography } from "antd";
 import Image from "next/image";
-import LogoLogin from "@/assets/images/LogoLogin.png";
+import LogoLogin from "@/assets/images/logo-incacore.svg";
 
 export default function RegisterPage() {
   const router = useRouter();

@@ -10,8 +10,8 @@ export interface ServiceTicketListItem {
   reportTravelNro: string;
   code: string;
   checkingNro: number;
-  boatName: string;
-  boatId: number;
+  vesselName: string;
+  vesselId: number;
   responsibleUsername: string;
 }
 
