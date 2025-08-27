@@ -213,15 +213,6 @@
 
 
 
-<!--Tecnologias ux-ui -->
-<table align="center">
-  <tr>
-    <td colspan="4" align="center"><h2>🎨 UX/UI Team</h2></td>
-  </tr>
-  
-  <!-- Fila 1: 2 perfiles -->
-  <tr>
-    <td></td> <!-- Celda vacía para centrar -->
     ## 👥 Equipo y Tecnologías
 
 <table align="center" style="border-collapse: collapse; margin: 20px auto; text-align: center;">
@@ -324,113 +315,76 @@
 <!-- ================== SEPARADOR VISUAL ================== -->
 <hr style="border: 0; height: 1px; background: #ccc; margin: 40px auto; width: 80%;">
 
-  <!-- Sandro Borga -->
-  <td align="center">
-      <img src="https://images.weserv.nl/?url=github.com/sandroborga.png&h=100&w=100&fit=cover&mask=circle" width="100" /><br/>
-      <strong>Sandro Borga</strong><br/>
-      UX/UI Designer<br/>
-      <!-- LinkedIn -->
-      <a href="#">
-        <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white" />
-      </a>
-      <!-- GitHub -->
-      <a href="#">
-        <img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" />
-      </a>
-      <!-- Figma -->
-      <a href="#">
-        <img src="https://img.shields.io/badge/Figma-F24E1E?style=flat&logo=figma&logoColor=white" />
-      </a>
-      <!-- Behance -->
-      <a href="#">
-        <img src="https://img.shields.io/badge/Behance-1769FF?style=flat&logo=behance&logoColor=white" />
-      </a>
-    </td>
 
-  <!-- Marjo Guerra (ACTUALIZADO) -->
-  <td align="center">
-      <img src="https://images.weserv.nl/?url=github.com/marjosebith.png&h=100&w=100&fit=cover&mask=circle" width="100" /><br/>
-      <strong>Marjo Guerra</strong><br/>
-      UX Researcher<br/>
-      <!-- LinkedIn -->
-      <a href="https://www.linkedin.com/in/marjosebith-guerra/">
-        <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white" />
-      </a>
-      <!-- GitHub -->
-      <a href="https://github.com/marjosebith">
-        <img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" />
-      </a>
-      <!-- Figma -->
-      <a href="#">
-        <img src="https://img.shields.io/badge/Figma-F24E1E?style=flat&logo=figma&logoColor=white" />
-      </a>
-      <!-- Behance -->
-      <a href="#">
-        <img src="https://img.shields.io/badge/Behance-1769FF?style=flat&logo=behance&logoColor=white" />
-      </a>
+
+## 🎨 Equipo UX/UI
+
+<table align="center" style="border-collapse: collapse; margin: 20px auto; text-align: center;">
+
+  <!-- ================== TÍTULO DEL EQUIPO ================== -->
+  <tr>
+    <td colspan="4" align="center" style="padding: 15px 0;">
+      <h2>👩‍🎨 UX/UI Team</h2>
     </td>
-    
-  <td></td>
   </tr>
 
-  <!-- Fila 2: 2 perfiles -->
+  <!-- ================== FILA ÚNICA: TODO EL EQUIPO ================== -->
   <tr>
-    <td></td>
-    
-  <!-- Maria Peña Camacho (ACTUALIZADO) -->
-  <td align="center">
-      <img src="https://images.weserv.nl/?url=github.com/mariapenacamacho.png&h=100&w=100&fit=cover&mask=circle" width="100" /><br/>
+    <!-- Sandro Borga -->
+    <td align="center" style="padding: 10px;">
+      <img src="https://images.weserv.nl/?url=github.com/sandroborga.png&h=100&w=100&fit=cover&mask=circle" width="100"/><br/>
+      <strong>Sandro Borga</strong><br/>
+      UX/UI Designer<br/>
+      <!-- Redes -->
+      <a href="#"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white"/></a>
+      <a href="#"><img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white"/></a>
+      <a href="#"><img src="https://img.shields.io/badge/Figma-F24E1E?style=flat&logo=figma&logoColor=white"/></a>
+      <a href="#"><img src="https://img.shields.io/badge/Behance-1769FF?style=flat&logo=behance&logoColor=white"/></a>
+    </td>
+
+  <!-- Marjo Guerra -->
+  <td align="center" style="padding: 10px;">
+      <img src="https://images.weserv.nl/?url=github.com/marjosebith.png&h=100&w=100&fit=cover&mask=circle" width="100"/><br/>
+      <strong>Marjo Guerra</strong><br/>
+      UX Researcher<br/>
+      <!-- Redes -->
+      <a href="https://www.linkedin.com/in/marjosebith-guerra/"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white"/></a>
+      <a href="https://github.com/marjosebith"><img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white"/></a>
+      <a href="#"><img src="https://img.shields.io/badge/Figma-F24E1E?style=flat&logo=figma&logoColor=white"/></a>
+      <a href="#"><img src="https://img.shields.io/badge/Behance-1769FF?style=flat&logo=behance&logoColor=white"/></a>
+    </td>
+
+  <!-- Maria Peña Camacho -->
+  <td align="center" style="padding: 10px;">
+      <img src="https://images.weserv.nl/?url=github.com/mariapenacamacho.png&h=100&w=100&fit=cover&mask=circle" width="100"/><br/>
       <strong>Maria Peña Camacho</strong><br/>
       UI Designer<br/>
-      <!-- LinkedIn -->
-      <a href="https://www.linkedin.com/in/mar%C3%ADa-pe%C3%B1a-camacho-838472353">
-        <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white" />
-      </a>
-      <!-- GitHub -->
-      <a href="#">
-        <img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" />
-      </a>
-      <!-- Figma -->
-      <a href="#">
-        <img src="https://img.shields.io/badge/Figma-F24E1E?style=flat&logo=figma&logoColor=white" />
-      </a>
-      <!-- Behance -->
-      <a href="#">
-        <img src="https://img.shields.io/badge/Behance-1769FF?style=flat&logo=behance&logoColor=white" />
-      </a>
+      <!-- Redes -->
+      <a href="https://www.linkedin.com/in/mar%C3%ADa-pe%C3%B1a-camacho-838472353"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white"/></a>
+      <a href="#"><img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white"/></a>
+      <a href="#"><img src="https://img.shields.io/badge/Figma-F24E1E?style=flat&logo=figma&logoColor=white"/></a>
+      <a href="#"><img src="https://img.shields.io/badge/Behance-1769FF?style=flat&logo=behance&logoColor=white"/></a>
     </td>
 
   <!-- Sofia Montes -->
-  <td align="center">
-      <img src="https://images.weserv.nl/?url=github.com/sofiamontes.png&h=100&w=100&fit=cover&mask=circle" width="100" /><br/>
+  <td align="center" style="padding: 10px;">
+      <img src="https://images.weserv.nl/?url=github.com/sofiamontes.png&h=100&w=100&fit=cover&mask=circle" width="100"/><br/>
       <strong>Sofia Montes</strong><br/>
       Product Designer<br/>
-      <!-- LinkedIn -->
-      <a href="#">
-        <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white" />
-      </a>
-      <!-- GitHub -->
-      <a href="#">
-        <img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" />
-      </a>
-      <!-- Figma -->
-      <a href="#">
-        <img src="https://img.shields.io/badge/Figma-F24E1E?style=flat&logo=figma&logoColor=white" />
-      </a>
-      <!-- Behance -->
-      <a href="#">
-        <img src="https://img.shields.io/badge/Behance-1769FF?style=flat&logo=behance&logoColor=white" />
-      </a>
+      <!-- Redes -->
+      <a href="#"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white"/></a>
+      <a href="#"><img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white"/></a>
+      <a href="#"><img src="https://img.shields.io/badge/Figma-F24E1E?style=flat&logo=figma&logoColor=white"/></a>
+      <a href="#"><img src="https://img.shields.io/badge/Behance-1769FF?style=flat&logo=behance&logoColor=white"/></a>
     </td>
-    
-  <td></td>
   </tr>
 
-  <!-- Tecnologías -->
+  <!-- ================== HERRAMIENTAS Y METODOLOGÍAS ================== -->
   <tr>
-    <td colspan="4" align="center" style="padding: 15px 0;">
-      <h2 align="center">Herramientas y Metodologías</h2>
-      <div style="max-width: 100%; display: flex; flex-wrap: wrap; justify-content: center; gap: 4px;">
+    <td colspan="4" align="center" style="padding: 20px 0;">
+      <h2>🛠️ Herramientas y Metodologías</h2>
+      <div style="max-width: 100%; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px;">
+        <!-- Herramientas -->
         <img src="https://img.shields.io/badge/-Figma-F24E1E?style=flat&logo=figma&logoColor=white" alt="Figma">
         <img src="https://img.shields.io/badge/-Behance-1769FF?style=flat&logo=behance&logoColor=white" alt="Behance">
         <img src="https://img.shields.io/badge/-GitHub-181717?style=flat&logo=github&logoColor=white" alt="GitHub">
@@ -441,6 +395,8 @@
   </tr>
 </table>
 
+<!-- ================== SEPARADOR VISUAL ================== -->
+<hr style="border: 0; height: 1px; background: #ccc; margin: 40px auto; width: 80%;">
 
 
 
