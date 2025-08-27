@@ -13,7 +13,7 @@
   <table style="margin: 0 auto;">
     <tr>
       <td>
-        <img src="https://raw.githubusercontent.com/Jhone-fori-freelancer/FOO-TALENT-DOCUMENTACION-PROJECT-MANAGER/573aabee3c5830872cd66414e6927afb49f76659/IMG/Logo_1.png" width="80" alt="Logo INCACORE">
+        <img src="https://github.com/Jhone-fori-freelancer/FOO-TALENT-DOCUMENTACION-PROJECT-MANAGER/blob/fa89fe31e750d1b5a756f2687f2ef43bf15c639a/INCACORE.jpg">
       </td>
       <td style="padding-left: 20px;">
         <h1 style="color: #007bff; font-size: 2.8rem; margin: 0;">
