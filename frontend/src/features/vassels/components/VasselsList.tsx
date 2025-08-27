@@ -253,7 +253,6 @@ export default function VasselsList() {
           setDialog(false);
         }}
         footer={null}
-        destroyOnClose
       >
         <VasselsForm
           current={current}

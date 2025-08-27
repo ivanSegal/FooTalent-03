@@ -11,13 +11,17 @@ import {
   type FieldErrors,
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Input, DatePicker, Button, Select } from "antd";
+import { Input, DatePicker, Button, Select, Steps } from "antd";
 import dayjs from "dayjs";
+
 import {
-  serviceTicketSchema,
+  type ServiceTicketDetail,
+  ServiceTicketDetailForm,
   type ServiceTicketFormValues,
-} from "@/features/service-ticket/schemas/serviceTicket.schema";
-import { serviceTicketService, type ServiceTicketListItem } from "@/features/service-ticket";
+  serviceTicketSchema,
+  serviceTicketService,
+  type ServiceTicketListItem,
+} from "@/features/service-ticket";
 import { showAlert } from "@/utils/showAlert";
 import { vasselsService, type Vassel } from "@/features/vassels";
 import type { NormalizedApiError } from "@/types/api";
@@ -27,6 +31,14 @@ interface Props {
   setItems: React.Dispatch<React.SetStateAction<ServiceTicketListItem[]>>;
   current: ServiceTicketListItem | null;
   onClose: () => void;
+  // nuevos opcionales para orquestación externa
+  onSaved?: (ticket: ServiceTicketListItem) => void;
+  closeOnSave?: boolean;
+  // nuevo: detalle asociado y paso inicial
+  currentDetail?: ServiceTicketDetail | null;
+  initialStep?: number; // 0: boleta, 1: detalle
+  // callback para propagar guardado de detalle hacia el padre
+  onDetailSaved?: (detail: ServiceTicketDetail) => void;
 }
 
 const defaultValues: Partial<ServiceTicketFormValues> = {
@@ -42,7 +54,17 @@ const defaultValues: Partial<ServiceTicketFormValues> = {
   responsibleUsername: "",
 };
 
-export const ServiceTicketForm: React.FC<Props> = ({ items, setItems, current, onClose }) => {
+export const ServiceTicketForm: React.FC<Props> = ({
+  items,
+  setItems,
+  current,
+  onClose,
+  onSaved,
+  closeOnSave = true,
+  currentDetail,
+  initialStep = 0,
+  onDetailSaved,
+}) => {
   const {
     handleSubmit,
     formState: { errors, isSubmitting, isDirty, isValid },
@@ -57,6 +79,10 @@ export const ServiceTicketForm: React.FC<Props> = ({ items, setItems, current, o
     shouldFocusError: true,
     defaultValues,
   });
+
+  // steps state
+  const [step, setStep] = React.useState<number>(initialStep ?? 0);
+  const [savedTicket, setSavedTicket] = React.useState<ServiceTicketListItem | null>(current);
 
   // Cargar embarcaciones para el select
   const [vassels, setVassels] = React.useState<Vassel[]>([]);
@@ -74,24 +100,59 @@ export const ServiceTicketForm: React.FC<Props> = ({ items, setItems, current, o
   useEffect(() => {
     if (current) {
       reset({ ...defaultValues, ...current } as ServiceTicketFormValues);
+      setSavedTicket(current);
+      setStep(initialStep ?? 0);
     } else {
       reset(defaultValues as ServiceTicketFormValues);
+      setSavedTicket(null);
+      setStep(0);
     }
-  }, [current, reset]);
+  }, [current, reset, initialStep]);
+
+  const goToStep = async (target: number) => {
+    if (target === step) return;
+    if (target === 0) {
+      // Volver a Boleta: prellenar con ticket guardado o current
+      if (savedTicket) {
+        reset({ ...defaultValues, ...savedTicket } as ServiceTicketFormValues);
+      } else if (current) {
+        reset({ ...defaultValues, ...current } as ServiceTicketFormValues);
+      }
+      setStep(0);
+      return;
+    }
+    // Ir a Detalle: asegurar ticket existente
+    const id = current?.id ?? savedTicket?.id;
+    if (!id) {
+      // Guardar boleta primero
+      await handleSubmit(onSubmit, onInvalid)();
+      return;
+    }
+    setStep(1);
+  };
 
   const onSubmit: SubmitHandler<ServiceTicketFormValues> = async (data) => {
     try {
       const selected = vassels.find((v) => v.name === data.vesselName);
       const payload = selected ? { ...data, vesselId: selected.id } : data;
-      if (current) {
-        const updated = await serviceTicketService.update(current.id, payload);
+
+      const idToUpdate = current?.id ?? savedTicket?.id;
+      if (idToUpdate) {
+        const updated = await serviceTicketService.update(idToUpdate, payload);
         setItems(items.map((t) => (t.id === updated.id ? updated : t)));
+        setSavedTicket(updated);
+        onSaved?.(updated);
+        // Cerrar solo si provenimos de edicion directa (current)
+        if (current && closeOnSave) onClose();
+        else setStep(1);
       } else {
         const created = await serviceTicketService.create(payload);
         setItems([created, ...items]);
-        reset();
+        reset({ ...defaultValues, ...created } as ServiceTicketFormValues);
+        onSaved?.(created);
+        setSavedTicket(created);
+        setStep(1); // avanzar a Detalle
       }
-      onClose();
     } catch (e) {
       const apiErr = e as NormalizedApiError;
       // Aplica errores sólo a campos conocidos del formulario
@@ -139,210 +200,240 @@ export const ServiceTicketForm: React.FC<Props> = ({ items, setItems, current, o
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit, onInvalid)} className="space-y-4">
-      <div className="grid gap-4 md:grid-cols-2">
-        <div className="flex flex-col">
-          <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="travelNro">
-            N° Viaje
-          </label>
-          <Controller
-            control={control}
-            name="travelNro"
-            render={({ field }) => (
-              <Input
-                id="travelNro"
-                type="number"
-                {...field}
-                value={field.value ?? 0}
-                status={errors.travelNro ? "error" : undefined}
-              />
-            )}
-          />
-          {errors.travelNro && (
-            <p className="mt-1 text-xs text-red-600">{errors.travelNro.message as string}</p>
-          )}
-        </div>
+    <div>
+      <Steps
+        current={step}
+        items={[{ title: "Boleta" }, { title: "Detalle" }]}
+        onChange={(v) => void goToStep(v)}
+      />
+      <div className="mt-4">
+        {step === 0 ? (
+          <form onSubmit={handleSubmit(onSubmit, onInvalid)} className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="flex flex-col">
+                <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="travelNro">
+                  N° Viaje
+                </label>
+                <Controller
+                  control={control}
+                  name="travelNro"
+                  render={({ field }) => (
+                    <Input
+                      id="travelNro"
+                      type="number"
+                      {...field}
+                      value={field.value ?? 0}
+                      status={errors.travelNro ? "error" : undefined}
+                    />
+                  )}
+                />
+                {errors.travelNro && (
+                  <p className="mt-1 text-xs text-red-600">{errors.travelNro.message as string}</p>
+                )}
+              </div>
 
-        <div className="flex flex-col">
-          <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="travelDate">
-            Fecha de viaje
-          </label>
-          <Controller
-            control={control}
-            name="travelDate"
-            render={({ field }) => (
-              <DatePicker
-                id="travelDate"
-                format="DD-MM-YYYY"
-                placeholder="Selecciona fecha"
-                value={field.value ? dayjs(field.value as string, "DD-MM-YYYY") : null}
-                onChange={(d) => field.onChange(d ? d.format("DD-MM-YYYY") : "")}
-                className="w-full"
-                status={errors.travelDate ? "error" : undefined}
-              />
-            )}
-          />
-          {errors.travelDate && (
-            <p className="mt-1 text-xs text-red-600">{errors.travelDate.message as string}</p>
-          )}
-        </div>
+              <div className="flex flex-col">
+                <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="travelDate">
+                  Fecha de viaje
+                </label>
+                <Controller
+                  control={control}
+                  name="travelDate"
+                  render={({ field }) => (
+                    <DatePicker
+                      id="travelDate"
+                      format="DD-MM-YYYY"
+                      placeholder="Selecciona fecha"
+                      value={field.value ? dayjs(field.value as string, "DD-MM-YYYY") : null}
+                      onChange={(d) => field.onChange(d ? d.format("DD-MM-YYYY") : "")}
+                      className="w-full"
+                      status={errors.travelDate ? "error" : undefined}
+                    />
+                  )}
+                />
+                {errors.travelDate && (
+                  <p className="mt-1 text-xs text-red-600">{errors.travelDate.message as string}</p>
+                )}
+              </div>
 
-        <div className="flex flex-col md:col-span-2">
-          <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="vesselAttended">
-            Embarcación atendida
-          </label>
-          <Controller
-            control={control}
-            name="vesselAttended"
-            render={({ field }) => (
-              <Input
-                id="vesselAttended"
-                placeholder="Nombre"
-                {...field}
-                value={field.value ?? ""}
-                status={errors.vesselAttended ? "error" : undefined}
-              />
-            )}
-          />
-          {errors.vesselAttended && (
-            <p className="mt-1 text-xs text-red-600">{errors.vesselAttended.message as string}</p>
-          )}
-        </div>
+              <div className="flex flex-col md:col-span-2">
+                <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="vesselAttended">
+                  Embarcación atendida
+                </label>
+                <Controller
+                  control={control}
+                  name="vesselAttended"
+                  render={({ field }) => (
+                    <Input
+                      id="vesselAttended"
+                      placeholder="Nombre"
+                      {...field}
+                      value={field.value ?? ""}
+                      status={errors.vesselAttended ? "error" : undefined}
+                    />
+                  )}
+                />
+                {errors.vesselAttended && (
+                  <p className="mt-1 text-xs text-red-600">
+                    {errors.vesselAttended.message as string}
+                  </p>
+                )}
+              </div>
 
-        <div className="flex flex-col">
-          <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="solicitedBy">
-            Solicitado por
-          </label>
-          <Controller
-            control={control}
-            name="solicitedBy"
-            render={({ field }) => (
-              <Input
-                id="solicitedBy"
-                placeholder="Solicitante"
-                {...field}
-                value={field.value ?? ""}
-                status={errors.solicitedBy ? "error" : undefined}
-              />
-            )}
-          />
-          {errors.solicitedBy && (
-            <p className="mt-1 text-xs text-red-600">{errors.solicitedBy.message as string}</p>
-          )}
-        </div>
+              <div className="flex flex-col">
+                <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="solicitedBy">
+                  Solicitado por
+                </label>
+                <Controller
+                  control={control}
+                  name="solicitedBy"
+                  render={({ field }) => (
+                    <Input
+                      id="solicitedBy"
+                      placeholder="Solicitante"
+                      {...field}
+                      value={field.value ?? ""}
+                      status={errors.solicitedBy ? "error" : undefined}
+                    />
+                  )}
+                />
+                {errors.solicitedBy && (
+                  <p className="mt-1 text-xs text-red-600">
+                    {errors.solicitedBy.message as string}
+                  </p>
+                )}
+              </div>
 
-        <div className="flex flex-col">
-          <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="reportTravelNro">
-            N° Reporte de Viaje
-          </label>
-          <Controller
-            control={control}
-            name="reportTravelNro"
-            render={({ field }) => (
-              <Input
-                id="reportTravelNro"
-                placeholder="RNE-XX-YYY"
-                {...field}
-                value={field.value ?? ""}
-                status={errors.reportTravelNro ? "error" : undefined}
-              />
-            )}
-          />
-          {errors.reportTravelNro && (
-            <p className="mt-1 text-xs text-red-600">{errors.reportTravelNro.message as string}</p>
-          )}
-        </div>
+              <div className="flex flex-col">
+                <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="reportTravelNro">
+                  N° Reporte de Viaje
+                </label>
+                <Controller
+                  control={control}
+                  name="reportTravelNro"
+                  render={({ field }) => (
+                    <Input
+                      id="reportTravelNro"
+                      placeholder="RNE-XX-YYY"
+                      {...field}
+                      value={field.value ?? ""}
+                      status={errors.reportTravelNro ? "error" : undefined}
+                    />
+                  )}
+                />
+                {errors.reportTravelNro && (
+                  <p className="mt-1 text-xs text-red-600">
+                    {errors.reportTravelNro.message as string}
+                  </p>
+                )}
+              </div>
 
-        <div className="flex flex-col">
-          <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="checkingNro">
-            N° Control
-          </label>
-          <Controller
-            control={control}
-            name="checkingNro"
-            render={({ field }) => (
-              <Input
-                id="checkingNro"
-                type="number"
-                {...field}
-                value={field.value ?? 0}
-                status={errors.checkingNro ? "error" : undefined}
-              />
-            )}
-          />
-          {errors.checkingNro && (
-            <p className="mt-1 text-xs text-red-600">{errors.checkingNro.message as string}</p>
-          )}
-        </div>
+              <div className="flex flex-col">
+                <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="checkingNro">
+                  N° Control
+                </label>
+                <Controller
+                  control={control}
+                  name="checkingNro"
+                  render={({ field }) => (
+                    <Input
+                      id="checkingNro"
+                      type="number"
+                      {...field}
+                      value={field.value ?? 0}
+                      status={errors.checkingNro ? "error" : undefined}
+                    />
+                  )}
+                />
+                {errors.checkingNro && (
+                  <p className="mt-1 text-xs text-red-600">
+                    {errors.checkingNro.message as string}
+                  </p>
+                )}
+              </div>
 
-        <div className="flex flex-col">
-          <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="code">
-            Código
-          </label>
-          <Controller
-            control={control}
-            name="code"
-            render={({ field }) => (
-              <Input
-                id="code"
-                placeholder="Código"
-                {...field}
-                value={field.value ?? ""}
-                status={errors.code ? "error" : undefined}
-              />
-            )}
-          />
-          {errors.code && (
-            <p className="mt-1 text-xs text-red-600">{errors.code.message as string}</p>
-          )}
-        </div>
+              <div className="flex flex-col">
+                <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="code">
+                  Código
+                </label>
+                <Controller
+                  control={control}
+                  name="code"
+                  render={({ field }) => (
+                    <Input
+                      id="code"
+                      placeholder="Código"
+                      {...field}
+                      value={field.value ?? ""}
+                      status={errors.code ? "error" : undefined}
+                    />
+                  )}
+                />
+                {errors.code && (
+                  <p className="mt-1 text-xs text-red-600">{errors.code.message as string}</p>
+                )}
+              </div>
 
-        <div className="flex flex-col">
-          <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="boatName">
-            Embarcación
-          </label>
-          <Controller
-            control={control}
+              <div className="flex flex-col">
+                <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="boatName">
+                  Embarcación
+                </label>
+                <Controller
+                  control={control}
+                  name="vesselName"
+                  render={({ field }) => (
+                    <Select
+                      id="vesselName"
+                      showSearch
+                      placeholder="Selecciona embarcación"
+                      optionFilterProp="label"
+                      value={field.value ?? undefined}
+                      onChange={(val) => field.onChange(val)}
+                      options={vassels.map((v) => ({ label: v.name, value: v.name }))}
+                      status={errors.vesselName ? "error" : undefined}
+                    />
+                  )}
+                />
+                {errors.vesselName && (
+                  <p className="mt-1 text-xs text-red-600">{errors.vesselName.message as string}</p>
+                )}
+              </div>
+            </div>
 
-            name="vesselName"
-            render={({ field }) => (
-              <Select
-                id="vesselName"
-
-                showSearch
-                placeholder="Selecciona embarcación"
-                optionFilterProp="label"
-                value={field.value ?? undefined}
-                onChange={(val) => field.onChange(val)}
-                options={vassels.map((v) => ({ label: v.name, value: v.name }))}
-
-                status={errors.vesselName ? "error" : undefined}
-              />
-            )}
-          />
-          {errors.vesselName && (
-            <p className="mt-1 text-xs text-red-600">{errors.vesselName.message as string}</p>
-
-          )}
-        </div>
-      </div>
-
-      <div className="flex items-center justify-end gap-3 pt-2">
-        {onClose && (
-          <Button htmlType="button" onClick={onClose}>
-            Cancelar
-          </Button>
+            <div className="flex items-center justify-end gap-3 pt-2">
+              {onClose && (
+                <Button htmlType="button" onClick={onClose}>
+                  Cancelar
+                </Button>
+              )}
+              <Button
+                htmlType="submit"
+                type="primary"
+                loading={isSubmitting}
+                disabled={isSubmitting || !isValid}
+              >
+                {isSubmitting ? "Guardando..." : isDirty ? "Guardar cambios" : "Guardar"}
+              </Button>
+            </div>
+          </form>
+        ) : (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <Button onClick={() => void goToStep(0)}>Atrás</Button>
+              <div className="flex items-center gap-2">
+                <Button onClick={() => onClose?.()}>Cerrar</Button>
+              </div>
+            </div>
+            <ServiceTicketDetailForm
+              serviceTicketId={savedTicket?.id ?? current?.id ?? 0}
+              current={currentDetail ?? undefined}
+              onSaved={(d) => onDetailSaved?.(d)}
+              onClose={onClose}
+            />
+          </div>
         )}
-        <Button
-          htmlType="submit"
-          type="primary"
-          loading={isSubmitting}
-          disabled={isSubmitting || !isValid}
-        >
-          {isSubmitting ? "Guardando..." : isDirty ? "Guardar cambios" : "Guardar"}
-        </Button>
       </div>
-    </form>
+    </div>
   );
 };
 

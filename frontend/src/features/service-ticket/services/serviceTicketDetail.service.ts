@@ -24,7 +24,8 @@ const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === "obj
 function normalizeArrayResponse<T>(val: unknown): T[] {
   const data = isApiResult<unknown>(val) ? val.data : val;
   if (Array.isArray(data)) return data as T[];
-  if (isRecord(data) && Array.isArray(data.content)) return data.content as T[];
+  if (isRecord(data) && Array.isArray((data as Record<string, unknown>).content))
+    return (data as Record<string, unknown>).content as T[];
   if (isRecord(data) && Object.keys(data).length > 0) return [data as T];
   return [];
 }
@@ -56,7 +57,7 @@ export const serviceTicketDetailService = {
     return unwrap<ServiceTicketDetail>(data);
   },
   async listByServiceTicket(serviceTicketId: number): Promise<ServiceTicketDetail[]> {
-    const { data } = await api.get<unknown>(`${DETAIL_BASE}?serviceTicketId=${serviceTicketId}`);
+    const { data } = await api.get<unknown>(`${DETAIL_BASE}/by-ticket/${serviceTicketId}`);
     return normalizeArrayResponse<ServiceTicketDetail>(data);
   },
   async getOneByServiceTicket(serviceTicketId: number): Promise<ServiceTicketDetail | null> {
