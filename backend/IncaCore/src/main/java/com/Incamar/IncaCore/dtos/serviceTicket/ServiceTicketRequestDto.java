@@ -32,6 +32,10 @@ public class ServiceTicketRequestDto {
     @NotBlank(groups = Create.class)
     private String vesselAttended;
 
+    @Schema(description = "Estado de la boleta, si esta activa o cerrada. Campo no requeridO al crearse")
+    @NotNull(groups = Update.class)
+    private boolean status;
+
     @Schema(description = "Empresa que solicita el servicio.", example = "Kronos")
     @NotBlank(groups = Create.class)
     private String solicitedBy;

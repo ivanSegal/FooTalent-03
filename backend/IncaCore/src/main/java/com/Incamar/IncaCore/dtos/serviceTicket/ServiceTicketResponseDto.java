@@ -21,6 +21,7 @@ public class ServiceTicketResponseDto {
     private String reportTravelNro;
     private String code;
     private Long checkingNro;
+    private boolean status;
 
     private String vesselName;
     private String responsibleUsername;

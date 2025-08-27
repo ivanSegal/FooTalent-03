@@ -48,6 +48,9 @@ public class ServiceTicket {
     @Column(nullable = false)
     private Long checkingNro;
 
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private boolean status;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "vessel_id", nullable = false)
     private Vessel vessel;

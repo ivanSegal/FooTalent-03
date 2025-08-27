@@ -58,6 +58,7 @@ public class ServiceTicketServiceImpl implements ServiceTicketService {
         validateTravelConsistency(requestDto.getTravelNro(), requestDto.getReportTravelNro());
 
         ServiceTicket entity = mapper.toEntity(requestDto, vessel, responsible);
+        entity.setStatus(true);
         return mapper.toDTO(serviceTicketRepository.save(entity));
     }
 
@@ -83,6 +84,8 @@ public class ServiceTicketServiceImpl implements ServiceTicketService {
         if (requestDto.getTravelNro() != null)       entity.setTravelNro(requestDto.getTravelNro());
         if (requestDto.getReportTravelNro() != null) entity.setReportTravelNro(requestDto.getReportTravelNro());
         if (requestDto.getCode() != null)            entity.setCode(requestDto.getCode());
+
+        entity.setStatus(requestDto.isStatus());
 
         return mapper.toDTO(serviceTicketRepository.save(entity));
     }

@@ -30,6 +30,7 @@ public interface ServiceTicketMapper {
             expression = "java(entity.getResponsible().getEmployee().getFirstName() +" +
                     " \" \" + entity.getResponsible().getEmployee().getLastName())")
     @Mapping(target = "detailId", source = "detail.id")
+    @Mapping(target = "status", source = "status")
     ServiceTicketResponseDto toDTO(ServiceTicket entity);
 
 }
