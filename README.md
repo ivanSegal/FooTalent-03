@@ -25,7 +25,7 @@
   <!-- Logo alineado a la izquierda -->
   <td style="padding-right: 15px;">
         <img 
-          src="https://github.com/Jhone-fori-freelancer/FOO-TALENT-DOCUMENTACION-PROJECT-MANAGER/blob/98e30ad3b51afd7cee89ffffb8559f488367ce19/IMG/logo-incacore.svg" 
+          src="https://github.com/Jhone-fori-freelancer/FOO-TALENT-DOCUMENTACION-PROJECT-MANAGER/blob/65bea469f2ce01b50d82da61dd80fcc02efe173b/IMG/logo-incacore-relieve-blanco.svg" 
           alt="Logo Incacore" 
           style="height: 60px;"
         />
