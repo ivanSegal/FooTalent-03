@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { MenuItem } from "@/types/menu_Item";
 import { SidebarProps } from "@/types/sidebar_props";
 import Image from "next/image";
-import logo from "@/assets/images/Logo.png";
+import logo from "@/assets/images/logo-incacore.svg";
 
 // Iconos por defecto
 const DashboardIcon = () => (

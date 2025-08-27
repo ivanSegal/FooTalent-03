@@ -8,7 +8,7 @@ import { showAlert, showAutoAlert } from "@/utils/showAlert";
 import type { NormalizedApiError } from "@/types/api";
 import { Button, Card, Form, Input, Typography } from "antd";
 import Image from "next/image";
-import LogoLogin from "@/assets/images/LogoLogin.png";
+import LogoLogin from "@/assets/images/logo-incacore.svg";
 
 function VerifyEmailResetPasswordPageInner() {
   const router = useRouter();
