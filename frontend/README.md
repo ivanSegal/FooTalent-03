@@ -66,6 +66,7 @@ Estas instrucciones te guiarán para obtener una copia de este proyecto en funci
 
 <!-- RAMAS -->
 
+
 ## 🏷️ Guía de ramas
 
 - **`main`**: Versión estable en producción.
@@ -74,27 +75,29 @@ Estas instrucciones te guiarán para obtener una copia de este proyecto en funci
 - **`hotfix/<descripción>`**: Correcciones críticas en producción.
 - **`release/<versión>`**: Preparación de versiones para `main`.
 
-<p align="right">(<a href="#readme-top">Volver al inicio</a>)</p>
+## 🏷️ Estrategia de Ramas (Branching Strategy)
 
-<!-- COMMITS -->
+Para mantener un flujo de trabajo organizado se utilizó una estrategia basada en **épicas semanales** y **ramas de tareas**:
 
-## ✍️ Convención de commits
 
-Usamos **Conventional Commits** para estandarizar mensajes y facilitar el historial:
+- **Rama Principal de la Épica**:  
+  Cada semana contó con una rama que centralizó el trabajo del issue.  
+  - Semana 3 → `feature/frontend-week3-ui-conf-maquetar`  
+  - Semana 4 → `epic/frontend-week4-ui-backend-integration`  
 
-```bash
-<tipo>(<scope opcional>): mensaje breve
-```
+- **Ramas de Tareas**:  
+  Cada tarea o sub-tarea (componentes, vistas, integración con backend) se desarrolló en una rama propia, partiendo siempre de la rama de la épica.  
+  Ejemplo: `feature/button-component`, `feature/user-list-view`.
 
-- **feat**: nueva funcionalidad
-- **fix**: corrección de errores
-- **docs**: cambios en documentación
-- **style**: formato, espaciado, sin lógica
-- **refactor**: refactorización de código
-- **test**: añadir o modificar tests
-- **chore**: tareas de mantenimiento
+- **Pull Requests (PRs)**:  
+  Los PRs de las tareas se dirigieron a la rama de la épica, **no directamente a `develop`**.  
 
-**Ejemplos:**
+- **Limpieza y Fusión Final**:  
+  Una vez aprobado y fusionado el PR de una tarea, la rama se eliminaba.  
+  Al completar todas las tareas, se hacía un PR final de la rama de la épica hacia `develop`.
+
+✅ Con esto se logró mantener el repositorio limpio, organizado y con un control claro de los avances semanales.
+
 
 ```bash
 feat(auth): implementar flujo de login
@@ -103,6 +106,9 @@ docs: actualizar sección de instalación en README
 ```
 
 <p align="right">(<a href="#readme-top">Volver al inicio</a>)</p>
+
+<!-- COMMITS -->
+
 
 <!-- FLUJO DE TRABAJO -->
 

@@ -3,6 +3,7 @@ package com.Incamar.IncaCore.controllers;
 import com.Incamar.IncaCore.documentation.vessel.*;
 import com.Incamar.IncaCore.dtos.vessels.VesselRequestDto;
 import com.Incamar.IncaCore.dtos.vessels.VesselResponseDto;
+import com.Incamar.IncaCore.security.service.SecurityService;
 import com.Incamar.IncaCore.services.VesselService;
 import com.Incamar.IncaCore.utils.ApiResult;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,28 +26,32 @@ public class VesselController {
 
     private final VesselService vesselService;
 
+
     @GetAllEmbarcacionesEndpointDoc
-    @PreAuthorize("hasAnyRole('WAREHOUSE_STAFF', 'OPERATIONS_MANAGER', 'ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
+            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @GetMapping
     public ResponseEntity<ApiResult<?>> getAllVessel(@ParameterObject Pageable pageable) {
-        return ResponseEntity.ok(ApiResult.success(vesselService.getAllVessels(pageable),"Se visualizan exitosamente todas las embarcaciones."));
+        return ResponseEntity.ok(ApiResult.success(vesselService.getAllVessels(pageable), "Se visualizan exitosamente todas las embarcaciones."));
     }
 
     @GetEmbarcacionByIdEndpointDoc
-    @PreAuthorize("hasAnyRole('WAREHOUSE_STAFF', 'OPERATIONS_MANAGER', 'ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
+            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @GetMapping("/{id}")
     public ResponseEntity<ApiResult<?>> getVesselById(@PathVariable Long id) {
         VesselResponseDto vesselResponseDto = vesselService.getVesselById(id);
-        return ResponseEntity.ok(ApiResult.success(vesselResponseDto,"Embarcacion obtenida exitosamente."));
+        return ResponseEntity.ok(ApiResult.success(vesselResponseDto, "Embarcacion obtenida exitosamente."));
     }
 
     @CreateEmbarcacionEndpointDoc
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR" +
+            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @PostMapping("/create")
     public ResponseEntity<ApiResult<?>> createVessel(@Valid @RequestBody VesselRequestDto vesselRequestDto) {
         VesselResponseDto vesselResponseDto = vesselService.createVessel(vesselRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResult.success(vesselResponseDto,"Embarcación creada correctamente."));
+                .body(ApiResult.success(vesselResponseDto, "Embarcación creada correctamente."));
     }
 
     @DeleteEmbarcacionEndpointDoc
@@ -58,19 +63,20 @@ public class VesselController {
     }
 
     @UpdateEmbarcacionEndpointDoc
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL')")
     @PutMapping("/{id}")
     public ResponseEntity<ApiResult<?>> editEmbarcacion(@PathVariable Long id,
-                                                  @Valid @RequestBody VesselRequestDto vesselRequestDto) {
+                                                        @Valid @RequestBody VesselRequestDto vesselRequestDto) {
         VesselResponseDto vesselResponseDto = vesselService.editEmbarcacion(id, vesselRequestDto);
-        return ResponseEntity.ok(ApiResult.success(vesselResponseDto,"Embarcacion editada exitosamente."));
+        return ResponseEntity.ok(ApiResult.success(vesselResponseDto, "Embarcacion editada exitosamente."));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL')OR " +
+            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @SearchEmbarcacionesEndpointDoc
     @GetMapping("/search")
     public ResponseEntity<ApiResult<?>> searchEmbarcaciones(@RequestParam("nombre") String nombre, @ParameterObject Pageable pageable) {
         Page<VesselResponseDto> result = vesselService.searchVesselByName(nombre, pageable);
-        return ResponseEntity.ok(ApiResult.success(result,"Embarcaciones obtenidas exitosamente."));
+        return ResponseEntity.ok(ApiResult.success(result, "Embarcaciones obtenidas exitosamente."));
     }
 }
