@@ -22,13 +22,13 @@ interface Props {
 }
 
 const defaultValues: Partial<ServiceTicketDetailInput> = {
-  serviceArea: "generico",
-  serviceType: "generico",
-  description: "generico",
+  serviceArea: "",
+  serviceType: "",
+  description: "",
   hoursTraveled: "00:00",
-  patronFullName: "generico",
-  marinerFullName: "generico",
-  captainFullName: "generico",
+  patronFullName: "",
+  marinerFullName: "",
+  captainFullName: "",
 };
 
 export const ServiceTicketDetailForm: React.FC<Props> = ({
@@ -51,6 +51,26 @@ export const ServiceTicketDetailForm: React.FC<Props> = ({
   React.useEffect(() => {
     if (current) reset({ ...current });
     else reset({ ...defaultValues, serviceTicketId });
+  }, [current, reset, serviceTicketId]);
+
+  // Auto-cargar detalle asociado si no se proporcionó `current`
+  React.useEffect(() => {
+    let abort = false;
+    (async () => {
+      if (!current && serviceTicketId) {
+        try {
+          const existing = await serviceTicketDetailService.getOneByServiceTicket(serviceTicketId);
+          if (!abort && existing) {
+            reset({ ...(existing as unknown as ServiceTicketDetailInput) });
+          }
+        } catch {
+          // ignorar si no hay detalle
+        }
+      }
+    })();
+    return () => {
+      abort = true;
+    };
   }, [current, reset, serviceTicketId]);
 
   const onSubmit = async (raw: ServiceTicketDetailInput) => {

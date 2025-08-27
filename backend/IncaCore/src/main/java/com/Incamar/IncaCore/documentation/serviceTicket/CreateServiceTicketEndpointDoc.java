@@ -30,7 +30,7 @@ import java.lang.annotation.*;
               (3 a 4 dígitos). Ej.: si <code>reportTravelNro = "AAA-05-0123"</code>, entonces <code>travelNro = 123</code>.</li>
           <li>Requeridos además: <code>travelDate (dd-MM-yyyy)</code>, <code>vesselAttended</code>, <code>solicitedBy</code>, <code>code</code>, <code>checkingNro</code>.</li>
         </ul>
-        Requiere autenticación con rol <strong>ADMIN, PATRON o SUPERVISOR</strong>.
+       Requiere autenticación de usuarios con rol <strong>ADMIN, SUPERVISOR, OPERATOR</strong>.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )
