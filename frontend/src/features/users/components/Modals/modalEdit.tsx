@@ -1,32 +1,19 @@
-"use client";
-import React, { useState } from 'react';
-import { EyeOutlined, EyeInvisibleOutlined, LoadingOutlined } from '@ant-design/icons';
+import React from "react";
+import { LoadingOutlined } from "@ant-design/icons";
+import { useState } from "react";
 
-interface CreateUserModalProps {
+export const EditUserModal: React.FC<{
   isOpen: boolean;
   onClose: () => void;
-  onCreateUser: (userData: {
-    fullName: string;
-    email: string;
-    username: string;
-    role: string;
-    password: string;
-  }) => Promise<void>;
-}
-
-export const CreateUserModal: React.FC<CreateUserModalProps> = ({
-  isOpen,
-  onClose,
-  onCreateUser
-}) => {
+  user: any;
+  onUpdateUser: (userId: string, userData: any) => Promise<void>;
+}> = ({ isOpen, onClose, user, onUpdateUser }) => {
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    username: '',
-    role: '',
-    password: ''
+    fullName: user?.fullName || '',
+    email: user?.email || '',
+    username: user?.username || '',
+    role: user?.role || ''
   });
-  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -35,6 +22,17 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
     { value: 'WAREHOUSE_STAFF', label: 'Personal de Almacén' },
     { value: 'OPERATIONS_MANAGER', label: 'Gerente de Operaciones' }
   ];
+
+  React.useEffect(() => {
+    if (user) {
+      setFormData({
+        fullName: user.fullName || '',
+        email: user.email || '',
+        username: user.username || '',
+        role: user.role || ''
+      });
+    }
+  }, [user]);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -51,18 +49,10 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
 
     if (!formData.username.trim()) {
       newErrors.username = 'El nombre de usuario es requerido';
-    } else if (formData.username.length < 3) {
-      newErrors.username = 'El nombre de usuario debe tener al menos 3 caracteres';
     }
 
     if (!formData.role) {
       newErrors.role = 'Debe seleccionar un rol';
-    }
-
-    if (!formData.password) {
-      newErrors.password = 'La contraseña es requerida';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
     }
 
     setErrors(newErrors);
@@ -76,25 +66,17 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
 
     setLoading(true);
     try {
-      await onCreateUser(formData);
+      await onUpdateUser(user.uuid, formData);
       handleClose();
     } catch (error) {
-      console.error('Error creating user:', error);
+      console.error('Error updating user:', error);
     } finally {
       setLoading(false);
     }
   };
 
   const handleClose = () => {
-    setFormData({
-      fullName: '',
-      email: '',
-      username: '',
-      role: '',
-      password: ''
-    });
     setErrors({});
-    setShowPassword(false);
     onClose();
   };
 
@@ -105,19 +87,17 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
     }
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || !user) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg max-w-md w-full mx-4 shadow-xl">
         <form onSubmit={handleSubmit}>
-          {/* Header */}
           <div className="p-6 pb-4">
             <h2 className="text-xl font-semibold text-gray-900 mb-6">
-              Añadir nuevo usuario
+              Editar usuario
             </h2>
 
-            {/* Nombre completo */}
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Nombre completo
@@ -126,7 +106,6 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
                 type="text"
                 value={formData.fullName}
                 onChange={(e) => handleInputChange('fullName', e.target.value)}
-                placeholder="Ana Rodriguez"
                 className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                   errors.fullName ? 'border-red-300' : 'border-gray-300'
                 }`}
@@ -136,7 +115,6 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
               )}
             </div>
 
-            {/* Correo Electrónico */}
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Correo Electrónico
@@ -145,7 +123,6 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
-                placeholder="ejemplo@incamar.com"
                 className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                   errors.email ? 'border-red-300' : 'border-gray-300'
                 }`}
@@ -155,7 +132,6 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
               )}
             </div>
 
-            {/* Nombre de usuario */}
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Nombre de usuario
@@ -164,7 +140,6 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
                 type="text"
                 value={formData.username}
                 onChange={(e) => handleInputChange('username', e.target.value)}
-                placeholder="arodriguez"
                 className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                   errors.username ? 'border-red-300' : 'border-gray-300'
                 }`}
@@ -174,8 +149,7 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
               )}
             </div>
 
-            {/* Rol del usuario */}
-            <div className="mb-4">
+            <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Rol del usuario
               </label>
@@ -204,58 +178,25 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
                 <p className="text-red-500 text-xs mt-1">{errors.role}</p>
               )}
             </div>
-
-            {/* Contraseña */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Contraseña
-              </label>
-              <div className="relative">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  value={formData.password}
-                  onChange={(e) => handleInputChange('password', e.target.value)}
-                  placeholder="••••••••"
-                  className={`w-full px-3 py-2 pr-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                    errors.password ? 'border-red-300' : 'border-gray-300'
-                  }`}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
-                >
-                  {showPassword ? (
-                    <EyeInvisibleOutlined className="w-4 h-4" />
-                  ) : (
-                    <EyeOutlined className="w-4 h-4" />
-                  )}
-                </button>
-              </div>
-              {errors.password && (
-                <p className="text-red-500 text-xs mt-1">{errors.password}</p>
-              )}
-            </div>
           </div>
 
-          {/* Footer */}
           <div className="px-6 py-4 bg-gray-50 rounded-b-lg flex gap-3">
             <button
               type="button"
               onClick={handleClose}
               disabled={loading}
-              className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-4 py-2 text-white rounded-lg font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="flex-1 px-4 py-2 text-white rounded-lg font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
               style={{ backgroundColor: '#496490' }}
             >
               {loading && <LoadingOutlined spin />}
-              Añadir usuario
+              Guardar cambios
             </button>
           </div>
         </form>

@@ -1,0 +1,331 @@
+"use client";
+import React, { useState } from 'react';
+import { LoadingOutlined } from '@ant-design/icons';
+
+interface CreateUserModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onUserCreated?: () => void; 
+}
+
+interface CreateUserData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+  department: string;
+}
+
+interface ApiError {
+  message: string;
+  field?: string;
+}
+
+export const CreateUserModal: React.FC<CreateUserModalProps> = ({
+  isOpen,
+  onClose,
+  onUserCreated
+}) => {
+  const [formData, setFormData] = useState<CreateUserData>({
+    firstName: '',
+    lastName: '',
+    email: '',
+    role: '',
+    department: ''
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [apiError, setApiError] = useState<string>('');
+
+  const departments = [
+    { value: 'INVENTORY', label: 'Inventario' },
+    { value: 'MAINTENANCE', label: 'Mantenimiento' },
+    { value: 'VESSEL', label: 'Embarcaciones' },
+  ];
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = 'El nombre es requerido';
+    }
+
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = 'El apellido es requerido';
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = 'El correo electrónico es requerido';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'El correo electrónico no es válido';
+    }
+
+    if (!formData.role) {
+      newErrors.role = 'Debe seleccionar un rol';
+    }
+
+    if (!formData.department) {
+      newErrors.department = 'Debe seleccionar un departamento';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+   const createUser = async (userData: CreateUserData): Promise<void> => {
+  try {
+    const response = await fetch('https://footalent-03.onrender.com/api/auth/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      if (data.errors && Array.isArray(data.errors)) {
+        const fieldErrors: Record<string, string> = {};
+        data.errors.forEach((error: ApiError) => {
+          if (error.field) {
+            fieldErrors[error.field] = error.message;
+          }
+        });
+        setErrors(fieldErrors);
+      } else {
+        setApiError(data.message || 'Error al crear el usuario');
+      }
+      throw new Error(data.message || 'Error al crear el usuario');
+    }
+
+    console.log('Usuario creado exitosamente:', data);
+    if (onUserCreated) {
+      onUserCreated();
+    }
+  } catch (error) {
+    console.error('Error creating user:', error);
+    if (!apiError && Object.keys(errors).length === 0) {
+      setApiError('Error de conexión. Por favor, intente nuevamente.');
+    }
+    throw error;
+  }
+};
+
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Limpiar errores previos
+    setErrors({});
+    setApiError('');
+    
+    if (!validateForm()) return;
+
+    setLoading(true);
+    try {
+      await createUser(formData);
+      handleClose();
+    } catch (error) {
+      // El error ya se maneja en createUser
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleClose = () => {
+    setFormData({
+      firstName: '',
+      lastName: '',
+      email: '',
+      role: '',
+      department: ''
+    });
+    setErrors({});
+    setApiError('');
+    setShowPassword(false);
+    onClose();
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    
+    // Limpiar errores del campo cuando el usuario empiece a escribir
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: '' }));
+    }
+    
+    // Limpiar error general de API
+    if (apiError) {
+      setApiError('');
+    }
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="backdrop-blur-sm fixed inset-0  bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg max-w-md w-full mx-4 shadow-xl">
+        <form onSubmit={handleSubmit}>
+          {/* Header */}
+          <div className="p-6 pb-4">
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">
+              Añadir nuevo usuario
+            </h2>
+
+            {/* Error general de API */}
+            {apiError && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
+                {apiError}
+              </div>
+            )}
+
+            {/* Nombre */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Nombre
+              </label>
+              <input
+                type="text"
+                value={formData.firstName}
+                onChange={(e) => handleInputChange('firstName', e.target.value)}
+                placeholder="Juan José"
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                  errors.firstName ? 'border-red-300' : 'border-gray-300'
+                }`}
+                disabled={loading}
+              />
+              {errors.firstName && (
+                <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>
+              )}
+            </div>
+
+            {/* Apellido */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Apellido
+              </label>
+              <input
+                type="text"
+                value={formData.lastName}
+                onChange={(e) => handleInputChange('lastName', e.target.value)}
+                placeholder="Pérez Gómez"
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                  errors.lastName ? 'border-red-300' : 'border-gray-300'
+                }`}
+                disabled={loading}
+              />
+              {errors.lastName && (
+                <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>
+              )}
+            </div>
+
+            {/* Correo Electrónico */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Correo Electrónico
+              </label>
+              <input
+                type="email"
+                value={formData.email}
+                onChange={(e) => handleInputChange('email', e.target.value)}
+                placeholder="juan.perez@example.com"
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                  errors.email ? 'border-red-300' : 'border-gray-300'
+                }`}
+                disabled={loading}
+              />
+              {errors.email && (
+                <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+              )}
+            </div>
+
+            {/* Rol del usuario */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Rol del usuario
+              </label>
+              <div className="relative">
+                <select
+                  value={formData.role}
+                  onChange={(e) => handleInputChange('role', e.target.value)}
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white ${
+                    errors.role ? 'border-red-300' : 'border-gray-300'
+                  }`}
+                  disabled={loading}
+                >
+                  <option value="">Seleccionar un rol...</option>
+                  <option value="ADMIN">Administrador</option>
+                  <option value="WAREHOUSE_STAFF">Personal de Almacén</option>
+                  <option value="OPERATIONS_MANAGER">Gerente de Operaciones</option>
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+              {errors.role && (
+                <p className="text-red-500 text-xs mt-1">{errors.role}</p>
+              )}
+            </div>
+
+            {/* Departamento */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Departamento
+              </label>
+              <div className="relative">
+                <select
+                  value={formData.department}
+                  onChange={(e) => handleInputChange('department', e.target.value)}
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white ${
+                    errors.department ? 'border-red-300' : 'border-gray-300'
+                  }`}
+                  disabled={loading}
+                >
+                  <option value="">Seleccionar un departamento...</option>
+                  {departments.map((department) => (
+                    <option key={department.value} value={department.value}>
+                      {department.label}
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+              {errors.department && (
+                <p className="text-red-500 text-xs mt-1">{errors.department}</p>
+              )}
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="px-6 py-4 bg-gray-50 rounded-b-lg flex gap-3">
+            <button
+              type="button"
+              onClick={handleClose}
+              disabled={loading}
+              className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="flex-1 px-4 py-2 text-white rounded-lg font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              style={{ backgroundColor: '#496490' }}
+            >
+              {loading && <LoadingOutlined spin />}
+              {loading ? 'Creando...' : 'Añadir usuario'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
