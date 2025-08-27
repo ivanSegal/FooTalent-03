@@ -190,7 +190,6 @@ export default function VasselItemList({ vasselId }: Props) {
           setDialog(false);
         }}
         footer={null}
-        destroyOnClose
       >
         <VasselItemForm
           vasselId={vasselId}
