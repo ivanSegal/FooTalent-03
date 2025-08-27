@@ -8,21 +8,47 @@
 
 
 
+
+
+
+
+
+
+
+
+
 <!-- ===================== 2. LOGO + TÍTULO ===================== -->
 <div align="center" style="margin: 30px 0;">
-  <table style="margin: 0 auto;">
-    <tr>
-      <td>
-        <img src="https://github.com/Jhone-fori-freelancer/FOO-TALENT-DOCUMENTACION-PROJECT-MANAGER/blob/98e30ad3b51afd7cee89ffffb8559f488367ce19/IMG/logo-incacore.svg">
+  <table style="margin: 0 auto; border-collapse: collapse;">
+    <tr style="vertical-align: middle;">
+      
+      <!-- Logo alineado a la izquierda -->
+  <td style="padding-right: 15px;">
+        <img 
+          src="https://github.com/Jhone-fori-freelancer/FOO-TALENT-DOCUMENTACION-PROJECT-MANAGER/blob/98e30ad3b51afd7cee89ffffb8559f488367ce19/IMG/logo-incacore.svg" 
+          alt="Logo Incacore" 
+          style="height: 60px;"
+        />
       </td>
-      <td style="padding-left: 20px;">
-        <h1 style="color: #007bff; font-size: 2.8rem; margin: 0;">
-          <a href="https://incacore.vercel.app/" style="text-decoration: none; color: inherit;">· INCACORE ·</a>
+
+      <!-- Título alineado a la derecha -->
+  <td style="padding-left: 15px;">
+        <h1 style="color: #007bff; font-size: 2.8rem; margin: 0; text-align: left;">
+          <a 
+            href="https://incacore.vercel.app/" 
+            style="text-decoration: none; color: inherit;"
+          >
+            · INCACORE ·
+          </a>
         </h1>
       </td>
+
     </tr>
   </table>
 </div>
+
+<!-- ===================== SEPARADOR ===================== -->
+<hr style="border: 1px solid #ddd; margin: 30px 0;">
 
 
 
