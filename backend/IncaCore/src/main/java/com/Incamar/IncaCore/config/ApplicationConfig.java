@@ -1,6 +1,8 @@
 package com.Incamar.IncaCore.config;
 
+import com.Incamar.IncaCore.models.User;
 import com.Incamar.IncaCore.repositories.UserRepository;
+import com.Incamar.IncaCore.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +23,7 @@ public class ApplicationConfig {
 
   @Bean
   public AuthenticationManager authenticationManager(
-      AuthenticationConfiguration config) throws Exception {
+          AuthenticationConfiguration config) throws Exception {
     return config.getAuthenticationManager();
   }
 
@@ -40,9 +42,11 @@ public class ApplicationConfig {
 
   @Bean
   public UserDetailsService userDetailService() {
-    return username -> userRepository.findByUsername(username)
-        .orElseThrow(() ->
-            new UsernameNotFoundException("Usuario no encontrado."));
+    return email -> {
+      User user = userRepository.findByEmail(email)
+              .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado."));
+      return new CustomUserDetails(user);
+    };
   }
 
 }

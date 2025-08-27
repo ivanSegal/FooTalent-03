@@ -10,6 +10,7 @@ import {
   type ServiceTicketListItem,
   serviceTicketService,
   ServiceTicketTemplate,
+
   // Nuevos imports para Detalle
   ServiceTicketDetailForm,
   serviceTicketDetailService,
@@ -60,7 +61,9 @@ export default function ServiceTicketList() {
       const mSearch =
         !term ||
         i.vesselAttended.toLowerCase().includes(term) ||
+
         i.vesselName.toLowerCase().includes(term) ||
+
         i.solicitedBy.toLowerCase().includes(term) ||
         i.responsibleUsername.toLowerCase().includes(term) ||
         i.reportTravelNro.toLowerCase().includes(term) ||
@@ -137,6 +140,7 @@ export default function ServiceTicketList() {
   };
 
   // Columnas principales
+
   const columns: ColumnsType<ServiceTicketListItem> = [
     {
       title: "ID",
@@ -169,12 +173,16 @@ export default function ServiceTicketList() {
               : undefined
           : undefined,
     },
+
     { title: "Embarcación atendida", dataIndex: "vesselAttended", key: "vesselAttended" },
+
     { title: "Solicitado por", dataIndex: "solicitedBy", key: "solicitedBy" },
     { title: "Reporte N°", dataIndex: "reportTravelNro", key: "reportTravelNro" },
     { title: "Código", dataIndex: "code", key: "code" },
     { title: "Control N°", dataIndex: "checkingNro", key: "checkingNro", width: 110 },
+
     { title: "Embarcación", dataIndex: "vesselName", key: "vesselName" },
+
     { title: "Responsable", dataIndex: "responsibleUsername", key: "responsibleUsername" },
     {
       title: "Acciones",
@@ -182,11 +190,13 @@ export default function ServiceTicketList() {
       align: "right" as const,
       render: (_: unknown, record) => (
         <Space size="small" onClick={(e) => e.stopPropagation()}>
+
           <Tooltip title="Detalle">
             <Button size="small" type="text" onClick={() => void openDetails(record)}>
               Detalle
             </Button>
           </Tooltip>
+
           <Tooltip title="Imprimir / Vista previa">
             <PDFGenerator
               template={ServiceTicketTemplate}
@@ -231,7 +241,6 @@ export default function ServiceTicketList() {
     },
   ];
 
-  // Columnas de Travels
   const travelColumns: ColumnsType<ServiceTicketTravel> = [
     { title: "Origen", dataIndex: "origin", key: "origin" },
     { title: "Destino", dataIndex: "destination", key: "destination" },
@@ -272,6 +281,7 @@ export default function ServiceTicketList() {
       ),
     },
   ];
+
 
   return (
     <main className="min-h-screen bg-gray-50 p-8">
@@ -338,6 +348,7 @@ export default function ServiceTicketList() {
         onCancel={onClose}
         footer={null}
       >
+
         {current?.id && (
           <div className="mb-3 flex justify-end">
             <Button onClick={() => void openDetails(current)}>Detalle</Button>
@@ -456,6 +467,7 @@ export default function ServiceTicketList() {
           </div>
         )}
       </Modal>
+
     </main>
   );
 }

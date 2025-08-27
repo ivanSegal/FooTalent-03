@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { MenuItem } from "@/types/menu_Item";
 import { SidebarProps } from "@/types/sidebar_props";
 import Image from "next/image";
-import logo from "@/assets/images/Logo.png";
+import logo from "@/assets/images/logo-incacore.svg";
 
 // Iconos por defecto
 const DashboardIcon = () => (
@@ -162,7 +162,7 @@ const defaultMenuItems: MenuItem[] = [
   { id: "dashboard", label: "Dashboard", href: "/dashboard", icon: <DashboardIcon /> },
   { id: "users", label: "Usuarios", href: "/users", icon: <UsersIcon /> },
   { id: "maintenance", label: "Mantenimiento", href: "/maintenance", icon: <MaintenanceIcon /> },
-  { id: "boats", label: "Embarcaciones", href: "/boats", icon: <ShippingIcon /> },
+  { id: "vassels", label: "Embarcaciones", href: "/vassels", icon: <ShippingIcon /> },
   { id: "inventory", label: "Inventario", href: "/inventory", icon: <InventoryIcon /> },
   { id: "config", label: "Configuración", href: "/config", icon: <ConfigIcon /> },
 ];

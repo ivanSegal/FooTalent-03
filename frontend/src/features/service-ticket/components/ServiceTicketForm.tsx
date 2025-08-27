@@ -38,6 +38,7 @@ const defaultValues: Partial<ServiceTicketFormValues> = {
   code: "",
   checkingNro: 0,
   vesselName: "",
+
   responsibleUsername: "",
 };
 
@@ -80,7 +81,6 @@ export const ServiceTicketForm: React.FC<Props> = ({ items, setItems, current, o
 
   const onSubmit: SubmitHandler<ServiceTicketFormValues> = async (data) => {
     try {
-      // Incluir vesselId si el usuario eligió una embarcación
       const selected = vassels.find((v) => v.name === data.vesselName);
       const payload = selected ? { ...data, vesselId: selected.id } : data;
       if (current) {
@@ -303,22 +303,26 @@ export const ServiceTicketForm: React.FC<Props> = ({ items, setItems, current, o
           </label>
           <Controller
             control={control}
+
             name="vesselName"
             render={({ field }) => (
               <Select
                 id="vesselName"
+
                 showSearch
                 placeholder="Selecciona embarcación"
                 optionFilterProp="label"
                 value={field.value ?? undefined}
                 onChange={(val) => field.onChange(val)}
                 options={vassels.map((v) => ({ label: v.name, value: v.name }))}
+
                 status={errors.vesselName ? "error" : undefined}
               />
             )}
           />
           {errors.vesselName && (
             <p className="mt-1 text-xs text-red-600">{errors.vesselName.message as string}</p>
+
           )}
         </div>
       </div>

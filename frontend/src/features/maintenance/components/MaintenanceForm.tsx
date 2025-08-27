@@ -17,6 +17,9 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import { MaintenanceFormValues, maintenanceSchema } from "../schemas/maintenance.schema";
 import { MaintenanceListItem, maintenanceService } from "@/features/maintenance";
 
+
+import { vasselsService, type Vassel } from "@/features/vassels";
+
 const { TextArea } = Input;
 
 interface Props {
@@ -53,6 +56,19 @@ export const MaintenanceForm: React.FC<Props> = ({
     resolver: zodResolver(maintenanceSchema),
     defaultValues,
   });
+  // Cargar embarcaciones para el select
+  const [vassels, setVassels] = React.useState<Vassel[]>([]);
+  useEffect(() => {
+    void (async () => {
+      try {
+        const res = await vasselsService.list({ page: 0, size: 100 });
+        setVassels(res.content);
+      } catch {
+        // Ignorar error de carga inicial
+      }
+    })();
+  }, []);
+
   useEffect(() => {
     if (maintenanceList) {
       // Prefill al editar
@@ -65,10 +81,12 @@ export const MaintenanceForm: React.FC<Props> = ({
 
   const onSubmit: SubmitHandler<MaintenanceFormValues> = async (data) => {
     try {
-      const payload: Partial<MaintenanceListItem> = {
-        ...data,
-        vesselId: Number(data.vesselName),
-      };
+      // Incluir vesselId si el usuario eligió una embarcación válida
+      const selected = vassels.find((v) => v.name === data.vesselName);
+      const payload: Partial<MaintenanceListItem> = selected
+        ? { ...data, vesselId: selected.id }
+        : { ...data };
+
       if (maintenanceList) {
         const updatedMaintenance = await maintenanceService.update(maintenanceList.id, payload);
         console.log("Updated maintenance order:", updatedMaintenance);
@@ -105,12 +123,14 @@ export const MaintenanceForm: React.FC<Props> = ({
             control={control}
             name="vesselName"
             render={({ field }) => (
-              <Input
+              <Select
                 id="vesselName"
-                placeholder="Nombre / código"
-                {...field}
-                value={field.value ?? ""}
-                status={errors.vesselName ? "error" : undefined}
+                showSearch
+                placeholder="Selecciona embarcación"
+                optionFilterProp="label"
+                value={field.value ?? undefined}
+                onChange={(val) => field.onChange(val)}
+                options={vassels.map((v) => ({ label: v.name, value: v.name }))}
               />
             )}
           />
