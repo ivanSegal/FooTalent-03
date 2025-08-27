@@ -27,7 +27,7 @@ import java.lang.annotation.*;
           <li><code>hoursTraveled</code> ≥ 0 (positivo o cero).</li>
           <li><code>patronFullName</code>, <code>marinerFullName</code>, <code>captainFullName</code> solo aceptan letras y espacios (máx 50).</li>
         </ul>
-        Requiere autenticación con roles: <strong>ADMIN, PATRON o SUPERVISOR</strong>.
+        Requiere autenticación con roles: <strong>ADMIN, OPERATOR, SUPERVISOR</strong>.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )

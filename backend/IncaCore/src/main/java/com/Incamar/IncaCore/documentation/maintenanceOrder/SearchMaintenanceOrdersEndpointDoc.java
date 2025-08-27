@@ -17,7 +17,7 @@ import java.lang.annotation.*;
         description = """
         Retorna una lista paginada de ordenes de mantenimiento cuyo nombre de embarcación coincida parcialmente \
         (ignorando mayúsculas) con el valor proporcionado en el parámetro `nombre`. \s
-        Accesible para usuarios con roles: <strong>ADMIN, SUPERVISOR o OPERADOR</strong>
+        Requiere autenticación de usuarios con rol <strong>ADMIN, SUPERVISOR, OPERATOR</strong>.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )

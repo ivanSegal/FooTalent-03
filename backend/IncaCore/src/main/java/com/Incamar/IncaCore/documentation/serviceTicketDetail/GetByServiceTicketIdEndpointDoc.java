@@ -20,7 +20,7 @@ import java.lang.annotation.*;
         description = """
         Devuelve el detalle asociado a un ServiceTicket específico mediante su ID. \
         Cada ServiceTicket puede tener **solo un detalle** (relación 1–1).<br/><br/>
-        Accesible para usuarios con roles: <strong>ADMIN, OPERADOR o SUPERVISOR</strong> \
+        Accesible para usuarios con roles: <strong>ADMIN, OPERATOR, SUPERVISOR</strong> \
         con acceso al departamento VESSELS.
         """,
         security = @SecurityRequirement(name = "bearer-key")
