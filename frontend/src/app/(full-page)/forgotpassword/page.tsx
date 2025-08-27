@@ -5,7 +5,7 @@ import { ForgotPasswordRequest } from "@/types/auth";
 import { forgotPassword } from "@/services/authService";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import LogoLogin from "@/assets/images/LogoLogin.png";
+import LogoLogin from "@/assets/images/logo-incacore.svg";
 import { showAlert, showAutoAlert } from "@/utils/showAlert";
 import type { NormalizedApiError } from "@/types/api";
 import { motion, useReducedMotion } from "framer-motion";

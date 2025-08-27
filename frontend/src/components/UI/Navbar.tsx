@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import logo from "@/assets/images/Logo.png";
+import logo from "@/assets/images/logo-incacore.svg";
 import { NavbarProps } from "@/types/NavbarProps";
 
 const Navbar: React.FC<NavbarProps> = ({

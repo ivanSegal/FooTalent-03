@@ -16,7 +16,9 @@ export const serviceTicketSchema = z.object({
     .regex(reportTravelNroRegex, "Formato inválido (AAA-00-0 o AAAA-00-0000, en MAYÚSCULAS)"),
   code: z.string().min(1, "Requerido"),
   checkingNro: z.coerce.number().int().nonnegative(),
-  boatName: z.string().min(1, "Requerido"),
+
+  vesselName: z.string().min(1, "Requerido"),
+
   responsibleUsername: z.string().optional(),
 });
 
