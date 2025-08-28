@@ -26,7 +26,7 @@ public class ItemWarehouseServiceImp implements IItemWarehouseService {
 
     @Override
     public ItemWarehouseResponseDto createItemWarehouse(ItemWarehouseRequestDto itemWarehouse) {
-        if(warehouseRepository.existsById(itemWarehouse.getWarehouseId())) {
+        if(!warehouseRepository.existsById(itemWarehouse.getWarehouseId())) {
              throw  new ResourceNotFoundException("Almacen no encontrado con ID: " + itemWarehouse.getWarehouseId());
         }
         if(itemWarehouseRepository.existsItemWarehouseByName(itemWarehouse.getName())) {

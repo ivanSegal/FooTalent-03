@@ -2,7 +2,6 @@ package com.Incamar.IncaCore.services;
 
 import com.Incamar.IncaCore.dtos.inventory.InventoryMovementRequestDto;
 import com.Incamar.IncaCore.dtos.inventory.InventoryMovementResponseDto;
-import com.Incamar.IncaCore.dtos.itemwarehouse.ItemWarehouseResponseDto;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

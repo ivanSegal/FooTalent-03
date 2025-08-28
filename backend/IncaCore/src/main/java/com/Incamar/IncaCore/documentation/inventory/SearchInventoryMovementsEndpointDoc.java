@@ -19,7 +19,7 @@ import java.lang.annotation.*;
         description = """
         Retorna una lista paginada de movimientos de inventario cuyo nombre del ítem de almacén coincida \
         parcialmente con el valor proporcionado (ignorando mayúsculas). \
-        Accesible para usuarios con roles: <strong>OPERATOR, SUPERVISOR o ADMIN</strong>.
+        Accesible para usuarios con roles: <strong>OPERATOR, SUPERVISOR o ADMIN</strong> que pertenezcan al departamento INVENTARY.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )

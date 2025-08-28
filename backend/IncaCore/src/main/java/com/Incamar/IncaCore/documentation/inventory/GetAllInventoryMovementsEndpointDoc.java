@@ -20,7 +20,7 @@ import java.lang.annotation.*;
         summary = "Obtener todos los movimientos de inventario",
         description = """
         Retorna una lista paginada de todos los movimientos de inventario registrados en el sistema. \
-        Accesible para usuarios con roles: <strong>OPERATOR, SUPERVISOR o ADMIN</strong>.
+        Accesible para usuarios con roles: <strong>OPERATOR, SUPERVISOR o ADMIN</strong> que pertenezcan al departamento INVENTARY.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )
