@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/boleta-servicio-detalle")
-@Tag(name = "07 - Detalles de boleta de servicio", description = "Endpoints para la gestión de los detalles de boletas de servicio para embarcaciones.")
+@Tag(name = "09 - Detalles de boleta de servicio", description = "Endpoints para la gestión de los detalles de boletas de servicio para embarcaciones.")
 @RequiredArgsConstructor
 public class ServiceTicketDetailController {
 
