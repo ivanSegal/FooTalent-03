@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @Data
 public class MaintenanceOrderResponseDto {
     private Long id;
+    private Long vesselId;
     private String vesselName;
     private MaintenanceType maintenanceType;
     private MaintenanceOrderStatus status;
