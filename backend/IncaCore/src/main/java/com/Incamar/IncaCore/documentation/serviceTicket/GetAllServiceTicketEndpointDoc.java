@@ -39,8 +39,6 @@ import java.lang.annotation.*;
                       "vesselAttended": "Varada Blessing",
                       "solicitedBy": "Kronos",
                       "reportTravelNro": "AAA-05-0123",
-                      "code": "COD-AB12",
-                      "checkingNro": 987,
                       "boatName": "Atlántida",
                       "responsibleUsername": "a.garcia"
                     },
@@ -51,8 +49,6 @@ import java.lang.annotation.*;
                       "vesselAttended": "Orca IX",
                       "solicitedBy": "Poseidon Ltd.",
                       "reportTravelNro": "AAA-05-0124",
-                      "code": "COD-XY34",
-                      "checkingNro": 988,
                       "boatName": "Marinera",
                       "responsibleUsername": "l.martinez"
                     }

@@ -51,8 +51,6 @@ import java.lang.annotation.*;
                     "vesselAttended": "Varada Blessing",
                     "solicitedBy": "Kronos",
                     "reportTravelNro": "AAA-05-0123",
-                    "code": "COD-AB12",
-                    "checkingNro": 987,
                     "boatName": "Atlántida",
                     "responsibleUsername": "j.perez"
                   }
