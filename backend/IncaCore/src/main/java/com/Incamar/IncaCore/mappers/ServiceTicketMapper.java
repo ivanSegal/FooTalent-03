@@ -14,6 +14,7 @@ public interface ServiceTicketMapper {
     @Mapping(target = "vessel", source = "vessel")
     @Mapping(target = "responsible", source = "responsible")
     @Mapping(target = "detail", ignore = true)
+    @Mapping(target = "status", source = "dto.status")
     ServiceTicket toEntity(ServiceTicketRequestDto dto,
                            Vessel vessel,
                            User responsible);
