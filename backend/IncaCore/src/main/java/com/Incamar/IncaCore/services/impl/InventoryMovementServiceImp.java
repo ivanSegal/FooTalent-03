@@ -6,8 +6,12 @@ import com.Incamar.IncaCore.enums.MovementType;
 import com.Incamar.IncaCore.exceptions.ResourceNotFoundException;
 import com.Incamar.IncaCore.mappers.InventoryMovementMapper;
 import com.Incamar.IncaCore.models.InventoryMovement;
+import com.Incamar.IncaCore.models.ItemWarehouse;
+import com.Incamar.IncaCore.models.User;
 import com.Incamar.IncaCore.repositories.InventoryMovementRepository;
-import com.Incamar.IncaCore.repositories.UserRepository;
+import com.Incamar.IncaCore.repositories.ItemWarehouseRepository;
+import com.Incamar.IncaCore.services.AuthService;
+import com.Incamar.IncaCore.services.EmailService;
 import com.Incamar.IncaCore.services.InventoryMovementService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,21 +24,34 @@ public class  InventoryMovementServiceImp implements InventoryMovementService {
 
     private final InventoryMovementRepository inventoryMovementRepository;
     private final ItemWarehouseServiceImp itemWarehouseServiceImp;
+    private final ItemWarehouseRepository itemWarehouseRepository;
     private final InventoryMovementMapper inventoryMovementMapper;
-    private final UserRepository userRepository;
+    private final AuthService authService;
+    private final EmailService emailService;
 
 
     @Override
     public InventoryMovementResponseDto createInventory(InventoryMovementRequestDto inventoryMovementRequestDto) {
-        if (!userRepository.existsById(inventoryMovementRequestDto.getResponsibleId())) {
-            throw new ResourceNotFoundException("Usuario no encontrado con id: " + inventoryMovementRequestDto.getResponsibleId());
-        }
+        User responsible = authService.getAuthenticatedUser().orElseThrow(()->new  ResourceNotFoundException("Usuario no encontrado."));
+        ItemWarehouse itemWarehouse = itemWarehouseRepository.findById(inventoryMovementRequestDto.getItemWarehouseId())
+                .orElseThrow(()->new ResourceNotFoundException("Item de almacen no encontrado."));
         if(inventoryMovementRequestDto.getMovementType().equals(MovementType.ENTRADA)) {
             itemWarehouseServiceImp.increaseStock(inventoryMovementRequestDto.getItemWarehouseId(), inventoryMovementRequestDto.getQuantity());
         } else {
             itemWarehouseServiceImp.decreaseStock(inventoryMovementRequestDto.getItemWarehouseId(), inventoryMovementRequestDto.getQuantity());
+            if (itemWarehouse.getStock() <= itemWarehouse.getStockMin()) {
+                emailService.sendStockAlertEmail(
+                        responsible.getEmail(),
+                        responsible.getEmployee().getFirstName() + " " + responsible.getEmployee().getLastName(),
+                        itemWarehouse.getName(),
+                        itemWarehouse.getStock(),
+                        itemWarehouse.getStockMin()
+                );
+            }
         }
         InventoryMovement inventoryMovement = inventoryMovementMapper.toEntity(inventoryMovementRequestDto);
+        inventoryMovement.setItemWarehouse(itemWarehouse);
+        inventoryMovement.setResponsible(responsible);
         inventoryMovementRepository.save(inventoryMovement);
         return inventoryMovementMapper.toResponseDto(inventoryMovement);
     }

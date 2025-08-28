@@ -13,6 +13,7 @@ public record VesselItemHoursRes(
 
         Long id,
         String responsable,
+        String comments,
         Long vesselId,
         LocalDate date,
         List<VesselItemHoursRes.Items> items

@@ -44,4 +44,17 @@ public class EmailServiceImpl implements EmailService {
             throw new RuntimeException("Failed to send email", e);
         }
     }
+
+    @Override
+    public void sendStockAlertEmail(String to, String recipientName, String productName, Long currentStock, Long minimumStock) {
+        Map<String, Object> variables = Map.of(
+                "recipientName", recipientName,
+                "productName", productName,
+                "currentStock", currentStock,
+                "minimumStock", minimumStock
+        );
+
+        sendHtmlEmail(to, "Alerta de Stock Mínimo", "stock-alert-email", variables);
+    }
+
 }

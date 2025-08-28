@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/warehouses")
-@Tag(name = "08 - Almacenes",
+@Tag(name = "11 - Almacenes",
         description = "Endpoints para gestión de almacenes")
 public class WarehouseController {
 
@@ -29,7 +29,7 @@ public class WarehouseController {
     @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','INVENTORY') OR " +
             "@securityService.hasRoleAndDepartment('OPERATOR','INVENTORY')")
     @PostMapping("/create")
-    public ResponseEntity<ApiResult<WarehouseResponseDto>> create(@Valid WarehouseRequestDto  warehouseRequestDto) {
+    public ResponseEntity<ApiResult<WarehouseResponseDto>> create(@Valid @RequestBody WarehouseRequestDto  warehouseRequestDto) {
         WarehouseResponseDto warehouseResponseDto = warehouseService.create(warehouseRequestDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)

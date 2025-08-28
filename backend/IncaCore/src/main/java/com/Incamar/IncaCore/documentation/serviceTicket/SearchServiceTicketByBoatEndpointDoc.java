@@ -40,8 +40,6 @@ import java.lang.annotation.*;
                       "vesselAttended": "Coral Star",
                       "solicitedBy": "Oceanic S.A.",
                       "reportTravelNro": "AAA-05-0125",
-                      "code": "COD-ZQ45",
-                      "checkingNro": 990,
                       "boatName": "Libertad",
                       "responsibleUsername": "j.perez"
                     },
@@ -52,8 +50,6 @@ import java.lang.annotation.*;
                       "vesselAttended": "Pacific Queen",
                       "solicitedBy": "Naviera Sur",
                       "reportTravelNro": "AAA-05-0126",
-                      "code": "COD-ZQ46",
-                      "checkingNro": 991,
                       "boatName": "Libertad",
                       "responsibleUsername": "m.ramos"
                     }

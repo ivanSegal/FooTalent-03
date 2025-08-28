@@ -125,25 +125,7 @@ import java.lang.annotation.*;
                         )
                 )
         ),
-        @ApiResponse(
-                responseCode = "404",
-                description = "Embarcación no encontrada con el ID especificado",
-                content = @Content(
-                        mediaType = "application/json",
-                        schema = @Schema(
-                                example = """
-                    {
-                      "statusCode": 404,
-                      "message": "Embarcación no encontrada con ID: 101",
-                      "errorCode": "RESOURCE_NOT_FOUND",
-                      "detailsError": "...",
-                      "path": "/api/vessels/create"
-                    }
-                """
-                        )
-                )
-        ),
-        @ApiResponse(
+         @ApiResponse(
                 responseCode = "500",
                 description = "Error interno del servidor",
                 content = @Content(

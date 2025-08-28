@@ -19,8 +19,7 @@ public class ServiceTicketResponseDto {
     private String vesselAttended;
     private String solicitedBy;
     private String reportTravelNro;
-    private String code;
-    private Long checkingNro;
+    private boolean status;
 
     private String vesselName;
     private String responsibleUsername;

@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 @Mapper(componentModel = "spring")
 public interface VesselItemMapper {
 
+     @Mapping(target = "vesselId", source = "vessel.id")
      VesselItemRes toVesselItemRes(VesselItem vesselItem);
 
 

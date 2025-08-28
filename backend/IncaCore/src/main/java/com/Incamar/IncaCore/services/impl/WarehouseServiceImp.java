@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class WarehouseServiceImp implements WarehouseService {
 
-    private WarehouseRepository warehouseRepository;
+    private final WarehouseRepository warehouseRepository;
 
     @Override
     public WarehouseResponseDto create(WarehouseRequestDto warehouseRequestDto) {

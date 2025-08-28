@@ -32,6 +32,10 @@ public class ServiceTicketRequestDto {
     @NotBlank(groups = Create.class)
     private String vesselAttended;
 
+    @Schema(description = "Estado de la boleta, si esta activa o cerrada. Campo no requeridO al crearse")
+    @NotNull(groups = Update.class)
+    private boolean status;
+
     @Schema(description = "Empresa que solicita el servicio.", example = "Kronos")
     @NotBlank(groups = Create.class)
     private String solicitedBy;
@@ -43,13 +47,6 @@ public class ServiceTicketRequestDto {
     )
     @Schema(description = "Código formado por el nombre de la embarcación, el año y el número de viaje.", example = "RNE-29-432")
     private String reportTravelNro;
-
-    @NotBlank(groups = Create.class)
-    private String code;
-
-    @NotNull(groups = Create.class)
-    @Positive
-    private Long checkingNro;
 
     public interface Create {}
     public interface Update {}

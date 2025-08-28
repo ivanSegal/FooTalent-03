@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/travels")
-@Tag(name = "08 - Viajes realizados", description = "Endpoints para la carga de los horarios y destinos por viaje de la embarcación.")
+@Tag(name = "10 - Viajes realizados", description = "Endpoints para la carga de los horarios y destinos por viaje de la embarcación.")
 @RequiredArgsConstructor
 public class TravelController {
 
