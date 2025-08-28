@@ -48,6 +48,7 @@ export const login = async (
   let email: string | undefined = undefined;
   try {
     const decoded = jwtDecode<{ email?: string; username?: string }>(token);
+    console.log("Decoded JWT:", decoded);
     email = decoded.email ?? decoded.username;
   } catch (err) {
     console.warn("No se pudo decodificar el token JWT", err);

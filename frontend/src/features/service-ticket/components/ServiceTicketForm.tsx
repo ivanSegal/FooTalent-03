@@ -23,7 +23,7 @@ import {
   type ServiceTicketListItem,
 } from "@/features/service-ticket";
 import { showAlert } from "@/utils/showAlert";
-import { vasselsService, type Vassel } from "@/features/vassels";
+import { vesselsService, type Vessel } from "@/features/vessels";
 import type { NormalizedApiError } from "@/types/api";
 
 interface Props {
@@ -85,12 +85,12 @@ export const ServiceTicketForm: React.FC<Props> = ({
   const [savedTicket, setSavedTicket] = React.useState<ServiceTicketListItem | null>(current);
 
   // Cargar embarcaciones para el select
-  const [vassels, setVassels] = React.useState<Vassel[]>([]);
+  const [vessels, setVessels] = React.useState<Vessel[]>([]);
   useEffect(() => {
     void (async () => {
       try {
-        const res = await vasselsService.list({ page: 0, size: 100 });
-        setVassels(res.content);
+        const res = await vesselsService.list({ page: 0, size: 100 });
+        setVessels(res.content);
       } catch {
         // opcional: ignorar error silenciosamente
       }
@@ -133,7 +133,7 @@ export const ServiceTicketForm: React.FC<Props> = ({
 
   const onSubmit: SubmitHandler<ServiceTicketFormValues> = async (data) => {
     try {
-      const selected = vassels.find((v) => v.name === data.vesselName);
+      const selected = vessels.find((v) => v.name === data.vesselName);
       const payload = selected ? { ...data, vesselId: selected.id } : data;
 
       const idToUpdate = current?.id ?? savedTicket?.id;
@@ -389,7 +389,7 @@ export const ServiceTicketForm: React.FC<Props> = ({
                       optionFilterProp="label"
                       value={field.value ?? undefined}
                       onChange={(val) => field.onChange(val)}
-                      options={vassels.map((v) => ({ label: v.name, value: v.name }))}
+                      options={vessels.map((v) => ({ label: v.name, value: v.name }))}
                       status={errors.vesselName ? "error" : undefined}
                     />
                   )}
