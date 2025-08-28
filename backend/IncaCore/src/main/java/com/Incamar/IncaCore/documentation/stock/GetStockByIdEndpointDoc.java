@@ -1,4 +1,4 @@
-package com.Incamar.IncaCore.documentation.itemwarehouse;
+package com.Incamar.IncaCore.documentation.stock;
 
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,48 +14,49 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Operation(
-        summary = "Obtener ítem de almacén por ID",
+        summary = "Obtener stock por ID",
         description = """
-                Recupera la información de un ítem de almacén existente mediante su identificador único \
-                Accesible para usuarios con roles: <strong>OPERATOR, SUPERVISOR o ADMIN</strong> pertenecientes al departamento INVENTORY.
-""",
+                Recupera la información de un stock existente mediante su identificador único. \
+                Accesible para usuarios con roles: <strong>OPERATOR, SUPERVISOR o ADMIN</strong> en el departamento INVENTORY.
+        """,
         security = @SecurityRequirement(name = "bearer-key")
 )
 @ApiResponses(value = {
         @ApiResponse(
                 responseCode = "200",
-                description = "Ítem de almacén obtenido exitosamente",
+                description = "Stock obtenido exitosamente",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(example = """
                 {
                   "statusCode": 200,
-                  "message": "Item de almacen obtenido exitosamente.",
+                  "message": "Stock obtenido exitosamente.",
                   "data": {
-                    "id": 10,
-                    "name": "Tornillos de acero",
-                    "description": "Caja con 100 tornillos de 5cm",
+                    "id": 15,
                     "stock": 500,
                     "stockMin": 50,
-                    "warehouseName":  "Depósito Central"
+                    "warehouseId": 2,
+                    "warehouseName": "Depósito Central",
+                    "itemWarehouseId": 1,
+                    "itemWarehouseName": "Tornillos de acero"
                   },
-                  "path": "/api/items-warehouse/{id}"
+                  "path": "/api/stocks/{id}"
                 }
             """)
                 )
         ),
         @ApiResponse(
                 responseCode = "404",
-                description = "Ítem de almacén no encontrado con el ID proporcionado",
+                description = "Stock no encontrado con el ID proporcionado",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(example = """
                 {
                   "statusCode": 404,
-                  "message": "Item de almacen no encontrado con ID: 99",
+                  "message": "Stock no encontrado con ID: 99",
                   "errorCode": "RESOURCE_NOT_FOUND",
                   "details": "...",
-                  "path": "/api/items-warehouse/{id}"
+                  "path": "/api/stocks/{id}"
                 }
             """)
                 )
@@ -71,7 +72,7 @@ import java.lang.annotation.*;
                   "message": "Acceso denegado",
                   "errorCode": "FORBIDDEN",
                   "details": "...",
-                  "path": "/api/items-warehouse/{id}"
+                  "path": "/api/stocks/{id}"
                 }
             """)
                 )
@@ -103,11 +104,11 @@ import java.lang.annotation.*;
                   "message": "Error inesperado",
                   "errorCode": "INTERNAL_SERVER_ERROR",
                   "details": "...",
-                  "path": "/api/items-warehouse/{id}"
+                  "path": "/api/stocks/{id}"
                 }
             """)
                 )
         )
 })
-public @interface GetItemWarehouseByIdEndpointDoc {
+public @interface GetStockByIdEndpointDoc {
 }

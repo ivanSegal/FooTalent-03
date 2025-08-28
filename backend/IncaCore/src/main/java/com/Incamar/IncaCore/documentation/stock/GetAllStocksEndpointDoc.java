@@ -1,4 +1,4 @@
-package com.Incamar.IncaCore.documentation.itemwarehouse;
+package com.Incamar.IncaCore.documentation.stock;
 
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,46 +11,49 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.lang.annotation.*;
 
 /**
- * Swagger documentation for GET /api/item-warehouses.
+ * Swagger documentation for GET /api/stocks.
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Operation(
-        summary = "Obtener todos los ítems de almacén",
+        summary = "Obtener todos los stocks",
         description = """
-        Retorna una lista paginada de ítems de almacén registrados en el sistema. \
-        Accesible para usuarios con roles: <strong>OPERATOR, SUPERVISOR o ADMIN</strong> pertenecientes al departamento INVENTORY.
+        Retorna una lista paginada de stocks registrados en el sistema. \
+        Accesible para usuarios con roles: <strong>ADMIN</strong> o \
+        usuarios con rol <strong>SUPERVISOR</strong>/<strong>OPERATOR</strong> en el departamento INVENTORY.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )
 @ApiResponses(value = {
         @ApiResponse(
                 responseCode = "200",
-                description = "Lista paginada de ítems de almacén obtenida exitosamente",
+                description = "Lista paginada de stocks obtenida exitosamente",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(example = """
                 {
                   "success": true,
-                  "message": "Se visualizan exitosamente todos los items de almacen.",
+                  "message": "Se visualizan exitosamente todos los stocks.",
                   "data": {
                     "content": [
                       {
                         "id": 1,
-                        "name": "Tornillos de acero",
-                        "description": "Caja con 100 tornillos de 5cm",
                         "stock": 150,
                         "stockMin": 20,
-                        "warehouseName": "Depósito Central"
+                        "warehouseId": 1,
+                        "warehouseName": "Depósito Central",
+                        "itemWarehouseId": 10,
+                        "itemWarehouseName": "Tornillos de acero"
                       },
                       {
                         "id": 2,
-                        "name": "Tuercas M5",
-                        "description": "Bolsa con 200 tuercas",
                         "stock": 300,
                         "stockMin": 50,
-                        "warehouseName": "Almacén Norte"
+                        "warehouseId": 2,
+                        "warehouseName": "Almacén Norte",
+                        "itemWarehouseId": 11,
+                        "itemWarehouseName": "Tuercas M5"
                       }
                     ],
                     "pageable": {
@@ -109,8 +112,8 @@ import java.lang.annotation.*;
                           "statusCode": 403,
                           "message": "Acceso denegado",
                           "errorCode": "FORBIDDEN",
-                          "details": "El usuario no tiene permisos para visualizar ítems de almacén",
-                          "path": "/api/item-warehouses"
+                          "details": "El usuario no tiene permisos para visualizar stocks",
+                          "path": "/api/stocks"
                         }
                         """)
                 )
@@ -126,11 +129,12 @@ import java.lang.annotation.*;
                           "message": "Error inesperado",
                           "errorCode": "INTERNAL_SERVER_ERROR",
                           "details": "NullPointerException ...",
-                          "path": "/api/item-warehouses"
+                          "path": "/api/stocks"
                         }
                         """)
                 )
         )
 })
-public @interface GetAllItemWarehousesEndpointDoc {
+
+public @interface GetAllStocksEndpointDoc {
 }

@@ -19,7 +19,7 @@ import java.lang.annotation.*;
         summary = "Actualizar ítem de almacén",
         description = """
         Actualiza la información de un ítem existente dentro de un almacén identificado por su ID único. \
-        Solo usuarios con rol <strong>ADMIN , SUPERVISOR</strong> pueden realizar esta operación.
+        Solo usuarios con rol <strong>ADMIN , SUPERVISOR</strong> pertenecientes al departamento INVENTORY pueden realizar esta operación.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )

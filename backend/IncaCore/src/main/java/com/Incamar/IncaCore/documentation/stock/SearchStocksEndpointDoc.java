@@ -1,5 +1,4 @@
-package com.Incamar.IncaCore.documentation.itemwarehouse;
-
+package com.Incamar.IncaCore.documentation.stock;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -10,47 +9,47 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.lang.annotation.*;
 
-/**
- * Swagger documentation for GET /api/item-warehouses.
- */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Operation(
-        summary = "Obtener todos los ítems de almacén",
+        summary = "Buscar stocks por nombre de ítem con paginación",
         description = """
-        Retorna una lista paginada de ítems de almacén registrados en el sistema. \
-        Accesible para usuarios con roles: <strong>OPERATOR, SUPERVISOR o ADMIN</strong> pertenecientes al departamento INVENTORY.
+        Retorna una lista paginada de stocks cuyo nombre de ítem de almacen coincida parcialmente
+        (ignorando mayúsculas) con el valor proporcionado en el parámetro `nombre`.
+        <strong>Accesible solo para usuarios con rol ADMIN, OPERATOR o SUPERVISOR</strong> pertenecientes al departamento INVENTORY.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )
 @ApiResponses(value = {
         @ApiResponse(
                 responseCode = "200",
-                description = "Lista paginada de ítems de almacén obtenida exitosamente",
+                description = "Stocks encontrados exitosamente",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(example = """
                 {
                   "success": true,
-                  "message": "Se visualizan exitosamente todos los items de almacen.",
+                  "message": "Stocks obtenidos exitosamente.",
                   "data": {
                     "content": [
                       {
                         "id": 1,
-                        "name": "Tornillos de acero",
-                        "description": "Caja con 100 tornillos de 5cm",
                         "stock": 150,
                         "stockMin": 20,
-                        "warehouseName": "Depósito Central"
+                        "warehouseId": 1,
+                        "warehouseName": "Depósito Central",
+                        "itemWarehouseId": 10,
+                        "itemWarehouseName": "Tornillo M6"
                       },
                       {
                         "id": 2,
-                        "name": "Tuercas M5",
-                        "description": "Bolsa con 200 tuercas",
-                        "stock": 300,
-                        "stockMin": 50,
-                        "warehouseName": "Almacén Norte"
+                        "stock": 80,
+                        "stockMin": 15,
+                        "warehouseId": 2,
+                        "warehouseName": "Almacén Norte",
+                        "itemWarehouseId": 12,
+                        "itemWarehouseName": "Arandela 8mm"
                       }
                     ],
                     "pageable": {
@@ -65,7 +64,7 @@ import java.lang.annotation.*;
                       "paged": true,
                       "unpaged": false
                     },
-                    "last": true,
+                    "last": false,
                     "totalElements": 2,
                     "totalPages": 1,
                     "size": 20,
@@ -84,35 +83,35 @@ import java.lang.annotation.*;
                 )
         ),
         @ApiResponse(
-                responseCode = "401",
-                description = "No autorizado (token ausente o inválido)",
+                responseCode = "403",
+                description = "Acceso denegado por falta de permisos. Usuario con rol no autorizado.",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(example = """
-                        {
-                          "statusCode": 401,
-                          "message": "Acceso no autorizado",
-                          "errorCode": "AUTH_ERROR",
-                          "details": "Token inválido o expirado",
-                          "path": "/error"
-                        }
-                        """)
+                {
+                  "statusCode": 403,
+                  "message": "Acceso denegado",
+                  "errorCode": "FORBIDDEN",
+                  "details": "El usuario no tiene permisos para buscar stocks",
+                  "path": "/api/stocks/search"
+                }
+                """)
                 )
         ),
         @ApiResponse(
-                responseCode = "403",
-                description = "Acceso denegado por falta de permisos",
+                responseCode = "401",
+                description = "No autorizado (token ausente o inválido).",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(example = """
-                        {
-                          "statusCode": 403,
-                          "message": "Acceso denegado",
-                          "errorCode": "FORBIDDEN",
-                          "details": "El usuario no tiene permisos para visualizar ítems de almacén",
-                          "path": "/api/item-warehouses"
-                        }
-                        """)
+                {
+                  "statusCode": 401,
+                  "message": "Acceso no autorizado",
+                  "errorCode": "AUTH_ERROR",
+                  "details": "Token inválido o expirado",
+                  "path": "/error"
+                }
+                """)
                 )
         ),
         @ApiResponse(
@@ -121,16 +120,16 @@ import java.lang.annotation.*;
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(example = """
-                        {
-                          "statusCode": 500,
-                          "message": "Error inesperado",
-                          "errorCode": "INTERNAL_SERVER_ERROR",
-                          "details": "NullPointerException ...",
-                          "path": "/api/item-warehouses"
-                        }
-                        """)
+                {
+                  "statusCode": 500,
+                  "message": "Error inesperado",
+                  "errorCode": "INTERNAL_SERVER_ERROR",
+                  "details": "...",
+                  "path": "/api/stocks/search"
+                }
+                """)
                 )
         )
 })
-public @interface GetAllItemWarehousesEndpointDoc {
+public @interface SearchStocksEndpointDoc {
 }

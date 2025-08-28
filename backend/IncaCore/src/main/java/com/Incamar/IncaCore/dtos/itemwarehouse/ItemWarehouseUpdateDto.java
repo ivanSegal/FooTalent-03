@@ -23,6 +23,7 @@ public class ItemWarehouseUpdateDto {
     private String description;
 
     @Schema(description = "Cantidad mínima permitida antes de reposición", example = "20")
+    @NotBlank(message = "El stock minimo es obligatorio")
     private Long stockMin;
 
     @Schema(description = "ID del almacén al que pertenece el ítem", example = "1")

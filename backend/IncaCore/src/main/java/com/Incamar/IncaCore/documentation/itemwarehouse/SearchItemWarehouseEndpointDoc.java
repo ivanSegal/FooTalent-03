@@ -18,7 +18,7 @@ import java.lang.annotation.*;
         description = """
         Retorna una lista paginada de ítems de almacén cuyo nombre coincida parcialmente
         (ignorando mayúsculas) con el valor proporcionado en el parámetro `nombre`.
-        <strong>Accesible solo para usuarios con rol ADMIN, SUPERVISOR, OPERATOR.</strong>
+        <strong>Accesible solo para usuarios con rol ADMIN, SUPERVISOR, OPERATOR.</strong> pertenecientes al departamento INVENTORY.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )

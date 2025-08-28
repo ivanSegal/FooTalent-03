@@ -3,6 +3,7 @@ package com.Incamar.IncaCore.services;
 import com.Incamar.IncaCore.dtos.itemwarehouse.ItemWarehouseRequestDto;
 import com.Incamar.IncaCore.dtos.itemwarehouse.ItemWarehouseResponseDto;
 import com.Incamar.IncaCore.dtos.itemwarehouse.ItemWarehouseUpdateDto;
+import com.Incamar.IncaCore.models.Warehouse;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,9 +23,4 @@ public interface IItemWarehouseService {
 
     Page<ItemWarehouseResponseDto> searchItemWarehouseByName(String nombre, Pageable pageable);
 
-    @Transactional
-    void increaseStock(Long itemWarehouseId, int quantity);
-
-    @Transactional
-    void decreaseStock(Long itemWarehouseId, int quantity);
 }
