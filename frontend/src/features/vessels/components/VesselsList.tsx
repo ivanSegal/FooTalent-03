@@ -1,16 +1,19 @@
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Button, Input, Modal, Popconfirm, Space, Table, Tooltip } from "antd";
+import { Button, Input, Modal, Popconfirm, Space, Table, Tag, Tooltip, Tabs } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import type { TableProps } from "antd";
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { vesselsService, type Vessel } from "@/features/vessels";
+import { vesselItemHoursService } from "@/features/vessels";
+import type { VesselItemHoursEntry } from "@/features/vessels";
 import VesselsForm from "@/features/vessels/components/VesselsForm";
 import { showAlert } from "@/utils/showAlert";
 import { vesselItemService } from "@/features/vessels";
 import type { VesselItem } from "@/features/vessels";
 import VesselItemForm from "@/features/vessels/components/VesselItemForm";
+import { VesselItemHoursForm } from "@/features/vessels";
 
 export default function VesselsList() {
   const [items, setItems] = useState<Vessel[]>([]);
@@ -25,6 +28,52 @@ export default function VesselsList() {
   const [showItemForm, setShowItemForm] = useState(false);
   const [currentItem, setCurrentItem] = useState<VesselItem | null>(null);
   const [allItems, setAllItems] = useState<VesselItem[]>([]);
+  // Estado para modal de carga de horas a nivel de lista
+  const [hoursVesselId, setHoursVesselId] = useState<number | null>(null);
+  const [hoursItems, setHoursItems] = useState<VesselItem[]>([]);
+  const [hoursLoading, setHoursLoading] = useState(false);
+  const [hoursActiveTab, setHoursActiveTab] = useState<"form" | "history">("form");
+  const [hoursInitialReport, setHoursInitialReport] = useState<VesselItemHoursEntry | null>(null);
+  const [hoursHistoryRows, setHoursHistoryRows] = useState<VesselItemHoursEntry[]>([]);
+
+  // Estado para historial de cargas de horas
+  const [historyVesselId, setHistoryVesselId] = useState<number | null>(null);
+  const [historyRows, setHistoryRows] = useState<VesselItemHoursEntry[]>([]);
+  const [allHistoryRows, setAllHistoryRows] = useState<VesselItemHoursEntry[]>([]);
+  const [historyLoading, setHistoryLoading] = useState(false);
+  const [historyPage, setHistoryPage] = useState(0);
+  const [historyPageSize, setHistoryPageSize] = useState(10);
+  const [historyTotal, setHistoryTotal] = useState(0);
+
+  const loadHistoryAll = useCallback(
+    async (size = historyPageSize): Promise<VesselItemHoursEntry[]> => {
+      setHistoryLoading(true);
+      try {
+        const firstPage = 0;
+        let acc: VesselItemHoursEntry[] = [];
+        // Primera petición para conocer totalPages
+        const first = await vesselItemHoursService.list({ page: firstPage, size });
+        acc = (first.content ?? []).slice();
+        const totalPages = first.totalPages ?? 1;
+        // Trae el resto de páginas si existen
+        for (let p = 1; p < totalPages; p++) {
+          const res = await vesselItemHoursService.list({ page: p, size });
+          acc = acc.concat(res.content ?? []);
+        }
+        return acc;
+      } catch (e) {
+        await showAlert(
+          "Error al cargar historial",
+          (e as Error)?.message || "No se pudo cargar el historial",
+          "error",
+        );
+        return [];
+      } finally {
+        setHistoryLoading(false);
+      }
+    },
+    [historyPageSize],
+  );
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -172,21 +221,93 @@ export default function VesselsList() {
     { title: "Combustible", dataIndex: "fuelType", key: "fuelType" },
     { title: "Horas", dataIndex: "navigationHours", key: "navigationHours", width: 100 },
     {
+      title: "Ítems",
+      key: "itemsCount",
+      width: 110,
+      render: (_: unknown, record) => {
+        // Cuenta los ítems asociados a esta embarcación
+        const count = allItems.reduce(
+          (acc, it) => (getVesselIdFromItem(it) === record.id ? acc + 1 : acc),
+          0,
+        );
+
+        return (
+          <Tooltip title="Ver ítems">
+            <Tag
+              color={count ? "blue" : undefined}
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                // Abre el modal; el efecto se encarga de filtrar los ítems
+                setItemsManagerVesselId(record.id);
+              }}
+            >
+              {count} {count === 1 ? "ítem" : "ítems"}
+            </Tag>
+          </Tooltip>
+        );
+      },
+    },
+    {
       title: "Acciones",
       key: "acciones",
       align: "right" as const,
       render: (_: unknown, record) => (
         <Space size="small" onClick={(e) => e.stopPropagation()}>
-          <Tooltip title="Ver ítems">
+          <Tooltip title="Cargar horas de ítems">
+            <Button
+              size="small"
+              onClick={async () => {
+                try {
+                  setHoursLoading(true);
+                  const res = await vesselItemService.list({
+                    page: 0,
+                    size: 1000,
+                    vesselId: record.id,
+                  });
+                  setHoursItems(res.content ?? []);
+                  setHoursVesselId(record.id);
+                  setHoursActiveTab("form");
+                  setHoursInitialReport(null);
+                  // Cargar historial completo y filtrar localmente
+                  const all = allHistoryRows.length
+                    ? allHistoryRows
+                    : await loadHistoryAll(historyPageSize);
+                  if (!allHistoryRows.length) setAllHistoryRows(all);
+                  const filtered = all.filter((r) => r.vesselId === record.id);
+                  setHoursHistoryRows(filtered);
+                } catch (e) {
+                  await showAlert(
+                    "Error al cargar ítems",
+                    (e as Error)?.message || "No se pudieron cargar los ítems",
+                    "error",
+                  );
+                } finally {
+                  setHoursLoading(false);
+                }
+              }}
+            >
+              Cargar horas
+            </Button>
+          </Tooltip>
+          <Tooltip title="Ver historial de cargas de horas">
             <Button
               size="small"
               type="text"
-              onClick={() => {
-                setItemsManagerVesselId(record.id);
-                // La carga real se hará en el effect; aquí solo abrimos el modal con el id
+              onClick={async () => {
+                setHistoryVesselId(record.id);
+                setHistoryPage(0);
+                // Si ya tenemos historial completo cargado, reusar; si no, cargar todo
+                let all = allHistoryRows;
+                if (!allHistoryRows.length) {
+                  all = await loadHistoryAll(historyPageSize);
+                  setAllHistoryRows(all);
+                }
+                const filtered = all.filter((r) => r.vesselId === record.id);
+                setHistoryRows(filtered);
+                setHistoryTotal(filtered.length);
               }}
             >
-              Ítems
+              Ver historial
             </Button>
           </Tooltip>
           <Tooltip title="Editar">
@@ -280,6 +401,19 @@ export default function VesselsList() {
     },
   ];
 
+  const historyColumns: ColumnsType<VesselItemHoursEntry> = [
+    { title: "ID", dataIndex: "id", key: "id", width: 80 },
+    { title: "Fecha", dataIndex: "date", key: "date", width: 120 },
+    { title: "Responsable", dataIndex: "responsable", key: "responsable", width: 200 },
+    { title: "Descripción", dataIndex: "description", key: "description" },
+    {
+      title: "Ítems",
+      key: "itemsCount",
+      width: 100,
+      render: (_: unknown, record) => (record.items ? record.items.length : 0),
+    },
+  ];
+
   return (
     <main className="min-h-screen bg-gray-50 p-8">
       <div className="mx-auto">
@@ -315,6 +449,7 @@ export default function VesselsList() {
               dataSource={filtered}
               onChange={handleTableChange}
               pagination={{ pageSize: 10, showSizeChanger: false }}
+              scroll={{ x: "max-content" }}
             />
           </div>
         </section>
@@ -419,6 +554,8 @@ export default function VesselsList() {
             </div>
           )}
 
+          {/* Se removió carga de horas aquí para separar responsabilidades */}
+
           <Table
             size="small"
             rowKey="id"
@@ -428,6 +565,220 @@ export default function VesselsList() {
             pagination={false}
           />
         </div>
+      </Modal>
+
+      {/* Modal independiente para cargar horas desde la lista */}
+      <Modal
+        open={hoursVesselId != null}
+        title={
+          hoursVesselId != null ? `Cargar horas – Embarcación #${hoursVesselId}` : "Cargar horas"
+        }
+        onCancel={() => {
+          setHoursVesselId(null);
+          setHoursItems([]);
+          setHoursInitialReport(null);
+        }}
+        footer={null}
+        width={900}
+        confirmLoading={hoursLoading}
+      >
+        {hoursVesselId != null && (
+          <div className="rounded-md border border-gray-200 p-3">
+            <Tabs
+              activeKey={hoursActiveTab}
+              onChange={(k) => setHoursActiveTab(k as "form" | "history")}
+              items={[
+                {
+                  key: "form",
+                  label: hoursInitialReport ? "Editar reporte" : "Cargar horas",
+                  children: (
+                    <VesselItemHoursForm
+                      vesselId={hoursVesselId}
+                      items={hoursItems}
+                      initial={
+                        hoursInitialReport
+                          ? {
+                              id: hoursInitialReport.id,
+                              date: hoursInitialReport.date,
+                              description: hoursInitialReport.description,
+                              items: hoursInitialReport.items,
+                            }
+                          : null
+                      }
+                      onSaved={(updated) => {
+                        setHoursItems(updated);
+                        // Refresca el caché general en memoria
+                        setAllItems((prev) => {
+                          const map = new Map(prev.map((x) => [x.id, x] as const));
+                          for (const u of updated) map.set(u.id, u);
+                          return Array.from(map.values());
+                        });
+                        // Refrescar historial local filtrado sin cerrar modal
+                        const all = allHistoryRows.length ? allHistoryRows : [];
+                        if (all.length && hoursVesselId != null) {
+                          const filtered = all.filter((r) => r.vesselId === hoursVesselId);
+                          setHoursHistoryRows(filtered);
+                        }
+                        setHoursInitialReport(null);
+                        setHoursActiveTab("history");
+                      }}
+                      onCancel={() => {
+                        setHoursInitialReport(null);
+                      }}
+                    />
+                  ),
+                },
+                {
+                  key: "history",
+                  label: "Historial",
+                  children: (
+                    <Table
+                      size="small"
+                      rowKey="id"
+                      columns={historyColumns.concat([
+                        {
+                          title: "Acciones",
+                          key: "actions",
+                          width: 120,
+                          render: (_: unknown, record: VesselItemHoursEntry) => (
+                            <Button
+                              size="small"
+                              onClick={() => {
+                                setHoursInitialReport(record);
+                                setHoursActiveTab("form");
+                              }}
+                            >
+                              Editar
+                            </Button>
+                          ),
+                        },
+                      ])}
+                      dataSource={hoursHistoryRows}
+                      loading={historyLoading}
+                      expandable={{
+                        expandedRowRender: (record) => {
+                          const itemCols: ColumnsType<{
+                            vesselItemId: number;
+                            addedHours: number;
+                          }> = [
+                            {
+                              title: "Ítem",
+                              key: "itemName",
+                              render: (_: unknown, r) => {
+                                const name = allItems.find((it) => it.id === r.vesselItemId)?.name;
+                                return name ?? `#${r.vesselItemId}`;
+                              },
+                              width: 240,
+                            },
+                            {
+                              title: "Horas agregadas",
+                              dataIndex: "addedHours",
+                              key: "addedHours",
+                              width: 160,
+                            },
+                          ];
+                          return (
+                            <Table
+                              size="small"
+                              rowKey={(r) => `${record.id}-${r.vesselItemId}`}
+                              columns={itemCols}
+                              dataSource={record.items || []}
+                              pagination={false}
+                              scroll={{ x: "max-content" }}
+                            />
+                          );
+                        },
+                        rowExpandable: (record) =>
+                          Array.isArray(record.items) && record.items.length > 0,
+                      }}
+                      pagination={{
+                        current: historyPage + 1,
+                        pageSize: historyPageSize,
+                        total: hoursHistoryRows.length,
+                        showSizeChanger: true,
+                        pageSizeOptions: [5, 10, 20, 50],
+                        onChange: (page, pageSize) => {
+                          setHistoryPage(page - 1);
+                          setHistoryPageSize(pageSize);
+                        },
+                      }}
+                      scroll={{ x: "max-content" }}
+                    />
+                  ),
+                },
+              ]}
+            />
+          </div>
+        )}
+      </Modal>
+
+      {/* Modal para ver historial de cargas de horas */}
+      <Modal
+        open={historyVesselId != null}
+        title={
+          historyVesselId != null
+            ? `Historial de horas – Embarcación #${historyVesselId}`
+            : "Historial de horas"
+        }
+        onCancel={() => {
+          setHistoryVesselId(null);
+          setHistoryRows([]);
+        }}
+        footer={null}
+        width={900}
+      >
+        <Table
+          size="small"
+          rowKey="id"
+          columns={historyColumns}
+          dataSource={historyRows}
+          loading={historyLoading}
+          expandable={{
+            expandedRowRender: (record) => {
+              const itemCols: ColumnsType<{ vesselItemId: number; addedHours: number }> = [
+                {
+                  title: "Ítem",
+                  key: "itemName",
+                  render: (_: unknown, r) => {
+                    const name = allItems.find((it) => it.id === r.vesselItemId)?.name;
+                    return name ?? `#${r.vesselItemId}`;
+                  },
+                  width: 240,
+                },
+                {
+                  title: "Horas agregadas",
+                  dataIndex: "addedHours",
+                  key: "addedHours",
+                  width: 160,
+                },
+              ];
+              return (
+                <Table
+                  size="small"
+                  rowKey={(r) => `${record.id}-${r.vesselItemId}`}
+                  columns={itemCols}
+                  dataSource={record.items || []}
+                  pagination={false}
+                  scroll={{ x: "max-content" }}
+                />
+              );
+            },
+            rowExpandable: (record) => Array.isArray(record.items) && record.items.length > 0,
+          }}
+          pagination={{
+            current: historyPage + 1,
+            pageSize: historyPageSize,
+            total: historyTotal,
+            showSizeChanger: true,
+            pageSizeOptions: [5, 10, 20, 50],
+            onChange: (page, pageSize) => {
+              setHistoryPage(page - 1);
+              setHistoryPageSize(pageSize);
+              // Paginación local sobre historyRows, sin refetch
+            },
+          }}
+          scroll={{ x: "max-content" }}
+        />
       </Modal>
     </main>
   );
