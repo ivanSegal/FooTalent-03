@@ -39,8 +39,4 @@ public class InventoryMovementRequestDto {
     @Schema(description = "Razón del movimiento", example = "Ingreso por compra de proveedor")
     @NotBlank(message = "La razón es obligatoria")
     private String reason;
-
-    @Schema(description = "ID del usuario responsable", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
-    @NotNull(message = "El ID del usuario responsable es obligatorio")
-    private UUID responsibleId;
 }

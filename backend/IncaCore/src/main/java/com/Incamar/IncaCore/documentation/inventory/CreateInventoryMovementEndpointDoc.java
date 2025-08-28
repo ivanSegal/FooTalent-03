@@ -19,7 +19,7 @@ import java.lang.annotation.*;
         description = """
         Registra un nuevo movimiento de inventario (ENTRADA o SALIDA) para un ítem específico en un almacén. \
         Actualiza automáticamente el stock del ítem y registra al usuario responsable. \
-        Requiere autenticación de usuarios con rol <strong>ADMIN</strong>.
+        Requiere autenticación de usuarios con rol <strong>ADMIN, OPERATOR, SUPERVISOR </strong> que pertenezcan al departamento INVENTARY
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )

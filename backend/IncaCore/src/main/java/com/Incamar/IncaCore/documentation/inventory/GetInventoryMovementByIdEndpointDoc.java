@@ -16,7 +16,7 @@ import java.lang.annotation.*;
         summary = "Obtener movimiento de inventario por ID",
         description = """
                 Recupera la información de un movimiento de inventario existente mediante su identificador único. \
-                Accesible para usuarios con roles: <strong>OPERATOR, SUPERVISOR o ADMIN</strong>.
+                Accesible para usuarios con roles: <strong>OPERATOR, SUPERVISOR o ADMIN</strong> que pertenezcan al departamento INVENTARY.
 """,
         security = @SecurityRequirement(name = "bearer-key")
 )

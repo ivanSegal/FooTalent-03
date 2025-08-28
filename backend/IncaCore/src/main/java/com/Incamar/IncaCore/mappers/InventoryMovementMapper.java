@@ -15,7 +15,6 @@ public interface InventoryMovementMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "itemWarehouse", expression = "java(mapItemWarehouse(requestDto.getItemWarehouseId()))")
-    @Mapping(target = "responsible", expression = "java(mapUser(requestDto.getResponsibleId()))")
     InventoryMovement toEntity(InventoryMovementRequestDto requestDto);
 
     @Mapping(target = "itemWarehouseId", source = "itemWarehouse.id")
@@ -32,11 +31,4 @@ public interface InventoryMovementMapper {
         return iw;
     }
 
-    default User mapUser(UUID id) {
-        if (id == null) return null;
-        User user = new User();
-        user.setId(id);
-        return user;
-
-    }
 }
