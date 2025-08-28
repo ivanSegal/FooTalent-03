@@ -40,14 +40,6 @@ public class ServiceTicket {
     @Column(nullable = false, length = 32)
     private String reportTravelNro;
 
-    @NotNull
-    @Column(nullable = false, length = 40)
-    private String code;
-
-    @NotNull
-    @Column(nullable = false)
-    private Long checkingNro;
-
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private boolean status;
 
