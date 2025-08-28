@@ -62,11 +62,3 @@ export const vesselItemService = {
 };
 
 export default vesselItemService;
-
-alertHours: 2;
-controlType: "NAVIGATION";
-description: "sdfsd";
-materialType: "COMPONENTS";
-name: "dsfsdf";
-usefulLifeHours: 3;
-vesselId: 5;
