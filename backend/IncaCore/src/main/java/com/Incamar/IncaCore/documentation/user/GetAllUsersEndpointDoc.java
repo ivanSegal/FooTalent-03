@@ -7,11 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
@@ -19,7 +15,7 @@ import java.lang.annotation.Target;
 @Operation(
     summary = "Obtener todos los usuarios",
     description = """
-        Retorna la lista paginada de usuarios del sistema. \
+        Retorna la lista paginada de usuarios del sistema. Tambien funciona con filtros, si no se añade ningun filtro traera todos los usuarios del sistema \
         <strong>Solo accesible para usuarios con rol ADMIN.</strong>
         """,
         security = @SecurityRequirement(name = "bearer-key")

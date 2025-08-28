@@ -1,5 +1,9 @@
 package com.Incamar.IncaCore.controllers;
 
+import com.Incamar.IncaCore.documentation.user.DeleteUserEndpointDoc;
+import com.Incamar.IncaCore.documentation.user.GetAllUsersEndpointDoc;
+import com.Incamar.IncaCore.documentation.user.GetUserByIdEndpointDoc;
+import com.Incamar.IncaCore.documentation.user.UpdateUserEndpointDoc;
 import com.Incamar.IncaCore.dtos.users.UpdateUserReq;
 import com.Incamar.IncaCore.dtos.users.UserSearchReq;
 
@@ -28,7 +32,8 @@ public class UserController {
 
     private final UserService userService;
 
-    @SecurityRequirement(name = "bearer-key")
+    @GetAllUsersEndpointDoc
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<?> getAllWithSearch(@ParameterObject @Valid UserSearchReq params, @ParameterObject Pageable pageable) {
         Page<UserSearchRes> response = userService.searchUsers(params, pageable);
@@ -36,19 +41,27 @@ public class UserController {
                 .body(ApiResult.success(response,"Operación exitosa"));
     }
 
-    @SecurityRequirement(name = "bearer-key")
+    @GetUserByIdEndpointDoc
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable UUID id){
         UserSearchRes response = userService.findById(id);
         return ResponseEntity.ok().body(ApiResult.success(response,"Usuario encontrado"));
     }
 
-    @SecurityRequirement(name = "bearer-key")
+    @UpdateUserEndpointDoc
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateById(@PathVariable UUID id, @RequestBody @Valid UpdateUserReq request){
         userService.updateById(id, request);
         return ResponseEntity.ok().body(ApiResult.success("Actualizacion eixosa"));
+    }
+
+    @DeleteUserEndpointDoc
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteById(@PathVariable UUID id){
+        userService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
 

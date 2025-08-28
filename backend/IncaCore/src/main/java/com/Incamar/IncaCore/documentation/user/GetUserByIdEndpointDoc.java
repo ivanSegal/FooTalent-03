@@ -7,11 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
@@ -19,9 +15,9 @@ import java.lang.annotation.Target;
 @Operation(
     summary = "Obtener usuario por ID",
     description = """
-        Devuelve los datos de un usuario específico. \
-        • <strong>El usuario debe ser el mismo que el del token</strong> o tener rol <strong>ADMIN</strong>. \
-        • Usuarios con roles SUPERVISOR u OPERATOR solo pueden ver su propio perfil.
+        Devuelve los datos de un usuario específico. \s
+        • El <strong>ADMIN</strong> puede ver todos los usuarios. \s
+        • Usuarios con roles <strong>SUPERVISOR</strong> u <strong>OPERATOR</strong> solo pueden ver su propio perfil.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )

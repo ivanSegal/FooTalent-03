@@ -6,6 +6,8 @@ import com.Incamar.IncaCore.enums.Role;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -14,6 +16,8 @@ import java.util.UUID;
 @Data
 @Entity
 @Table(name = "users")
+@SQLDelete(sql = "UPDATE users SET is_deleted = true WHERE id = ?")
+@SQLRestriction("is_deleted = false")
 public class User {
 
   @Id
@@ -37,6 +41,9 @@ public class User {
   @Column(nullable = false)
   @Enumerated(EnumType.STRING)
   private AccountStatus accountStatus;
+
+  @Column(nullable = false)
+  private boolean isDeleted;
 
   @Column(nullable = false, updatable = false)
   private LocalDateTime createdAt;

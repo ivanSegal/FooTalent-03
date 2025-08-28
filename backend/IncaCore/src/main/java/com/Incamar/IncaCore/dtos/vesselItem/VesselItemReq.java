@@ -40,9 +40,6 @@ public record VesselItemReq(
         @Schema(description = "Tipo de material del item", example = "COMPONENTS",allowableValues = {"COMPONENTS","SUBCOMPONENTS","SUPPLIES"}, required = true)
         MaterialType materialType,
 
-//        @Schema(description = "ID del componente al que pertenece un subcomponente si es el caso", example = "1")
-//        Long componentId,
-
         @NotNull
         @Positive
         @Schema(description = "ID de la embarcación a la que pertenece el item", example = "1", required = true)

@@ -1,4 +1,4 @@
-package com.Incamar.IncaCore.documentation.user;
+package com.Incamar.IncaCore.documentation.vesselItem;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,50 +13,56 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Operation(
-        summary = "Buscar usuarios por nombre de usuario con paginación",
+        summary = "Obtener componente de una embarcación por ID",
         description = """
-        Retorna una lista paginada de usuarios cuyo nombre de usuario coincida parcialmente \
-        (ignorando mayúsculas) con el valor proporcionado en el parámetro `username`. \
-        <strong>Solo accesible para usuarios con rol ADMIN, SUPERVISOR, OPERATOR.</strong>
+        Devuelve los detalles de un componente de embarcación específica mediante su ID. \
+        Accesible para usuarios con roles: <strong>OPERATOR, SUPERVISOR o ADMIN.</strong>
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )
 @ApiResponses(value = {
         @ApiResponse(
                 responseCode = "200",
-                description = "Usuarios encontrados exitosamente",
+                description = "Embarcación encontrada exitosamente",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(example = """
                 {
-                  "content": [
-                    {
-                      "uuid": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-                      "username": "edgar123",
-                      "role": "USER"
-                    },
-                    {
-                      "uuid": "6f4b3b4e-2f21-478a-857e-7cfe546d35fa",
-                      "username": "eduardo",
-                      "role": "ADMIN"
-                    }
-                  ],
-                  "pageable": {
-                    "pageNumber": 0,
-                    "pageSize": 10
-                  },
-                  "totalElements": 2,
-                  "totalPages": 1,
-                  "last": true,
-                  "first": true,
-                  "empty": false
+                  "success": true,
+                  "message": "Componente de embarcación obtenida exitosamente.",
+                  "data": {
+                      "id": 3,
+                      "name": "Motor",
+                      "description": "Primary propulsion engine",
+                      "controlType": "NAVIGATION",
+                      "accumulatedHours": 4,
+                      "usefulLifeHours": 12000,
+                      "alertHours": 10000,
+                      "materialType": "COMPONENTS"
+                  }
                 }
                 """)
                 )
         ),
         @ApiResponse(
+                responseCode = "404",
+                description = "Embarcación no encontrada",
+                content = @Content(
+                        mediaType = "application/json",
+                        schema = @Schema(example = """
+                {
+                  "statusCode": 404,
+                  "message": "Embarcación no encontrada con ID: ...",
+                  "errorCode": "RESOURCE_NOT_FOUND",
+                  "details": "...",
+                  "path": "/api/vessel-item/{id}"
+                }
+            """)
+                )
+        ),
+        @ApiResponse(
                 responseCode = "403",
-                description = "Acceso denegado por falta de permisos. Usuario con rol no autorizado.",
+                description = "Acceso denegado por falta de permisos",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(example = """
@@ -65,14 +71,14 @@ import java.lang.annotation.*;
                   "message": "Acceso denegado",
                   "errorCode": "FORBIDDEN",
                   "details": "...",
-                  "path": "/api/users/search"
+                  "path": "/api/vessel-item/{id}"
                 }
             """)
                 )
         ),
         @ApiResponse(
                 responseCode = "401",
-                description = "No autorizado (token ausente o inválido).",
+                description = "No autorizado (token ausente o inválido)",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(example = """
@@ -81,7 +87,7 @@ import java.lang.annotation.*;
                   "message": "Acceso no autorizado",
                   "errorCode": "AUTH_ERROR",
                   "details": "...",
-                  "path": "/api/users/search"
+                  "path": "/api/vessel-item/{id}"
                 }
             """)
                 )
@@ -97,11 +103,11 @@ import java.lang.annotation.*;
                   "message": "Error inesperado",
                   "errorCode": "INTERNAL_SERVER_ERROR",
                   "details": "...",
-                  "path": "/api/users/search"
+                  "path": "/api/vessel-item/{id}"
                 }
-                """)
+            """)
                 )
         )
 })
-public @interface SearchUsersEndpointDoc {}
-
+public @interface GetVesselItemByIdEndpointDoc {
+}

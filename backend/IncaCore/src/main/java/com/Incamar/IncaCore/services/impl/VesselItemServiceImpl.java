@@ -11,6 +11,7 @@ import com.Incamar.IncaCore.models.VesselItem;
 import com.Incamar.IncaCore.repositories.VesselItemRepository;
 import com.Incamar.IncaCore.repositories.VesselRepository;
 import com.Incamar.IncaCore.services.VesselItemService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,11 +48,6 @@ public class VesselItemServiceImpl implements VesselItemService {
         Vessel vessel = vesselRepository.findById(request.vesselId()).orElseThrow();
         vesselItem.setVessel(vessel);
 
-//        if(request.componentId()!=null && request.materialType().equals(MaterialType.SUBCOMPONENTS)){
-//            VesselItem component = vesselItemRepository.findById(request.componentId()).orElseThrow();
-//            vesselItem.setComponent(component);
-//        }
-
         return vesselItemMapper.toVesselItemRes(vesselItemRepository.save(vesselItem));
     }
 
@@ -60,5 +56,11 @@ public class VesselItemServiceImpl implements VesselItemService {
         VesselItem vesselItem = vesselItemRepository.findById(id).orElseThrow();
         vesselItemMapper.update(request, vesselItem);
         return vesselItemMapper.toVesselItemRes(vesselItemRepository.save(vesselItem));
+    }
+
+    @Override
+    public void delete(Long id) {
+        VesselItem vesselItem=vesselItemRepository.findById(id).orElseThrow(()->new EntityNotFoundException("No se encontro ningun componente con id "+ id));
+        vesselItemRepository.delete(vesselItem);
     }
 }

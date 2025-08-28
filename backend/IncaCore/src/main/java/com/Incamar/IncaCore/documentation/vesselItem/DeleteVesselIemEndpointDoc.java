@@ -1,4 +1,4 @@
-package com.Incamar.IncaCore.documentation.user;
+package com.Incamar.IncaCore.documentation.vesselItem;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -9,17 +9,15 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.lang.annotation.*;
 
-/**
- * Swagger documentation for DELETE /api/users.
- */
+
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Operation(
-        summary = "Eliminar Usuario",
+        summary = "Eliminar un componente de la embarcacion",
         description = """
-        Elimina un usuario de manera logica del sistema por su ID único. \
+        Elimina un componente de una embarcación existente del sistema por su ID único. \
         Solo usuarios con rol <strong>ADMIN</strong> pueden realizar esta operación.
         """,
         security = @SecurityRequirement(name = "bearer-key")
@@ -27,8 +25,17 @@ import java.lang.annotation.*;
 @ApiResponses(value = {
         @ApiResponse(
                 responseCode = "204",
-                description = "Usuario eliminado correctamente",
-                content = @Content(mediaType = "application/json")
+                description = "Embarcación eliminada exitosamente",
+                content = @Content(
+                        mediaType = "application/json",
+                        schema = @Schema(example = """
+                {
+                  "success": true,
+                  "message": "Embarcación eliminada exitosamente.",
+                  "data": null
+                }
+                """)
+                )
         ),
         @ApiResponse(
                 responseCode = "401",
@@ -39,9 +46,9 @@ import java.lang.annotation.*;
                         {
                           "statusCode": 401,
                           "message": "Acceso no autorizado",
-                          "errorCode": "UNAUTHORIZED",
+                          "errorCode": "AUTH_ERROR",
                           "details": "Token inválido o expirado",
-                          "path": "/api/users/{id}"
+                          "path": "/api/vessel-item"
                         }
                         """)
                 )
@@ -56,24 +63,24 @@ import java.lang.annotation.*;
                           "statusCode": 403,
                           "message": "Acceso denegado",
                           "errorCode": "FORBIDDEN",
-                          "details": "El usuario no tiene permisos para eliminar el usuario",
-                          "path": "/api/users/{id}"
+                          "details": "El usuario no tiene permisos para eliminar esta embarcación",
+                          "path": "/api/vessel-item"
                         }
                         """)
                 )
         ),
         @ApiResponse(
                 responseCode = "404",
-                description = "Usuario no encontrado",
+                description = "Embarcación no encontrada",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(example = """
                         {
                           "statusCode": 404,
-                          "message": "No se encontró usuario con ID: {id}",
-                          "errorCode": "NOT_FOUND",
-                          "details": "No existe un usuario con el ID proporcionado",
-                          "path": "/api/users/{id}"
+                          "message": "Embarcación no encontrada con ID: {id}",
+                          "errorCode": "RESOURCE_NOT_FOUND",
+                          "details": "No existe una embarcación con el ID proporcionado",
+                          "path": "/api/vessel-item"
                         }
                         """)
                 )
@@ -89,10 +96,12 @@ import java.lang.annotation.*;
                           "message": "Error inesperado",
                           "errorCode": "INTERNAL_SERVER_ERROR",
                           "details": "NullPointerException at line ...",
-                          "path": "/api/users/{id}"
+                          "path": "/api/vessel-item"
                         }
                         """)
                 )
         )
 })
-public @interface DeleteUserEndpointDoc {}
+
+public @interface DeleteVesselIemEndpointDoc {
+}

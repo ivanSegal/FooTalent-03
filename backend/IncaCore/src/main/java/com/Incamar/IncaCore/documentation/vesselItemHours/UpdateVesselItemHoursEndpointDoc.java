@@ -1,4 +1,4 @@
-package com.Incamar.IncaCore.documentation.user;
+package com.Incamar.IncaCore.documentation.vesselItemHours;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -9,26 +9,47 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.lang.annotation.*;
 
-/**
- * Swagger documentation for DELETE /api/users.
- */
-
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Operation(
-        summary = "Eliminar Usuario",
+        summary = "Actualizar las datos de la boleta de horas de componente de embarcacion",
         description = """
-        Elimina un usuario de manera logica del sistema por su ID único. \
-        Solo usuarios con rol <strong>ADMIN</strong> pueden realizar esta operación.
+        Actualiza la información de la boleta de horas de componente de una embarcación existente identificada por su ID. \
+        Accesible solo para usuarios autorizados con rol <strong>ADMIN.</strong>
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )
 @ApiResponses(value = {
         @ApiResponse(
-                responseCode = "204",
-                description = "Usuario eliminado correctamente",
-                content = @Content(mediaType = "application/json")
+                responseCode = "200",
+                description = "Boleta de horas de componentes de embarcación actualizada correctamente",
+                content = @Content(
+                        mediaType = "application/json",
+                        schema = @Schema(example = """
+                        {
+                          "success": true,
+                          "message": "Boleta de horas de componentes de embarcación actualizada correctamente.",
+                          "data":{null}
+                        }
+                        """)
+                )
+        ),
+        @ApiResponse(
+                responseCode = "400",
+                description = "Solicitud inválida: datos malformados o violaciones de validación",
+                content = @Content(
+                        mediaType = "application/json",
+                        schema = @Schema(example = """
+                        {
+                          "statusCode": 400,
+                          "message": "Error de validación",
+                          "errorCode": "VALIDATION_ERROR",
+                          "details": "registrationNumber: no puede estar vacío",
+                          "path": "/api/vessel-item-hours/{id}"
+                        }
+                        """)
+                )
         ),
         @ApiResponse(
                 responseCode = "401",
@@ -39,9 +60,9 @@ import java.lang.annotation.*;
                         {
                           "statusCode": 401,
                           "message": "Acceso no autorizado",
-                          "errorCode": "UNAUTHORIZED",
-                          "details": "Token inválido o expirado",
-                          "path": "/api/users/{id}"
+                          "errorCode": "AUTH_ERROR",
+                          "details": "...",
+                          "path": "/api/vessel-item-hours/{id}"
                         }
                         """)
                 )
@@ -56,24 +77,24 @@ import java.lang.annotation.*;
                           "statusCode": 403,
                           "message": "Acceso denegado",
                           "errorCode": "FORBIDDEN",
-                          "details": "El usuario no tiene permisos para eliminar el usuario",
-                          "path": "/api/users/{id}"
+                          "details": "...",
+                          "path": "/api/vessel-item-hours/{id}"
                         }
                         """)
                 )
         ),
         @ApiResponse(
                 responseCode = "404",
-                description = "Usuario no encontrado",
+                description = "Boleta de horas de componentes de embarcación no encontrada",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(example = """
                         {
                           "statusCode": 404,
-                          "message": "No se encontró usuario con ID: {id}",
-                          "errorCode": "NOT_FOUND",
-                          "details": "No existe un usuario con el ID proporcionado",
-                          "path": "/api/users/{id}"
+                          "message": "Boleta de horas de componentes de embarcación no encontrada con id: 101",
+                          "errorCode": "RESOURCE_NOT_FOUND",
+                          "details": "...",
+                          "path": "/api/vessel-item-hours/{id}"
                         }
                         """)
                 )
@@ -88,11 +109,12 @@ import java.lang.annotation.*;
                           "statusCode": 500,
                           "message": "Error inesperado",
                           "errorCode": "INTERNAL_SERVER_ERROR",
-                          "details": "NullPointerException at line ...",
-                          "path": "/api/users/{id}"
+                          "details": "NullPointerException ...",
+                          "path": "/api/vessel-item-hours/{id}"
                         }
                         """)
                 )
         )
 })
-public @interface DeleteUserEndpointDoc {}
+public @interface UpdateVesselItemHoursEndpointDoc {
+}

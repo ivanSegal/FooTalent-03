@@ -60,4 +60,9 @@ public class UserServiceImpl implements UserService {
         userMapper.updateUserFromDto(request,user);
         userRepository.save(user);
     }
+
+    @Override
+    public void deleteById(UUID id) {
+        userRepository.deleteById(id);
+    }
 }
