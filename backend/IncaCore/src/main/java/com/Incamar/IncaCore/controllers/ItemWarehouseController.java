@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/items/warehouses")
-@Tag(name = "09 - Items de Almacen",
+@Tag(name = "12 - Items de Almacen",
         description = "Endpoints para gestión de items de almacen.")
 public class ItemWarehouseController {
 

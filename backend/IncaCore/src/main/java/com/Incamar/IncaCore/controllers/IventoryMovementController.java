@@ -6,6 +6,7 @@ import com.Incamar.IncaCore.dtos.inventory.InventoryMovementResponseDto;
 import com.Incamar.IncaCore.dtos.itemwarehouse.ItemWarehouseResponseDto;
 import com.Incamar.IncaCore.services.InventoryMovementService;
 import com.Incamar.IncaCore.utils.ApiResult;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -18,7 +19,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
-@RestController("/inventory-movements")
+@RestController
+@RequestMapping("/api/inventory-movement")
+@Tag(name = "13 - Movimientos de Inventario",
+        description = "Endpoints para gestión de movimientos de inventario")
 public class IventoryMovementController {
 
     private final InventoryMovementService inventoryMovementService;

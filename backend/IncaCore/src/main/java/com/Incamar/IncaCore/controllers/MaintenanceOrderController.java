@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/ordenes-mantenimiento")
 @RequiredArgsConstructor
-@Tag(name = "05 - Ordenes de Mantenimiento", description = "Endpoints para la gestión de órdenes de mantenimiento de " +
+@Tag(name = "06 - Ordenes de Mantenimiento", description = "Endpoints para la gestión de órdenes de mantenimiento de " +
         "embarcaciones")
 public class MaintenanceOrderController {
     private final MaintenanceOrderService maintenanceOrderService;

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/vessel-item-hours")
-@Tag(name = "07 - Items Horas Embarcación", description = "Gestión de horas acumuladas en items embarcaciones")
+@Tag(name = "05 - Items Horas Embarcación", description = "Gestión de horas acumuladas en items embarcaciones")
 public class VesselItemHoursController {
 
     private final VesselItemHoursService vesselItemHoursService;
