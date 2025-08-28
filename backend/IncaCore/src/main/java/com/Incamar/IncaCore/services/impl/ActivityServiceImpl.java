@@ -61,9 +61,20 @@ public class ActivityServiceImpl implements ActivityService {
                     ));
         }
 
+        // Crear y guardar la actividad
         Activity activity = mapper.toEntity(requestDto, maintenanceOrder, vesselItem, inventoryMovement);
+        Activity savedActivity = activityRepository.save(activity);
 
-        return mapper.toDTO(activityRepository.save(activity));
+        // --- Actualizar alertHours del VesselItem ---
+        if (vesselItem.getAccumulatedHours() != null &&
+                vesselItem.getUsefulLifeHours() != null) {
+            vesselItem.setAlertHours(
+                    vesselItem.getAccumulatedHours().intValue() + vesselItem.getUsefulLifeHours()
+            );
+            vesselItemRepository.save(vesselItem);
+        }
+
+        return mapper.toDTO(savedActivity);
     }
 
     @Override
