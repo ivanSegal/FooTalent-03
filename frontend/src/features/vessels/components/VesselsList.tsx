@@ -14,6 +14,8 @@ import { vesselItemService } from "@/features/vessels";
 import type { VesselItem } from "@/features/vessels";
 import VesselItemForm from "@/features/vessels/components/VesselItemForm";
 import { VesselItemHoursForm } from "@/features/vessels";
+import PDFGenerator from "@/components/pdf/PDFGenerator";
+import { VesselTemplate } from "@/features/vessels";
 
 export default function VesselsList() {
   const [items, setItems] = useState<Vessel[]>([]);
@@ -36,14 +38,11 @@ export default function VesselsList() {
   const [hoursInitialReport, setHoursInitialReport] = useState<VesselItemHoursEntry | null>(null);
   const [hoursHistoryRows, setHoursHistoryRows] = useState<VesselItemHoursEntry[]>([]);
 
-  // Estado para historial de cargas de horas
-  const [historyVesselId, setHistoryVesselId] = useState<number | null>(null);
-  const [historyRows, setHistoryRows] = useState<VesselItemHoursEntry[]>([]);
+  // Estado para historial de cargas de horas (integrado en el modal de Cargar horas)
   const [allHistoryRows, setAllHistoryRows] = useState<VesselItemHoursEntry[]>([]);
   const [historyLoading, setHistoryLoading] = useState(false);
   const [historyPage, setHistoryPage] = useState(0);
   const [historyPageSize, setHistoryPageSize] = useState(10);
-  const [historyTotal, setHistoryTotal] = useState(0);
 
   const loadHistoryAll = useCallback(
     async (size = historyPageSize): Promise<VesselItemHoursEntry[]> => {
@@ -253,6 +252,16 @@ export default function VesselsList() {
       align: "right" as const,
       render: (_: unknown, record) => (
         <Space size="small" onClick={(e) => e.stopPropagation()}>
+          <Tooltip title="Imprimir / Vista previa">
+            <PDFGenerator
+              template={VesselTemplate}
+              data={{
+                vessel: record,
+                items: allItems.filter((it) => getVesselIdFromItem(it) === record.id),
+              }}
+              fileName={`ficha-embarcacion-${record.id ?? "sin-id"}.pdf`}
+            />
+          </Tooltip>
           <Tooltip title="Cargar horas de ítems">
             <Button
               size="small"
@@ -287,27 +296,6 @@ export default function VesselsList() {
               }}
             >
               Cargar horas
-            </Button>
-          </Tooltip>
-          <Tooltip title="Ver historial de cargas de horas">
-            <Button
-              size="small"
-              type="text"
-              onClick={async () => {
-                setHistoryVesselId(record.id);
-                setHistoryPage(0);
-                // Si ya tenemos historial completo cargado, reusar; si no, cargar todo
-                let all = allHistoryRows;
-                if (!allHistoryRows.length) {
-                  all = await loadHistoryAll(historyPageSize);
-                  setAllHistoryRows(all);
-                }
-                const filtered = all.filter((r) => r.vesselId === record.id);
-                setHistoryRows(filtered);
-                setHistoryTotal(filtered.length);
-              }}
-            >
-              Ver historial
             </Button>
           </Tooltip>
           <Tooltip title="Editar">
@@ -405,7 +393,7 @@ export default function VesselsList() {
     { title: "ID", dataIndex: "id", key: "id", width: 80 },
     { title: "Fecha", dataIndex: "date", key: "date", width: 120 },
     { title: "Responsable", dataIndex: "responsable", key: "responsable", width: 200 },
-    { title: "Descripción", dataIndex: "description", key: "description" },
+    { title: "Comentarios", dataIndex: "comments", key: "comments" },
     {
       title: "Ítems",
       key: "itemsCount",
@@ -600,7 +588,7 @@ export default function VesselsList() {
                           ? {
                               id: hoursInitialReport.id,
                               date: hoursInitialReport.date,
-                              description: hoursInitialReport.description,
+                              comments: hoursInitialReport.comments,
                               items: hoursInitialReport.items,
                             }
                           : null
@@ -710,75 +698,6 @@ export default function VesselsList() {
             />
           </div>
         )}
-      </Modal>
-
-      {/* Modal para ver historial de cargas de horas */}
-      <Modal
-        open={historyVesselId != null}
-        title={
-          historyVesselId != null
-            ? `Historial de horas – Embarcación #${historyVesselId}`
-            : "Historial de horas"
-        }
-        onCancel={() => {
-          setHistoryVesselId(null);
-          setHistoryRows([]);
-        }}
-        footer={null}
-        width={900}
-      >
-        <Table
-          size="small"
-          rowKey="id"
-          columns={historyColumns}
-          dataSource={historyRows}
-          loading={historyLoading}
-          expandable={{
-            expandedRowRender: (record) => {
-              const itemCols: ColumnsType<{ vesselItemId: number; addedHours: number }> = [
-                {
-                  title: "Ítem",
-                  key: "itemName",
-                  render: (_: unknown, r) => {
-                    const name = allItems.find((it) => it.id === r.vesselItemId)?.name;
-                    return name ?? `#${r.vesselItemId}`;
-                  },
-                  width: 240,
-                },
-                {
-                  title: "Horas agregadas",
-                  dataIndex: "addedHours",
-                  key: "addedHours",
-                  width: 160,
-                },
-              ];
-              return (
-                <Table
-                  size="small"
-                  rowKey={(r) => `${record.id}-${r.vesselItemId}`}
-                  columns={itemCols}
-                  dataSource={record.items || []}
-                  pagination={false}
-                  scroll={{ x: "max-content" }}
-                />
-              );
-            },
-            rowExpandable: (record) => Array.isArray(record.items) && record.items.length > 0,
-          }}
-          pagination={{
-            current: historyPage + 1,
-            pageSize: historyPageSize,
-            total: historyTotal,
-            showSizeChanger: true,
-            pageSizeOptions: [5, 10, 20, 50],
-            onChange: (page, pageSize) => {
-              setHistoryPage(page - 1);
-              setHistoryPageSize(pageSize);
-              // Paginación local sobre historyRows, sin refetch
-            },
-          }}
-          scroll={{ x: "max-content" }}
-        />
       </Modal>
     </main>
   );

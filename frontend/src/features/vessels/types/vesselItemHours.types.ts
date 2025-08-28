@@ -6,7 +6,7 @@ export interface VesselItemHoursRow {
 export interface VesselItemHoursRequest {
   vesselId: number;
   date: string; // DD-MM-YYYY
-  description: string;
+  comments: string;
   items: VesselItemHoursRow[];
 }
 
@@ -20,7 +20,7 @@ export interface VesselItemHoursEntry {
   id: number;
   vesselId: number;
   date: string; // YYYY-MM-DD (formato que devuelve el backend en GET)
-  description?: string;
+  comments?: string;
   responsable?: string;
   items?: VesselItemHoursRow[]; // Detalle opcional según API
   createdBy?: string;

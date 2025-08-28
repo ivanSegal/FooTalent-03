@@ -20,7 +20,7 @@ interface Props {
   initial?: {
     id: number;
     date: string; // YYYY-MM-DD del backend
-    description?: string;
+    comments?: string;
     items?: VesselItemHoursRow[];
   } | null;
 }
@@ -33,15 +33,15 @@ export default function VesselItemHoursForm({
   initial,
 }: Props) {
   const [date, setDate] = React.useState<Dayjs | null>(dayjs());
-  const [description, setDescription] = React.useState<string>("");
+  const [comments, setComments] = React.useState<string>("");
   const [hoursMap, setHoursMap] = React.useState<Record<number, number>>({});
   const [submitting, setSubmitting] = React.useState(false);
 
   // Prefill en modo edición
   React.useEffect(() => {
     if (initial && initial.id) {
-  setDate(initial.date ? dayjs(initial.date) : null);
-      setDescription(initial.description ?? "");
+      setDate(initial.date ? dayjs(initial.date) : null);
+      setComments(initial.comments ?? "");
       const map: Record<number, number> = {};
       (initial.items ?? []).forEach((r) => {
         map[r.vesselItemId] = r.addedHours;
@@ -49,8 +49,8 @@ export default function VesselItemHoursForm({
       setHoursMap(map);
     } else {
       // reset en modo creación
-  setDate(dayjs());
-      setDescription("");
+      setDate(dayjs());
+      setComments("");
       setHoursMap({});
     }
   }, [initial]);
@@ -99,7 +99,7 @@ export default function VesselItemHoursForm({
     const payload: VesselItemHoursRequest = {
       vesselId,
       date: date.format("DD-MM-YYYY"),
-      description,
+      comments,
       items: newRows,
     };
 
@@ -154,10 +154,10 @@ export default function VesselItemHoursForm({
           />
         </div>
         <div className="flex flex-col md:col-span-2">
-          <label className="mb-1 text-sm text-gray-700">Descripción</label>
+          <label className="mb-1 text-sm text-gray-700">Comentarios</label>
           <Input.TextArea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            value={comments}
+            onChange={(e) => setComments(e.target.value)}
             placeholder="Opcional"
             autoSize={{ minRows: 2 }}
           />

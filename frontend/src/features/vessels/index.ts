@@ -14,3 +14,4 @@ export type { VesselItemFormValues } from "@/features/vessels/schemas/vesselItem
 export * from "@/features/vessels/services/vesselItemHours.service";
 export * from "@/features/vessels/types/vesselItemHours.types";
 export { default as VesselItemHoursForm } from "@/features/vessels/components/VesselItemHoursForm";
+export { default as VesselTemplate } from "@/features/vessels/components/VesselTemplate";
