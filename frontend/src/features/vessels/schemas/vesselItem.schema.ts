@@ -10,7 +10,7 @@ const CONTROL_TYPES = [
 ] as const;
 const MATERIAL_TYPES = ["COMPONENTS", "CONSUMABLES", "SPARE_PARTS", "TOOLS", "OTHER"] as const;
 
-export const vasselItemSchema = z.object({
+export const vesselItemSchema = z.object({
   name: z.string().trim().min(1, "Requerido"),
   description: z.string().trim().min(1, "Requerido"),
   controlType: z.enum(CONTROL_TYPES),
@@ -20,4 +20,4 @@ export const vasselItemSchema = z.object({
   materialType: z.enum(MATERIAL_TYPES),
 });
 
-export type VasselItemFormValues = z.infer<typeof vasselItemSchema>;
+export type VesselItemFormValues = z.infer<typeof vesselItemSchema>;

@@ -1,7 +1,7 @@
 import type { PageResponse } from "@/features/maintenance";
 
-// Modelo de embarcación (vassel) según respuesta del backend
-export interface Vassel {
+// Modelo de embarcación (vessel) según respuesta del backend
+export interface Vessel {
   id: number;
   name: string;
   registrationNumber: string;
@@ -17,4 +17,4 @@ export interface Vassel {
   navigationHours: number;
 }
 
-export type VasselPage = PageResponse<Vassel>;
+export type VesselPage = PageResponse<Vessel>;

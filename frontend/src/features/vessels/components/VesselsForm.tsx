@@ -4,24 +4,24 @@ import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input, InputNumber, Button } from "antd";
-import { vasselSchema, type VasselFormValues } from "@/features/vassels/schemas/vassel.schema";
-import { vasselsService, type Vassel } from "@/features/vassels";
+import { vesselSchema, type VesselFormValues } from "@/features/vessels/schemas/vessel.schema";
+import { vesselsService, type Vessel } from "@/features/vessels";
 import { showAlert } from "@/utils/showAlert";
 
 interface Props {
-  current?: (Vassel & { id?: number }) | null;
-  onSaved?: (v: Vassel) => void;
+  current?: (Vessel & { id?: number }) | null;
+  onSaved?: (v: Vessel) => void;
   onCancel?: () => void;
 }
 
-export default function VasselsForm({ current, onSaved, onCancel }: Props) {
+export default function VesselsForm({ current, onSaved, onCancel }: Props) {
   const {
     control,
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<VasselFormValues>({
-    resolver: zodResolver(vasselSchema),
+  } = useForm<VesselFormValues>({
+    resolver: zodResolver(vesselSchema),
     defaultValues: current ?? {
       name: "",
       registrationNumber: "",
@@ -44,13 +44,13 @@ export default function VasselsForm({ current, onSaved, onCancel }: Props) {
     }
   }, [current, reset]);
 
-  const onSubmit = async (values: VasselFormValues) => {
+  const onSubmit = async (values: VesselFormValues) => {
     try {
-      let saved: Vassel;
+      let saved: Vessel;
       if (current?.id) {
-        saved = await vasselsService.update(current.id, values);
+        saved = await vesselsService.update(current.id, values);
       } else {
-        saved = await vasselsService.create(values);
+        saved = await vesselsService.create(values);
       }
       await showAlert("Éxito", "Embarcación guardada correctamente", "success");
       onSaved?.(saved);

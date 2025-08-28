@@ -10,7 +10,7 @@ export type ControlType =
 
 export type MaterialType = "COMPONENTS" | "CONSUMABLES" | "SPARE_PARTS" | "TOOLS" | "OTHER";
 
-export interface VasselItem {
+export interface VesselItem {
   id: number;
   name: string;
   description: string;
@@ -21,4 +21,4 @@ export interface VasselItem {
   materialType: MaterialType;
 }
 
-export type VasselItemPage = PageResponse<VasselItem>;
+export type VesselItemPage = PageResponse<VesselItem>;

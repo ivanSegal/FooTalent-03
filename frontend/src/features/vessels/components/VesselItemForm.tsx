@@ -5,28 +5,28 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Input, InputNumber, Select } from "antd";
 import {
-  vasselItemSchema,
-  type VasselItemFormValues,
-} from "@/features/vassel-item/schemas/vasselItem.schema";
-import type { VasselItem } from "@/features/vassel-item/types/vasselItem.types";
+  vesselItemSchema,
+  type VesselItemFormValues,
+} from "@/features/vessels/schemas/vesselItem.schema";
+import type { VesselItem } from "@/features/vessels/types/vesselItem.types";
 import { showAlert } from "@/utils/showAlert";
-import { vasselItemService } from "@/features/vassel-item/services/vasselItem.service";
+import { vesselItemService } from "@/features/vessels/services/vesselItem.service";
 
 interface Props {
-  vasselId: number;
-  current?: (VasselItem & { id?: number }) | null;
-  onSaved?: (v: VasselItem) => void;
+  vesselId: number;
+  current?: (VesselItem & { id?: number }) | null;
+  onSaved?: (v: VesselItem) => void;
   onCancel?: () => void;
 }
 
-export default function VasselItemForm({ vasselId, current, onSaved, onCancel }: Props) {
+export default function VesselItemForm({ vesselId, current, onSaved, onCancel }: Props) {
   const {
     control,
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<VasselItemFormValues>({
-    resolver: zodResolver(vasselItemSchema),
+  } = useForm<VesselItemFormValues>({
+    resolver: zodResolver(vesselItemSchema),
     defaultValues: current ?? {
       name: "",
       description: "",
@@ -44,13 +44,13 @@ export default function VasselItemForm({ vasselId, current, onSaved, onCancel }:
     }
   }, [current, reset]);
 
-  const onSubmit = async (values: VasselItemFormValues) => {
+  const onSubmit = async (values: VesselItemFormValues) => {
     try {
-      let saved: VasselItem;
+      let saved: VesselItem;
       if (current?.id) {
-        saved = await vasselItemService.update(current.id, values);
+        saved = await vesselItemService.update(current.id, values);
       } else {
-        saved = await vasselItemService.create({ ...values, vasselId });
+        saved = await vesselItemService.create({ ...values, vesselId });
       }
       await showAlert("Éxito", "Item guardado correctamente", "success");
       onSaved?.(saved);

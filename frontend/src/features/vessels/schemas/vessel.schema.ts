@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const vasselSchema = z.object({
+export const vesselSchema = z.object({
   name: z.string().trim().min(1, "Requerido"),
   registrationNumber: z
     .string()
@@ -38,4 +38,4 @@ export const vasselSchema = z.object({
     .nonnegative({ message: "No negativo" }),
 });
 
-export type VasselFormValues = z.infer<typeof vasselSchema>;
+export type VesselFormValues = z.infer<typeof vesselSchema>;
