@@ -3,11 +3,15 @@ package com.Incamar.IncaCore.services.impl;
 import com.Incamar.IncaCore.dtos.itemwarehouse.ItemWarehouseRequestDto;
 import com.Incamar.IncaCore.dtos.itemwarehouse.ItemWarehouseResponseDto;
 import com.Incamar.IncaCore.dtos.itemwarehouse.ItemWarehouseUpdateDto;
+import com.Incamar.IncaCore.dtos.warehouse.WarehouseRequestDto;
 import com.Incamar.IncaCore.exceptions.ConflictException;
 import com.Incamar.IncaCore.exceptions.ResourceNotFoundException;
 import com.Incamar.IncaCore.mappers.ItemWarehouseMapper;
 import com.Incamar.IncaCore.models.ItemWarehouse;
+import com.Incamar.IncaCore.models.Stock;
+import com.Incamar.IncaCore.models.Warehouse;
 import com.Incamar.IncaCore.repositories.ItemWarehouseRepository;
+import com.Incamar.IncaCore.repositories.StockRepository;
 import com.Incamar.IncaCore.repositories.WarehouseRepository;
 import com.Incamar.IncaCore.services.IItemWarehouseService;
 import lombok.RequiredArgsConstructor;
@@ -16,32 +20,33 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ItemWarehouseServiceImp implements IItemWarehouseService {
 
     private final ItemWarehouseMapper itemWarehouseMapper;
     private final ItemWarehouseRepository itemWarehouseRepository;
-    private final WarehouseRepository warehouseRepository;
+    private final StockRepository stockRepository;
 
     @Override
     public ItemWarehouseResponseDto createItemWarehouse(ItemWarehouseRequestDto itemWarehouse) {
-        if(!warehouseRepository.existsById(itemWarehouse.getWarehouseId())) {
-             throw  new ResourceNotFoundException("Almacen no encontrado con ID: " + itemWarehouse.getWarehouseId());
-        }
         if(itemWarehouseRepository.existsItemWarehouseByName(itemWarehouse.getName())) {
             throw new ConflictException("Item de almacen ya existe con ese nombre.");
         }
-        ItemWarehouse itemWarehouse1 = itemWarehouseMapper.toEntity(itemWarehouse);
-        itemWarehouseRepository.save(itemWarehouse1);
-        return itemWarehouseMapper.toResponseDto(itemWarehouse1);
+        ItemWarehouse item = itemWarehouseMapper.toEntity(itemWarehouse);
+        itemWarehouseRepository.save(item);
+        List<Stock> stocks = stockRepository.findByItemWarehouse(item);
+        return itemWarehouseMapper.toResponseDto(item, stocks);
     }
 
     @Override
     public ItemWarehouseResponseDto getItemWarehouseById(Long id) {
         ItemWarehouse itemWarehouse = itemWarehouseRepository.findById(id)
                 .orElseThrow(() ->  new ResourceNotFoundException("Item de almacen no encontrado con ID: " + id));
-        return itemWarehouseMapper.toResponseDto(itemWarehouse);
+        List<Stock> stocks = stockRepository.findByItemWarehouse(itemWarehouse);
+        return itemWarehouseMapper.toResponseDto(itemWarehouse, stocks);
     }
 
     @Override
@@ -57,42 +62,26 @@ public class ItemWarehouseServiceImp implements IItemWarehouseService {
                 .orElseThrow(() ->  new ResourceNotFoundException("Item de almacen no encontrado con ID: " + id));
         itemWarehouseMapper.updateEntityFromDto(itemWarehouseDto, itemWarehouse);
         itemWarehouseRepository.save(itemWarehouse);
-        return itemWarehouseMapper.toResponseDto(itemWarehouse);
+        List<Stock> stocks = stockRepository.findByItemWarehouse(itemWarehouse);
+        return itemWarehouseMapper.toResponseDto(itemWarehouse, stocks);
     }
 
     @Override
     public Page<ItemWarehouseResponseDto> getAllItemsWarehouse(Pageable pageable) {
         Page<ItemWarehouse> itemWarehousePage = itemWarehouseRepository.findAll(pageable);
-        return itemWarehousePage.map(itemWarehouseMapper::toResponseDto);
+        return itemWarehousePage.map(itemWarehouse -> {
+            List<Stock> stocks = stockRepository.findByItemWarehouse(itemWarehouse);
+            return itemWarehouseMapper.toResponseDto(itemWarehouse, stocks);
+        });
     }
 
     @Override
     public Page<ItemWarehouseResponseDto> searchItemWarehouseByName(String nombre, Pageable pageable) {
         Page<ItemWarehouse> itemWarehousePage = itemWarehouseRepository.findByNameContainingIgnoreCase(nombre,  pageable);
-        return itemWarehousePage.map(itemWarehouseMapper::toResponseDto);
+        return itemWarehousePage.map(itemWarehouse -> {
+            List<Stock> stocks = stockRepository.findByItemWarehouse(itemWarehouse);
+            return itemWarehouseMapper.toResponseDto(itemWarehouse, stocks);
+        });
     }
 
-    @Transactional
-    @Override
-    public void increaseStock(Long itemWarehouseId, int quantity) {
-        ItemWarehouse item = itemWarehouseRepository.findById(itemWarehouseId)
-                .orElseThrow(() -> new RuntimeException("Item no encontrado con ID: " + itemWarehouseId));
-
-        item.setStock(item.getStock() + quantity);
-        itemWarehouseRepository.save(item);
-    }
-
-    @Transactional
-    @Override
-    public void decreaseStock(Long itemWarehouseId, int quantity) {
-        ItemWarehouse item = itemWarehouseRepository.findById(itemWarehouseId)
-                .orElseThrow(() -> new RuntimeException("Item no encontrado con ID: " + itemWarehouseId));
-
-        if (item.getStock() < quantity) {
-            throw new RuntimeException("Stock insuficiente para el ítem con ID: " + itemWarehouseId);
-        }
-
-        item.setStock(item.getStock() - quantity);
-        itemWarehouseRepository.save(item);
-    }
 }

@@ -46,15 +46,17 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendStockAlertEmail(String to, String recipientName, String productName, Long currentStock, Long minimumStock) {
+    public void sendStockAlertEmail(String to, String recipientName, String productName, Long currentStock, String warehouseName, Long minimumStock) {
         Map<String, Object> variables = Map.of(
                 "recipientName", recipientName,
                 "productName", productName,
+                "warehouseName", warehouseName, // <-- agregamos el almacén
                 "currentStock", currentStock,
                 "minimumStock", minimumStock
         );
 
         sendHtmlEmail(to, "Alerta de Stock Mínimo", "stock-alert-email", variables);
     }
+
 
 }

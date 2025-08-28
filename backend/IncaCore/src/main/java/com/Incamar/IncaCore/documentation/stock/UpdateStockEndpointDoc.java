@@ -1,4 +1,5 @@
-package com.Incamar.IncaCore.documentation.warehouse;
+package com.Incamar.IncaCore.documentation.stock;
+
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -10,33 +11,37 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.lang.annotation.*;
 
 /**
- * Swagger documentation for PUT /api/warehouses/{id}.
+ * Swagger documentation for PUT /api/stocks/{id}.
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Operation(
-        summary = "Actualizar almacén",
+        summary = "Actualizar stock mínimo",
         description = """
-        Actualiza la información de un almacén existente identificado por su ID único. \
-        Solo usuarios con rol <strong>ADMIN, SUPERVISOR</strong> pertenecientes al departamento INVENTORY pueden realizar esta operación.
+        Actualiza la información del stock mínimo (`stockMin`) de un stock existente identificado por su ID único. \
+        Solo usuarios con rol <strong>ADMIN</strong> o <strong>SUPERVISOR</strong> pertenecientes al departamento INVENTORY pueden realizar esta operación.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )
 @ApiResponses(value = {
         @ApiResponse(
                 responseCode = "200",
-                description = "Almacén actualizado correctamente",
+                description = "Stock actualizado correctamente",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(example = """
                         {
                           "success": true,
-                          "message": "Almacen editado exitosamente.",
+                          "message": "Stock editado exitosamente.",
                           "data": {
                             "id": 5,
-                            "name": "Depósito Central",
-                            "location": "Av. Libertador 1234, Buenos Aires"
+                            "stock": 150,
+                            "stockMin": 30,
+                            "warehouseId": 1,
+                            "warehouseName": "Depósito Central",
+                            "itemWarehouseId": 12,
+                            "itemWarehouseName": "Tornillo M6"
                           }
                         }
                         """)
@@ -52,8 +57,8 @@ import java.lang.annotation.*;
                           "statusCode": 400,
                           "message": "Error de validación",
                           "errorCode": "VALIDATION_ERROR",
-                          "details": "name: no puede estar vacío",
-                          "path": "/api/warehouses/{id}"
+                          "details": "stockMin: no puede ser nulo",
+                          "path": "/api/stocks/{id}"
                         }
                         """)
                 )
@@ -84,24 +89,24 @@ import java.lang.annotation.*;
                           "statusCode": 403,
                           "message": "Acceso denegado",
                           "errorCode": "FORBIDDEN",
-                          "details": "El usuario no tiene permisos para editar almacenes",
-                          "path": "/api/warehouses/{id}"
+                          "details": "El usuario no tiene permisos para editar stocks",
+                          "path": "/api/stocks/{id}"
                         }
                         """)
                 )
         ),
         @ApiResponse(
                 responseCode = "404",
-                description = "Almacén no encontrado",
+                description = "Stock no encontrado",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(example = """
                         {
                           "statusCode": 404,
-                          "message": "Almacen no encontrado.",
+                          "message": "Stock no encontrado con ID: {id}",
                           "errorCode": "RESOURCE_NOT_FOUND",
-                          "details": "No existe un almacén con el ID proporcionado",
-                          "path": "/api/warehouses/{id}"
+                          "details": "No existe un stock con el ID proporcionado",
+                          "path": "/api/stocks/{id}"
                         }
                         """)
                 )
@@ -117,11 +122,11 @@ import java.lang.annotation.*;
                           "message": "Error inesperado",
                           "errorCode": "INTERNAL_SERVER_ERROR",
                           "details": "NullPointerException at line ...",
-                          "path": "/api/warehouses/{id}"
+                          "path": "/api/stocks/{id}"
                         }
                         """)
                 )
         )
 })
-public @interface UpdateWarehouseEndpointDoc {
+public @interface UpdateStockEndpointDoc {
 }

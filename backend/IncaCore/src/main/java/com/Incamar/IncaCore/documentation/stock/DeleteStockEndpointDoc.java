@@ -1,4 +1,4 @@
-package com.Incamar.IncaCore.documentation.itemwarehouse;
+package com.Incamar.IncaCore.documentation.stock;
 
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,75 +10,28 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.lang.annotation.*;
 
-/**
- * Swagger documentation for GET /api/item-warehouses.
- */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Operation(
-        summary = "Obtener todos los ítems de almacén",
+        summary = "Eliminar stock",
         description = """
-        Retorna una lista paginada de ítems de almacén registrados en el sistema. \
-        Accesible para usuarios con roles: <strong>OPERATOR, SUPERVISOR o ADMIN</strong> pertenecientes al departamento INVENTORY.
+        Elimina un registro de stock por su ID único. \
+        Solo usuarios con rol <strong>ADMIN</strong> pueden realizar esta operación.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )
 @ApiResponses(value = {
         @ApiResponse(
                 responseCode = "200",
-                description = "Lista paginada de ítems de almacén obtenida exitosamente",
+                description = "Stock eliminado exitosamente",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(example = """
                 {
                   "success": true,
-                  "message": "Se visualizan exitosamente todos los items de almacen.",
-                  "data": {
-                    "content": [
-                      {
-                        "id": 1,
-                        "name": "Tornillos de acero",
-                        "description": "Caja con 100 tornillos de 5cm",
-                        "stock": 150,
-                        "stockMin": 20,
-                        "warehouseName": "Depósito Central"
-                      },
-                      {
-                        "id": 2,
-                        "name": "Tuercas M5",
-                        "description": "Bolsa con 200 tuercas",
-                        "stock": 300,
-                        "stockMin": 50,
-                        "warehouseName": "Almacén Norte"
-                      }
-                    ],
-                    "pageable": {
-                      "pageNumber": 0,
-                      "pageSize": 20,
-                      "sort": {
-                        "empty": true,
-                        "unsorted": true,
-                        "sorted": false
-                      },
-                      "offset": 0,
-                      "paged": true,
-                      "unpaged": false
-                    },
-                    "last": true,
-                    "totalElements": 2,
-                    "totalPages": 1,
-                    "size": 20,
-                    "number": 0,
-                    "sort": {
-                      "empty": true,
-                      "unsorted": true,
-                      "sorted": false
-                    },
-                    "first": true,
-                    "numberOfElements": 2,
-                    "empty": false
-                  }
+                  "message": "Stock eliminado exitosamente.",
+                  "data": null
                 }
                 """)
                 )
@@ -109,8 +62,24 @@ import java.lang.annotation.*;
                           "statusCode": 403,
                           "message": "Acceso denegado",
                           "errorCode": "FORBIDDEN",
-                          "details": "El usuario no tiene permisos para visualizar ítems de almacén",
-                          "path": "/api/item-warehouses"
+                          "details": "El usuario no tiene permisos para eliminar este stock",
+                          "path": "/api/stocks/{id}"
+                        }
+                        """)
+                )
+        ),
+        @ApiResponse(
+                responseCode = "404",
+                description = "Stock no encontrado",
+                content = @Content(
+                        mediaType = "application/json",
+                        schema = @Schema(example = """
+                        {
+                          "statusCode": 404,
+                          "message": "Stock no encontrado con ID: {id}",
+                          "errorCode": "RESOURCE_NOT_FOUND",
+                          "details": "No existe un stock con el ID proporcionado",
+                          "path": "/api/stocks/{id}"
                         }
                         """)
                 )
@@ -125,12 +94,12 @@ import java.lang.annotation.*;
                           "statusCode": 500,
                           "message": "Error inesperado",
                           "errorCode": "INTERNAL_SERVER_ERROR",
-                          "details": "NullPointerException ...",
-                          "path": "/api/item-warehouses"
+                          "details": "NullPointerException at line ...",
+                          "path": "/api/stocks/{id}"
                         }
                         """)
                 )
         )
 })
-public @interface GetAllItemWarehousesEndpointDoc {
+public @interface DeleteStockEndpointDoc {
 }

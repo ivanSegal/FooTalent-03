@@ -1,4 +1,5 @@
-package com.Incamar.IncaCore.documentation.itemwarehouse;
+package com.Incamar.IncaCore.documentation.stock;
+
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,36 +15,34 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Operation(
-        summary = "Crear un ítem de almacén",
+        summary = "Crear un stock para un ítem en un almacén",
         description = """
-        Crea un nuevo ítem dentro de un almacén especificando nombre, descripción, stock y stock mínimo. \
-        El nombre del ítem debe ser único en el sistema. \
-        Además, el ID de almacén debe existir previamente en el sistema. \
-        Requiere autenticación de usuarios con rol <strong>OPERATOR, SUPERVISOR o ADMIN</strong> pertenecientes al departamento INVENTORY.
+        Crea un registro de stock asociado a un ítem en un almacén específico. \
+        El par <strong>almacén + ítem</strong> debe ser único en el sistema. \
+        Además, tanto el ID del almacén como el ID del ítem de almacén deben existir previamente. \
+        Requiere autenticación de usuarios con rol <strong>ADMIN</strong> o bien <strong>SUPERVISOR/OPERATOR</strong> del departamento INVENTORY.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )
 @ApiResponses(value = {
         @ApiResponse(
                 responseCode = "201",
-                description = "Ítem de almacén creado correctamente",
+                description = "Stock creado correctamente",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(
                                 example = """
                     {
                       "success": true,
-                      "message": "Item de almacen creado correctamente.",
+                      "message": "Stock creado correctamente.",
                       "data": {
-                        "id": 1,
-                        "name": "Tornillos de acero",
-                        "description": "Caja con 100 tornillos de 5cm",
+                        "id": 10,
                         "stock": 500,
                         "stockMin": 50,
-                        "warehouse": {
-                          "id": 2,
-                          "name": "Depósito Central"
-                        }
+                        "warehouseId": 2,
+                        "warehouseName": "Depósito Central",
+                        "itemWarehouseId": 1,
+                        "itemWarehouseName": "Tornillos de acero"
                       }
                     }
                 """
@@ -64,8 +63,8 @@ import java.lang.annotation.*;
                                               "statusCode": 400,
                                               "message": "Error de validación en los datos",
                                               "errorCode": "VALIDATION_ERROR",
-                                              "detailsError": "name: no puede estar vacío, stock: debe ser mayor que 0",
-                                              "path": "/api/items-warehouse/create"
+                                              "detailsError": "stock: debe ser mayor que 0, stockMin: debe ser >= 0",
+                                              "path": "/api/stocks/create"
                                             }
                                         """
                                 )
@@ -74,7 +73,7 @@ import java.lang.annotation.*;
         ),
         @ApiResponse(
                 responseCode = "404",
-                description = "El almacén especificado no existe",
+                description = "El almacén o ítem especificado no existe",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(
@@ -84,7 +83,7 @@ import java.lang.annotation.*;
                       "message": "Almacen no encontrado con ID: 99",
                       "errorCode": "RESOURCE_NOT_FOUND",
                       "detailsError": "...",
-                      "path": "/api/items-warehouse/create"
+                      "path": "/api/stocks/create"
                     }
                 """
                         )
@@ -92,17 +91,17 @@ import java.lang.annotation.*;
         ),
         @ApiResponse(
                 responseCode = "409",
-                description = "El nombre del ítem ya existe en el sistema",
+                description = "Ya existe un stock para ese ítem en ese almacén",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(
                                 example = """
                     {
                       "statusCode": 409,
-                      "message": "Item de almacen ya existe con ese nombre.",
+                      "message": "Ya existe un stock para ese ítem en ese almacén",
                       "errorCode": "CONFLICT",
                       "detailsError": "...",
-                      "path": "/api/items-warehouse/create"
+                      "path": "/api/stocks/create"
                     }
                 """
                         )
@@ -138,7 +137,7 @@ import java.lang.annotation.*;
                       "message": "Acceso denegado",
                       "errorCode": "FORBIDDEN",
                       "details": "...",
-                      "path": "/api/items-warehouse/create"
+                      "path": "/api/stocks/create"
                     }
                 """
                         )
@@ -156,12 +155,12 @@ import java.lang.annotation.*;
                       "message": "Internal Server Error",
                       "errorCode": "INTERNAL_ERROR",
                       "detailsError": "...",
-                      "path": "/api/items-warehouse/create"
+                      "path": "/api/stocks/create"
                     }
                 """
                         )
                 )
         )
 })
-public @interface CreateItemWarehouseEndpointDoc {
+public @interface CreateStockEndpointDoc {
 }

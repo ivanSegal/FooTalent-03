@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 
 @Setter
 @Getter
@@ -22,12 +24,6 @@ public class ItemWarehouseResponseDto {
     @Schema(description = "Descripción del ítem", example = "Caja con 100 tornillos de 5cm")
     private String description;
 
-    @Schema(description = "Cantidad actual en stock", example = "150")
-    private Long stock;
-
-    @Schema(description = "Cantidad mínima permitida antes de reposición", example = "20")
-    private Long stockMin;
-
-    @Schema(description = "Nombre del almacén al que pertenece el ítem", example = "Depósito Central")
-    private String warehouseName;
+    @Schema(description = "Lista de stocks en los distintos almacenes")
+    private List<StockSummaryDto> stocks;
 }

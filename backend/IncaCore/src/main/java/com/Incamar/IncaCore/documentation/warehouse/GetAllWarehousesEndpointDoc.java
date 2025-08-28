@@ -20,7 +20,7 @@ import java.lang.annotation.*;
         summary = "Obtener todos los almacenes",
         description = """
         Retorna una lista paginada de almacenes registrados en el sistema. \
-        Accesible para usuarios con roles: <strong>ADMIN, SUPERVISOR, OPERATOR</strong>.
+        Accesible para usuarios con roles: <strong>ADMIN, SUPERVISOR, OPERATOR</strong> pertenecientes al departamento INVENTORY.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )
