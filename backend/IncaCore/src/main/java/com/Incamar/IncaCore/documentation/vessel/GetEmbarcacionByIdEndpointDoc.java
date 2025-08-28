@@ -20,7 +20,7 @@ import java.lang.annotation.*;
         summary = "Obtener embarcación por ID",
         description = """
         Devuelve los detalles de una embarcación específica mediante su ID. \
-        Accesible para usuarios con roles: <strong>WAREHOUSE_STAFF, OPERATIONS_MANAGER o ADMIN.</strong>
+        Requiere autenticación de usuarios con rol <strong>ADMIN, SUPERVISOR, OPERATOR</strong>.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )

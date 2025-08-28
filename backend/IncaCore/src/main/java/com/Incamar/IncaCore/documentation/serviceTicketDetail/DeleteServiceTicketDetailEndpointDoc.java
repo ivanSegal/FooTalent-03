@@ -20,7 +20,7 @@ import java.lang.annotation.*;
         description = """
         Elimina de forma permanente un detalle de boleta de servicio (<code>ServiceTicketDetail</code>) \
         identificado por su <code>ID</code>. \
-        Requiere autenticación con roles: <strong>ADMIN, PATRON o SUPERVISOR</strong>.
+        Requiere autenticación con roles: <strong>ADMIN</strong>.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )

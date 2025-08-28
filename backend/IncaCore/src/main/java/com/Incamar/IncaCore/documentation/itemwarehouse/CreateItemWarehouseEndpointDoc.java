@@ -19,7 +19,7 @@ import java.lang.annotation.*;
         Crea un nuevo ítem dentro de un almacén especificando nombre, descripción, stock y stock mínimo. \
         El nombre del ítem debe ser único en el sistema. \
         Además, el ID de almacén debe existir previamente en el sistema. \
-        Requiere autenticación de usuarios con rol <strong>ADMIN</strong>.
+        Requiere autenticación de usuarios con rol <strong>OPERATOR, SUPERVISOR o ADMIN</strong>.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )

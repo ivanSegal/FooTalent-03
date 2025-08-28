@@ -19,7 +19,7 @@ import java.lang.annotation.*;
         summary = "Eliminar boleta de servicio",
         description = """
         Elimina definitivamente una boleta de servicio por su identificador. \
-        Requiere autenticación con rol <strong>ADMIN, PATRON o SUPERVISOR</strong>.
+       Requiere autenticación de usuarios con rol <strong>ADMIN</strong>.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )
