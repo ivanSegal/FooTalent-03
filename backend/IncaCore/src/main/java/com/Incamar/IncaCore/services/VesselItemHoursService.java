@@ -11,12 +11,11 @@ public interface VesselItemHoursService {
 
     VesselItemHoursRes getById(Long id);
 
-    Object create(VesselItemHoursReq request);
+    VesselItemHoursRes create(VesselItemHoursReq request);
 
     Page<VesselItemHoursRes> getAll(Pageable pageable);
 
-    @Transactional
-    void update(Long id, VesselItemHoursUpdateReq request);
+    VesselItemHoursRes update(Long id, VesselItemHoursUpdateReq request);
 
 
 }

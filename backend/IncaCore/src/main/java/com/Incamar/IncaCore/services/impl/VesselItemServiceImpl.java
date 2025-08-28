@@ -40,25 +40,25 @@ public class VesselItemServiceImpl implements VesselItemService {
     }
 
     @Override
-    public void create(VesselItemReq request) {
+    public VesselItemRes create(VesselItemReq request) {
 
         VesselItem vesselItem = vesselItemMapper.toVesselItem(request);
 
         Vessel vessel = vesselRepository.findById(request.vesselId()).orElseThrow();
         vesselItem.setVessel(vessel);
 
-        if(request.componentId()!=null && request.materialType().equals(MaterialType.SUBCOMPONENTS)){
-            VesselItem component = vesselItemRepository.findById(request.componentId()).orElseThrow();
-            vesselItem.setComponent(component);
-        }
+//        if(request.componentId()!=null && request.materialType().equals(MaterialType.SUBCOMPONENTS)){
+//            VesselItem component = vesselItemRepository.findById(request.componentId()).orElseThrow();
+//            vesselItem.setComponent(component);
+//        }
 
-        vesselItemRepository.save(vesselItem);
+        return vesselItemMapper.toVesselItemRes(vesselItemRepository.save(vesselItem));
     }
 
     @Override
-    public void update(Long id, VesselItemUpdateReq request){
+    public VesselItemRes update(Long id, VesselItemUpdateReq request){
         VesselItem vesselItem = vesselItemRepository.findById(id).orElseThrow();
         vesselItemMapper.update(request, vesselItem);
-        vesselItemRepository.save(vesselItem);
+        return vesselItemMapper.toVesselItemRes(vesselItemRepository.save(vesselItem));
     }
 }

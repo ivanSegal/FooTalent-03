@@ -14,7 +14,8 @@ public record VesselItemHoursUpdateReq(
         @Schema(description = "Fecha del historial", example = "25-08-2025")
         LocalDate date,
 
-        String description,
+        @Schema(description = "Anotaciones respecto a las horas que se añadirán")
+        String comments,
 
         @NotNull
         @Schema(description = "Lista de detalles de horas por componente")

@@ -4,6 +4,7 @@ import com.Incamar.IncaCore.dtos.vesselItem.VesselItemReq;
 import com.Incamar.IncaCore.dtos.vesselItem.VesselItemRes;
 import com.Incamar.IncaCore.dtos.vesselItem.VesselItemSearchReq;
 import com.Incamar.IncaCore.dtos.vesselItem.VesselItemUpdateReq;
+import com.Incamar.IncaCore.dtos.vesselItemHours.VesselItemHoursRes;
 import com.Incamar.IncaCore.services.VesselItemService;
 import com.Incamar.IncaCore.utils.ApiResult;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -52,18 +53,18 @@ public class VesselItemController {
             "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody VesselItemReq request){
-        vesselItemService.create(request);
+        VesselItemRes response = vesselItemService.create(request);
         return ResponseEntity.ok()
-                .body(ApiResult.success("Item agregado a la embarcacion exitosamente"));
+                .body(ApiResult.success(response,"Item agregado exitosamente"));
     }
 
     @SecurityRequirement(name = "bearer-key")
     @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL')")
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody VesselItemUpdateReq request){
-        vesselItemService.update(id,request);
+        VesselItemRes response = vesselItemService.update(id,request);
         return ResponseEntity.ok()
-                .body(ApiResult.success("Item de embarcacion actualizado"));
+                .body(ApiResult.success(response,"Item de embarcacion actualizado"));
     }
 
 

@@ -44,7 +44,7 @@ public class VesselItemHoursServiceImpl implements VesselItemHoursService {
 
     @Transactional
     @Override
-    public Object create(VesselItemHoursReq request) {
+    public VesselItemHoursRes create(VesselItemHoursReq request) {
         User user = authService.getAuthenticatedUser().orElseThrow();
 
         Vessel vessel = vesselRepository.findById(request.vesselId())
@@ -64,17 +64,17 @@ public class VesselItemHoursServiceImpl implements VesselItemHoursService {
             }
         });
 
-        return vesselItemHoursRepository.save(entity);
+        return vesselItemHoursMapper.toDto(vesselItemHoursRepository.save(entity));
     }
 
     @Transactional
     @Override
-    public void update(Long id, VesselItemHoursUpdateReq request) {
+    public VesselItemHoursRes update(Long id, VesselItemHoursUpdateReq request) {
         User user = authService.getAuthenticatedUser().orElseThrow();
 
         VesselItemHours existing = vesselItemHoursRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Registro no encontrado"));
-
+        existing.setDescription(request.comments());
         Vessel vessel = existing.getVessel(); // No se puede cambiar
         List<VesselItem> vesselItems = vesselItemRepository.findByVesselId(vessel.getId());
 
@@ -100,6 +100,8 @@ public class VesselItemHoursServiceImpl implements VesselItemHoursService {
                         .add(BigDecimal.valueOf(detail.getAssignedHours())));
             }
         });
+
+        return vesselItemHoursMapper.toDto(existing);
     }
 
 

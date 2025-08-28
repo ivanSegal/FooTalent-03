@@ -30,13 +30,7 @@ public record VesselItemUpdateReq(
         ControlType controlType,
 
         @Schema(description = "Tipo de material del item", example = "COMPONENTS", allowableValues = {"COMPONENTS","SUBCOMPONENTS","SUPPLIES"})
-        MaterialType materialType,
-
-        @Schema(description = "ID del componente padre (si es un subcomponente)", example = "5")
-        Long componentId,
-
-        @Schema(description = "ID de la embarcación a la que pertenece", example = "2")
-        Long vesselId
+        MaterialType materialType
 
 ) {
 }

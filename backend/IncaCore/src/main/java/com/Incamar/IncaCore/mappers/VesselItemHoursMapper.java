@@ -21,6 +21,7 @@ public interface VesselItemHoursMapper {
     @Mapping(target = "vessel", source = "vessel")
     @Mapping(target = "responsable", source = "user")
     @Mapping(target = "items", ignore = true)
+    @Mapping(target = "description", source = "dto.comments")
     VesselItemHours toEntity(VesselItemHoursReq dto, Vessel vessel, User user);
 
     @AfterMapping
@@ -50,6 +51,7 @@ public interface VesselItemHoursMapper {
     @Mapping(target = "responsable", expression = "java(entity.getResponsable().getEmployee().getFirstName() + \" \" + entity.getResponsable().getEmployee().getLastName())")
     @Mapping(target = "vesselId", source = "vessel.id")
     @Mapping(target = "items", expression = "java(entity.getItems().stream().map(this::mapItem).collect(java.util.stream.Collectors.toList()))")
+    @Mapping(target = "comments",source = "description")
     VesselItemHoursRes toDto(VesselItemHours entity);
 
     default Page<VesselItemHoursRes> toDto(Page<VesselItemHours> vesselItems) {
@@ -65,6 +67,7 @@ public interface VesselItemHoursMapper {
         dto = new VesselItemHoursRes(
                 entity.getId(),
                 entity.getResponsable().getEmail(),
+                entity.getDescription(),
                 entity.getVessel().getId(),
                 entity.getDate(),
                 details
@@ -78,9 +81,6 @@ public interface VesselItemHoursMapper {
         );
     }
 
-
-
-    // Solo mapeamos la fecha, los items los llenamos en @AfterMapping
     @Mapping(target = "items", ignore = true)
     void updateEntity(VesselItemHoursUpdateReq dto,
                       @MappingTarget VesselItemHours entity,

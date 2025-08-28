@@ -50,16 +50,16 @@ public class VesselItemHoursController {
             "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody VesselItemHoursReq request) {
-        vesselItemHoursService.create(request);
+        VesselItemHoursRes response = vesselItemHoursService.create(request);
         return ResponseEntity.ok()
-                .body(ApiResult.success("Las horas se añadieron con exito"));
+                .body(ApiResult.success(response,"Las horas se añadieron con exito"));
     }
 
     @SecurityRequirement(name = "bearer-key")
     @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL')")
     @PutMapping("{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody VesselItemHoursUpdateReq request){
-        vesselItemHoursService.update(id,request);
-        return ResponseEntity.ok().body(ApiResult.success("Actualizacion exitosa"));
+        VesselItemHoursRes response = vesselItemHoursService.update(id,request);
+        return ResponseEntity.ok().body(ApiResult.success(response, "Actualización exitosa"));
     }
 }
