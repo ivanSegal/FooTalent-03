@@ -23,4 +23,5 @@ public class VesselResponseDto {
     private String sternType;
     private String fuelType;
     private Double navigationHours;
+    private String status;
 }

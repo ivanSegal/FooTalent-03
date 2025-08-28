@@ -1,5 +1,6 @@
 package com.Incamar.IncaCore.models;
 
+import com.Incamar.IncaCore.enums.VesselStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,4 +29,7 @@ public class Vessel {
     private String sternType;
     private String fuelType;
     private Double navigationHours;
+
+    @Enumerated(EnumType.STRING)
+    private VesselStatus status;
 }
