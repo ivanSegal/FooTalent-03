@@ -25,8 +25,10 @@ public class ActivityMapper {
     public ActivityResponseDto toDTO(Activity activity){
         ActivityResponseDto responseDto = new ActivityResponseDto();
         responseDto.setId(activity.getId());
+        responseDto.setMaintenanceOrderId(activity.getMaintenanceOrder().getId());
         responseDto.setMaintenanceOrder(activity.getMaintenanceOrderSummary());
         responseDto.setActivityType(activity.getActivityType().toString());
+        responseDto.setVesselItemId(activity.getVesselItem().getId());
         responseDto.setVesselItemName(activity.getVesselItem().getName());
         responseDto.setInventoryMovementId(activity.getInventoryMovement() != null?
                 activity.getInventoryMovement().getId():null);
