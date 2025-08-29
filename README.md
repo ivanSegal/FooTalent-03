@@ -672,8 +672,8 @@ README.md        # Documentación general del proyecto
 
 ## 🌐 Enlaces finales (producción)
 
-- Frontend: [https://tu-dominio-frontend.com](https://incacore.vercel.app/login?from=%2F)
-- Backend: [https://tu-dominio-backend.com](https://footalent-03.onrender.com/swagger-ui/index.html)
+- Frontend: [https://incacore.vercel.app/login?from=%2F](https://incacore.vercel.app/login?from=%2F)
+- Backend: [https://footalent-03.onrender.com/swagger-ui/index.html](https://footalent-03.onrender.com/swagger-ui/index.html)
 
 ## ⚙ Detalles técnicos
 
