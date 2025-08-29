@@ -21,7 +21,7 @@ import java.lang.annotation.Target;
     description = """
         Devuelve los datos de un usuario específico. \
         • <strong>El usuario debe ser el mismo que el del token</strong> o tener rol <strong>ADMIN</strong>. \
-        • Usuarios con roles WAREHOUSE_STAFF u OPERATIONS_MANAGER solo pueden ver su propio perfil.
+        • Usuarios con roles SUPERVISOR u OPERATOR solo pueden ver su propio perfil.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )

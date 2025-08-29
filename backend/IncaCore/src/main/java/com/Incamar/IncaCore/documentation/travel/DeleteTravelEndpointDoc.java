@@ -16,7 +16,7 @@ import java.lang.annotation.*;
         summary = "Eliminar un viaje",
         description = """
         Elimina un viaje existente de la base de datos. \
-        Accesible a usuarios con roles: <strong>ADMIN, PATRON, SUPERVISOR</strong>.
+        Accesible a usuarios con roles: <strong>ADMIN</strong>.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )

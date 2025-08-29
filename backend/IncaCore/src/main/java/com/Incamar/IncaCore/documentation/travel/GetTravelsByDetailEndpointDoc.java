@@ -16,7 +16,7 @@ import java.lang.annotation.*;
         description = """
         Registra un viaje con su origen, destino y horarios. \
         Debe estar vinculado a un `ServiceTicketDetail`. \
-        Accesible a usuarios con roles: <strong>ADMIN, PATRON, SUPERVISOR</strong>.
+        Accesible a usuarios con roles: <strong>ADMIN, OPERATOR, SUPERVISOR</strong>.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )

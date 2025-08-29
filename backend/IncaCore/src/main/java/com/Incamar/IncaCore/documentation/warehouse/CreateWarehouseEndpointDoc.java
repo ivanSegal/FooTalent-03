@@ -18,7 +18,7 @@ import java.lang.annotation.*;
         description = """
         Crea un nuevo almacén especificando nombre y ubicación. \
         El nombre del almacén debe ser único en el sistema. \
-        Requiere autenticación de usuarios con rol <strong>ADMIN</strong>.
+        Requiere autenticación de usuarios con rol <strong>ADMIN, SUPERVISOR, OPERATOR</strong>.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )

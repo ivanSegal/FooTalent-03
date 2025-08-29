@@ -20,7 +20,7 @@ import java.lang.annotation.*;
         summary = "Obtener todos los ítems de almacén",
         description = """
         Retorna una lista paginada de ítems de almacén registrados en el sistema. \
-        Accesible para usuarios con roles: <strong>WAREHOUSE_STAFF, OPERATIONS_MANAGER o ADMIN</strong>.
+        Accesible para usuarios con roles: <strong>OPERATOR, SUPERVISOR o ADMIN</strong>.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )
