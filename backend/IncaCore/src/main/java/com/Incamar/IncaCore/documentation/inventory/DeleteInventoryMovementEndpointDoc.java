@@ -15,7 +15,7 @@ import java.lang.annotation.*;
 @Operation(
         summary = "Eliminar movimiento de inventario",
         description = """
-        Elimina un movimiento de inventario por su ID único. \
+        Elimina un movimiento de inventario por su ID único. Modifica el stock de los items. \
         Solo usuarios con rol <strong>ADMIN</strong> pueden realizar esta operación.
         """,
         security = @SecurityRequirement(name = "bearer-key")

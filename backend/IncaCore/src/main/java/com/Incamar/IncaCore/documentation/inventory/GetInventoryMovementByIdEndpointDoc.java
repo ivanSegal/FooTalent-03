@@ -9,6 +9,15 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.lang.annotation.*;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
+import java.lang.annotation.*;
+
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
@@ -16,7 +25,7 @@ import java.lang.annotation.*;
         summary = "Obtener movimiento de inventario por ID",
         description = """
                 Recupera la información de un movimiento de inventario existente mediante su identificador único. \
-                Accesible para usuarios con roles: <strong>OPERATOR, SUPERVISOR o ADMIN</strong> que pertenezcan al departamento INVENTARY.
+                Accesible para usuarios con roles: <strong>OPERATOR, SUPERVISOR o ADMIN</strong> que pertenezcan al departamento INVENTORY.
 """,
         security = @SecurityRequirement(name = "bearer-key")
 )
@@ -31,19 +40,25 @@ import java.lang.annotation.*;
                   "statusCode": 200,
                   "message": "Movimiento de inventario obtenido exitosamente.",
                   "data": {
-                    "id": 10,
-                    "itemWarehouseId": 1,
-                    "itemWarehouseName": "Tornillos de acero",
+                    "id": 44,
+                    "warehouseId": 1,
+                    "warehouseName": "Depósito Central",
                     "movementType": "ENTRADA",
-                    "quantity": 50,
-                    "date": "2025-08-26",
-                    "reason": "Reposición de stock",
-                    "responsibleId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-                    "responsibleName": "Jose Gonzales"
+                    "date": "2025-08-24",
+                    "reason": "Ingreso por compra de proveedor",
+                    "responsibleId": "ad1e461d-04c2-4a4c-be93-56260c2245fb",
+                    "responsibleName": "Juan Pérez",
+                    "movementDetails": [
+                      {
+                        "itemWarehouseId": 1,
+                        "itemWarehouseName": "Tornillos de acero",
+                        "quantity": 50
+                      }
+                    ]
                   },
                   "path": "/api/inventory-movements/{id}"
                 }
-            """)
+                """)
                 )
         ),
         @ApiResponse(
@@ -59,7 +74,7 @@ import java.lang.annotation.*;
                   "details": "...",
                   "path": "/api/inventory-movements/{id}"
                 }
-            """)
+                """)
                 )
         ),
         @ApiResponse(
@@ -75,7 +90,7 @@ import java.lang.annotation.*;
                   "details": "...",
                   "path": "/api/inventory-movements/{id}"
                 }
-            """)
+                """)
                 )
         ),
         @ApiResponse(
@@ -91,7 +106,7 @@ import java.lang.annotation.*;
                   "details": "...",
                   "path": "/error"
                 }
-            """)
+                """)
                 )
         ),
         @ApiResponse(
@@ -107,7 +122,7 @@ import java.lang.annotation.*;
                   "details": "...",
                   "path": "/api/inventory-movements/{id}"
                 }
-            """)
+                """)
                 )
         )
 })

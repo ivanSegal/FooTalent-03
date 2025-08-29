@@ -57,9 +57,12 @@ public class ItemWarehouseServiceImp implements IItemWarehouseService {
     }
 
     @Override
-    public ItemWarehouseResponseDto editWarehouse(Long id, ItemWarehouseUpdateDto itemWarehouseDto) {
+    public ItemWarehouseResponseDto editItemWarehouse(Long id, ItemWarehouseUpdateDto itemWarehouseDto) {
         ItemWarehouse itemWarehouse = itemWarehouseRepository.findById(id)
                 .orElseThrow(() ->  new ResourceNotFoundException("Item de almacen no encontrado con ID: " + id));
+        if (itemWarehouseRepository.existsItemWarehouseByName(itemWarehouse.getName()) &&  !itemWarehouse.getName().equals(itemWarehouseDto.getName())) {
+            throw new ConflictException("Item de almacen ya existe con ese nombre.");
+        }
         itemWarehouseMapper.updateEntityFromDto(itemWarehouseDto, itemWarehouse);
         itemWarehouseRepository.save(itemWarehouse);
         List<Stock> stocks = stockRepository.findByItemWarehouse(itemWarehouse);

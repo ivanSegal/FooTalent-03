@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 import java.lang.annotation.*;
 
 /**
@@ -19,7 +20,7 @@ import java.lang.annotation.*;
         description = """
         Retorna una lista paginada de movimientos de inventario cuyo nombre del ítem de almacén coincida \
         parcialmente con el valor proporcionado (ignorando mayúsculas). \
-        Accesible para usuarios con roles: <strong>OPERATOR, SUPERVISOR o ADMIN</strong> que pertenezcan al departamento INVENTARY.
+        Accesible para usuarios con roles: <strong>OPERATOR, SUPERVISOR o ADMIN</strong> que pertenezcan al departamento INVENTORY.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )
@@ -36,26 +37,38 @@ import java.lang.annotation.*;
                   "data": {
                     "content": [
                       {
-                        "id": 1,
-                        "itemWarehouseId": 10,
-                        "itemWarehouseName": "Tornillos de acero",
+                        "id": 44,
+                        "warehouseId": 1,
+                        "warehouseName": "Depósito Central",
                         "movementType": "ENTRADA",
-                        "quantity": 100,
-                        "date": "2025-08-26",
-                        "reason": "Reposición de stock",
-                        "responsibleId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-                        "responsibleName": "Claudia Ramos"
+                        "date": "2025-08-24",
+                        "reason": "Ingreso por compra de proveedor",
+                        "responsibleId": "ad1e461d-04c2-4a4c-be93-56260c2245fb",
+                        "responsibleName": "Juan Pérez",
+                        "movementDetails": [
+                          {
+                            "itemWarehouseId": 1,
+                            "itemWarehouseName": "Tornillos de acero",
+                            "quantity": 50
+                          }
+                        ]
                       },
                       {
-                        "id": 2,
-                        "itemWarehouseId": 11,
-                        "itemWarehouseName": "Tornillos de acero M5",
+                        "id": 45,
+                        "warehouseId": 2,
+                        "warehouseName": "Depósito Norte",
                         "movementType": "SALIDA",
-                        "quantity": 50,
                         "date": "2025-08-25",
                         "reason": "Pedido de cliente",
                         "responsibleId": "3fa85f64-5717-4562-b3fc-2c963f66af46",
-                        "responsibleName": "Juan Pérez"
+                        "responsibleName": "Claudia Ramos",
+                        "movementDetails": [
+                          {
+                            "itemWarehouseId": 2,
+                            "itemWarehouseName": "Tuercas M5",
+                            "quantity": 20
+                          }
+                        ]
                       }
                     ],
                     "pageable": {
