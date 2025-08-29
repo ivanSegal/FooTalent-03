@@ -16,6 +16,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class ActivityServiceImpl implements ActivityService {
     @Autowired
@@ -60,16 +63,27 @@ public class ActivityServiceImpl implements ActivityService {
             );
         }
 
-        InventoryMovement inventoryMovement = null;
+        /*InventoryMovement inventoryMovement = null;
         if (requestDto.getInventoryMovementId() != null) {
             inventoryMovement = inventoryMovementRepository.findById(requestDto.getInventoryMovementId())
                     .orElseThrow(() -> new ResourceNotFoundException(
                             "Movimiento de Inventario no encontrado con ID: " + requestDto.getInventoryMovementId()
                     ));
+        }*/
+
+        List<InventoryMovement> inventoryMovements = new ArrayList<>();
+        if (requestDto.getInventoryMovementIds() != null) {
+            for (Long id : requestDto.getInventoryMovementIds()) {
+                InventoryMovement movement = inventoryMovementRepository.findById(id)
+                        .orElseThrow(() -> new ResourceNotFoundException(
+                                "Movimiento de Inventario no encontrado con ID: " + id
+                        ));
+                inventoryMovements.add(movement);
+            }
         }
 
         // Crear y guardar la actividad
-        Activity activity = mapper.toEntity(requestDto, maintenanceOrder, vesselItem, inventoryMovement);
+        Activity activity = mapper.toEntity(requestDto, maintenanceOrder, vesselItem, inventoryMovements);
         Activity savedActivity = activityRepository.save(activity);
 
         // --- Actualizar alertHours del VesselItem ---
@@ -117,12 +131,13 @@ public class ActivityServiceImpl implements ActivityService {
             auxActivity.setVesselItem(vesselItem);
         }
 
-        if(requestDto.getInventoryMovementId() != null){
-            InventoryMovement inventoryMovement = inventoryMovementRepository.findById(requestDto.getInventoryMovementId())
-                    .orElseThrow(() -> new ResourceNotFoundException(
-                            "Movimiento de Inventario no encontrado con ID: " + requestDto.getInventoryMovementId()
-                    ));
-            auxActivity.setInventoryMovement(inventoryMovement);
+        if(requestDto.getInventoryMovementIds() != null){
+            List<InventoryMovement> inventoryMovements = inventoryMovementRepository
+                    .findAllById(requestDto.getInventoryMovementIds());
+            if(inventoryMovements.size() != requestDto.getInventoryMovementIds().size()) {
+                throw new ResourceNotFoundException("Alguno de los movimientos de inventario no existe.");
+            }
+            auxActivity.setInventoryMovements(inventoryMovements);
         }
 
         if (requestDto.getActivityType() != null)          auxActivity.setActivityType(ActivityType.valueOf(requestDto.getActivityType()));
