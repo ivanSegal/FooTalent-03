@@ -24,14 +24,4 @@ public class ItemWarehouse {
 
     @Column(nullable = false)
     private String description;
-
-    @Column(nullable = false)
-    private Long stock;
-
-    @Column(nullable = false)
-    private Long stockMin;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "warehouse_id",nullable = false)
-    private Warehouse warehouse;
 }

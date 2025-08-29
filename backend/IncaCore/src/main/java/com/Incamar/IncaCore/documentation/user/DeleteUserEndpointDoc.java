@@ -19,7 +19,7 @@ import java.lang.annotation.*;
 @Operation(
         summary = "Eliminar Usuario",
         description = """
-        Elimina un usuario existente del sistema por su ID único. \
+        Elimina un usuario de manera logica del sistema por su ID único. \
         Solo usuarios con rol <strong>ADMIN</strong> pueden realizar esta operación.
         """,
         security = @SecurityRequirement(name = "bearer-key")

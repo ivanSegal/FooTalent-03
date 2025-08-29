@@ -17,4 +17,6 @@ public interface VesselItemService {
     VesselItemRes create(VesselItemReq request);
 
     VesselItemRes update(Long id, VesselItemUpdateReq request);
+
+    void delete(Long id);
 }

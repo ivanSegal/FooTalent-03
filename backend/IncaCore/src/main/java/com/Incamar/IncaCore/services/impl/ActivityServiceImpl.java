@@ -16,6 +16,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class ActivityServiceImpl implements ActivityService {
     @Autowired
@@ -53,16 +56,34 @@ public class ActivityServiceImpl implements ActivityService {
                 .orElseThrow(() -> new ResourceNotFoundException("Componente/Subcomponente no encontrado con ID: " +
                         requestDto.getMaintenanceOrderId()));
 
-        InventoryMovement inventoryMovement = null;
+        // VesselItem debe pertenecer a la misma embarcación que la MaintenanceOrder
+        if (!vesselItem.getVessel().getId().equals(maintenanceOrder.getVessel().getId())) {
+            throw new IllegalArgumentException(
+                    "El componente/subcomponente pertenece a una embarcación distinta de la del mantenimiento."
+            );
+        }
+
+        /*InventoryMovement inventoryMovement = null;
         if (requestDto.getInventoryMovementId() != null) {
             inventoryMovement = inventoryMovementRepository.findById(requestDto.getInventoryMovementId())
                     .orElseThrow(() -> new ResourceNotFoundException(
                             "Movimiento de Inventario no encontrado con ID: " + requestDto.getInventoryMovementId()
                     ));
+        }*/
+
+        List<InventoryMovement> inventoryMovements = new ArrayList<>();
+        if (requestDto.getInventoryMovementIds() != null) {
+            for (Long id : requestDto.getInventoryMovementIds()) {
+                InventoryMovement movement = inventoryMovementRepository.findById(id)
+                        .orElseThrow(() -> new ResourceNotFoundException(
+                                "Movimiento de Inventario no encontrado con ID: " + id
+                        ));
+                inventoryMovements.add(movement);
+            }
         }
 
         // Crear y guardar la actividad
-        Activity activity = mapper.toEntity(requestDto, maintenanceOrder, vesselItem, inventoryMovement);
+        Activity activity = mapper.toEntity(requestDto, maintenanceOrder, vesselItem, inventoryMovements);
         Activity savedActivity = activityRepository.save(activity);
 
         // --- Actualizar alertHours del VesselItem ---
@@ -89,25 +110,36 @@ public class ActivityServiceImpl implements ActivityService {
     public ActivityResponseDto editActivity(Long id, ActivityRequestDto requestDto) {
         Activity auxActivity = activityRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Actividad no encontrada con ID: " + id));
+
+        MaintenanceOrder maintenanceOrder = auxActivity.getMaintenanceOrder();
         if(requestDto.getMaintenanceOrderId() != null){
-            MaintenanceOrder maintenanceOrder = maintenanceOrderRepository.findById(requestDto.getMaintenanceOrderId())
+            maintenanceOrder = maintenanceOrderRepository.findById(requestDto.getMaintenanceOrderId())
                     .orElseThrow(() -> new ResourceNotFoundException("Orden de mantenimiento no encontrada con ID: " +
                             requestDto.getMaintenanceOrderId()));
             auxActivity.setMaintenanceOrder(maintenanceOrder);
         }
+
         if(requestDto.getVesselItemId() != null){
             VesselItem vesselItem = vesselItemRepository.findById(requestDto.getVesselItemId())
                     .orElseThrow(() -> new ResourceNotFoundException("Componente/Subcomponente no encontrado con ID: " +
-                            requestDto.getMaintenanceOrderId()));
+                            requestDto.getVesselItemId()));
+            // Validación: el VesselItem debe ser de la misma embarcación que la de MaintenanceOrder
+            if (!vesselItem.getVessel().getId().equals(maintenanceOrder.getVessel().getId())) {
+                throw new IllegalArgumentException("El componente ingresado pertenece a una " +
+                        "embarcación distinta de la del mantenimiento.");
+            }
             auxActivity.setVesselItem(vesselItem);
         }
-        if(requestDto.getVesselItemId() != null){
-            InventoryMovement inventoryMovement = inventoryMovementRepository.findById(requestDto.getInventoryMovementId())
-                    .orElseThrow(() -> new ResourceNotFoundException(
-                            "Movimiento de Inventario no encontrado con ID: " + requestDto.getInventoryMovementId()
-                    ));
-            auxActivity.setInventoryMovement(inventoryMovement);
+
+        if(requestDto.getInventoryMovementIds() != null){
+            List<InventoryMovement> inventoryMovements = inventoryMovementRepository
+                    .findAllById(requestDto.getInventoryMovementIds());
+            if(inventoryMovements.size() != requestDto.getInventoryMovementIds().size()) {
+                throw new ResourceNotFoundException("Alguno de los movimientos de inventario no existe.");
+            }
+            auxActivity.setInventoryMovements(inventoryMovements);
         }
+
         if (requestDto.getActivityType() != null)          auxActivity.setActivityType(ActivityType.valueOf(requestDto.getActivityType()));
         if (requestDto.getDescription() != null)           auxActivity.setDescription(requestDto.getDescription());
 

@@ -5,6 +5,7 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input, Button, TimePicker } from "antd";
 import dayjs from "dayjs";
+import { EnvironmentOutlined, FieldTimeOutlined } from "@ant-design/icons";
 import {
   serviceTicketTravelSchema,
   type ServiceTicketTravelInput,
@@ -81,13 +82,21 @@ export const ServiceTicketTravelForm: React.FC<Props> = ({
       <div className="grid gap-4 md:grid-cols-3">
         <div className="flex flex-col md:col-span-1">
           <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="origin">
-            Origen
+            <span className="inline-flex items-center gap-1">
+              <EnvironmentOutlined />
+              Origen
+            </span>
           </label>
           <Controller
             control={control}
             name="origin"
             render={({ field }) => (
-              <Input id="origin" {...field} status={errors.origin ? "error" : undefined} />
+              <Input
+                id="origin"
+                placeholder="Ej: Puerto A"
+                {...field}
+                status={errors.origin ? "error" : undefined}
+              />
             )}
           />
           {errors.origin && (
@@ -97,7 +106,10 @@ export const ServiceTicketTravelForm: React.FC<Props> = ({
 
         <div className="flex flex-col md:col-span-1">
           <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="destination">
-            Destino
+            <span className="inline-flex items-center gap-1">
+              <EnvironmentOutlined />
+              Destino
+            </span>
           </label>
           <Controller
             control={control}
@@ -105,6 +117,7 @@ export const ServiceTicketTravelForm: React.FC<Props> = ({
             render={({ field }) => (
               <Input
                 id="destination"
+                placeholder="Ej: Puerto B"
                 {...field}
                 status={errors.destination ? "error" : undefined}
               />
@@ -117,7 +130,10 @@ export const ServiceTicketTravelForm: React.FC<Props> = ({
 
         <div className="flex flex-col">
           <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="departureTime">
-            Hora salida
+            <span className="inline-flex items-center gap-1">
+              <FieldTimeOutlined />
+              Hora salida
+            </span>
           </label>
           <Controller
             control={control}
@@ -126,6 +142,7 @@ export const ServiceTicketTravelForm: React.FC<Props> = ({
               <TimePicker
                 id="departureTime"
                 format="HH:mm"
+                placeholder="Ej: 08:30"
                 value={field.value ? dayjs(field.value, "HH:mm") : null}
                 onChange={(d) => field.onChange(d ? d.format("HH:mm") : "00:00")}
                 className="w-full"
@@ -140,7 +157,10 @@ export const ServiceTicketTravelForm: React.FC<Props> = ({
 
         <div className="flex flex-col">
           <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="arrivalTime">
-            Hora llegada
+            <span className="inline-flex items-center gap-1">
+              <FieldTimeOutlined />
+              Hora llegada
+            </span>
           </label>
           <Controller
             control={control}
@@ -149,6 +169,7 @@ export const ServiceTicketTravelForm: React.FC<Props> = ({
               <TimePicker
                 id="arrivalTime"
                 format="HH:mm"
+                placeholder="Ej: 12:45"
                 value={field.value ? dayjs(field.value, "HH:mm") : null}
                 onChange={(d) => field.onChange(d ? d.format("HH:mm") : "00:00")}
                 className="w-full"
@@ -162,14 +183,12 @@ export const ServiceTicketTravelForm: React.FC<Props> = ({
         </div>
       </div>
 
-      <div className="flex items-center justify-end gap-3 pt-2">
-        {onClose && (
-          <Button htmlType="button" onClick={onClose}>
-            Cancelar
-          </Button>
-        )}
-        <Button htmlType="submit" type="primary" loading={isSubmitting}>
-          {isSubmitting ? "Guardando..." : current?.id ? "Guardar cambios" : "Guardar"}
+      <div className="grid w-full grid-cols-1 gap-2 pt-2 md:grid-cols-2">
+        <Button onClick={onClose} className="w-full">
+          Cancelar
+        </Button>
+        <Button type="primary" htmlType="submit" loading={isSubmitting} className="w-full">
+          {isSubmitting ? "Guardando..." : current?.id ? "Modificar Viaje " : "Agregar Viaje "}
         </Button>
       </div>
     </form>

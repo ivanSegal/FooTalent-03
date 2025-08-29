@@ -1,10 +1,14 @@
 package com.Incamar.IncaCore.models;
 
+import com.Incamar.IncaCore.enums.VesselStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,4 +32,10 @@ public class Vessel {
     private String sternType;
     private String fuelType;
     private Double navigationHours;
+
+    @Enumerated(EnumType.STRING)
+    private VesselStatus status;
+
+    @OneToMany(mappedBy = "vessel", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<VesselItem> items = new ArrayList<>();
 }

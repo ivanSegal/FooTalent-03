@@ -19,7 +19,7 @@ import java.lang.annotation.*;
 @Operation(
         summary = "Crear nuevo usuario",
         description = """
-        Crea un nuevo usuario en el sistema especificando nombre de usuario, contraseña, rol y fecha de creación. \
+        Crea un nuevo usuario en el sistema especificando nombre, apellido, rol y departamento. \
         Requiere autenticación de usuarios con rol <strong>ADMIN.</strong>
         """,
         security = @SecurityRequirement(name = "bearer-key")

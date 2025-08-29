@@ -15,6 +15,7 @@ export interface Vessel {
   sternType: string;
   fuelType: string;
   navigationHours: number;
+  status: string;
 }
 
 export type VesselPage = PageResponse<Vessel>;

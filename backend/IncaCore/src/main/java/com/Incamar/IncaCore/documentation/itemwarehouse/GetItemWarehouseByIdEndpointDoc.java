@@ -1,8 +1,10 @@
 package com.Incamar.IncaCore.documentation.itemwarehouse;
 
 
+import com.Incamar.IncaCore.dtos.itemwarehouse.ItemWarehouseResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -17,7 +19,7 @@ import java.lang.annotation.*;
         summary = "Obtener ítem de almacén por ID",
         description = """
                 Recupera la información de un ítem de almacén existente mediante su identificador único \
-                Accesible para usuarios con roles: <strong>OPERATOR, SUPERVISOR o ADMIN</strong>.
+                Accesible para usuarios con roles: <strong>OPERATOR, SUPERVISOR o ADMIN</strong> pertenecientes al departamento INVENTORY.
 """,
         security = @SecurityRequirement(name = "bearer-key")
 )
@@ -27,21 +29,26 @@ import java.lang.annotation.*;
                 description = "Ítem de almacén obtenido exitosamente",
                 content = @Content(
                         mediaType = "application/json",
-                        schema = @Schema(example = """
-                {
-                  "statusCode": 200,
-                  "message": "Item de almacen obtenido exitosamente.",
-                  "data": {
-                    "id": 10,
-                    "name": "Tornillos de acero",
-                    "description": "Caja con 100 tornillos de 5cm",
-                    "stock": 500,
-                    "stockMin": 50,
-                    "warehouseName":  "Depósito Central"
-                  },
-                  "path": "/api/items-warehouse/{id}"
-                }
-            """)
+                        schema = @Schema(implementation = ItemWarehouseResponseDto.class),
+                        examples = {
+                                @ExampleObject(
+                                        name = "Item encontrado",
+                                        summary = "Respuesta con ítem de almacén y lista de stocks (vacía en creación)",
+                                        value = """
+                                {
+                                  "statusCode": 200,
+                                  "message": "Item de almacen obtenido exitosamente.",
+                                  "data": {
+                                    "id": 10,
+                                    "name": "Tornillos de acero",
+                                    "description": "Caja con 100 tornillos de 5cm",
+                                    "stocks": []
+                                  },
+                                  "path": "/api/items-warehouse/{id}"
+                                }
+                                """
+                                )
+                        }
                 )
         ),
         @ApiResponse(

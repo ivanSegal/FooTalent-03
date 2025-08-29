@@ -1,13 +1,10 @@
 import { z } from "zod";
 
-const hhmm = /^([01]\d|2[0-3]):[0-5]\d$/;
-
 export const serviceTicketDetailSchema = z.object({
   serviceTicketId: z.coerce.number().int().positive(),
   serviceArea: z.string().min(1, "Requerido"),
   serviceType: z.string().min(1, "Requerido"),
   description: z.string().min(1, "Requerido"),
-  hoursTraveled: z.string().regex(hhmm, "Formato HH:mm"),
   patronFullName: z.string().min(1, "Requerido"),
   marinerFullName: z.string().min(1, "Requerido"),
   captainFullName: z.string().min(1, "Requerido"),

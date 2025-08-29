@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/inventory-movement")
-@Tag(name = "13 - Movimientos de Inventario",
+@Tag(name = "14 - Movimientos de Inventario",
         description = "Endpoints para gestión de movimientos de inventario")
 public class IventoryMovementController {
 

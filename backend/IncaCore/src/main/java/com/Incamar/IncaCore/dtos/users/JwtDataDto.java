@@ -12,6 +12,12 @@ public record JwtDataDto(
         @Schema(description = "Email del usuario", example = "juan.perez_92@example.com")
         String email,
 
+        @Schema(description = "Nombre del usuario", example = "Juan Jose")
+        String firstName,
+
+        @Schema(description = "Apellido del usuario", example = "Perez Gomez")
+        String lastName,
+
         @Schema(description = "Rol o nivel de permisos del usuario en el sistema", example = "USER", allowableValues = {"ADMIN", "USER"})
         String role,
 

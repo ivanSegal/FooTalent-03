@@ -1,5 +1,9 @@
 package com.Incamar.IncaCore.controllers;
 
+import com.Incamar.IncaCore.documentation.vesselItemHours.CreateVesselItemHoursEndpointDoc;
+import com.Incamar.IncaCore.documentation.vesselItemHours.GetAllVesselItemHoursEndpointDoc;
+import com.Incamar.IncaCore.documentation.vesselItemHours.GetVesselItemHoursByIdEndpointDoc;
+import com.Incamar.IncaCore.documentation.vesselItemHours.UpdateVesselItemHoursEndpointDoc;
 import com.Incamar.IncaCore.dtos.vesselItemHours.VesselItemHoursReq;
 import com.Incamar.IncaCore.dtos.vesselItemHours.VesselItemHoursRes;
 import com.Incamar.IncaCore.dtos.vesselItemHours.VesselItemHoursUpdateReq;
@@ -24,7 +28,7 @@ public class VesselItemHoursController {
 
     private final VesselItemHoursService vesselItemHoursService;
 
-    @SecurityRequirement(name = "bearer-key")
+    @GetAllVesselItemHoursEndpointDoc
     @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
             "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @GetMapping
@@ -34,7 +38,7 @@ public class VesselItemHoursController {
                 .body(ApiResult.success(response,"Resultados obtenidos"));
     }
 
-    @SecurityRequirement(name = "bearer-key")
+    @GetVesselItemHoursByIdEndpointDoc
     @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
             "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @GetMapping("{id}")
@@ -45,7 +49,7 @@ public class VesselItemHoursController {
 
     }
 
-    @SecurityRequirement(name = "bearer-key")
+    @CreateVesselItemHoursEndpointDoc
     @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
             "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @PostMapping
@@ -55,7 +59,7 @@ public class VesselItemHoursController {
                 .body(ApiResult.success(response,"Las horas se añadieron con exito"));
     }
 
-    @SecurityRequirement(name = "bearer-key")
+    @UpdateVesselItemHoursEndpointDoc
     @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL')")
     @PutMapping("{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody VesselItemHoursUpdateReq request){

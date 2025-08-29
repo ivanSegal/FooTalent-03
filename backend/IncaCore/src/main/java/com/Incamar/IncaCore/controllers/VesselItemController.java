@@ -1,5 +1,6 @@
 package com.Incamar.IncaCore.controllers;
 
+import com.Incamar.IncaCore.documentation.vesselItem.*;
 import com.Incamar.IncaCore.dtos.vesselItem.VesselItemReq;
 import com.Incamar.IncaCore.dtos.vesselItem.VesselItemRes;
 import com.Incamar.IncaCore.dtos.vesselItem.VesselItemSearchReq;
@@ -28,7 +29,7 @@ public class VesselItemController {
 
     private final VesselItemService vesselItemService;
 
-    @SecurityRequirement(name = "bearer-key")
+    @GetAllVesselItemEndpointDoc
     @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
             "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @GetMapping
@@ -38,7 +39,7 @@ public class VesselItemController {
                 .body(ApiResult.success(response,"Operación exitosa"));
     }
 
-    @SecurityRequirement(name = "bearer-key")
+    @GetVesselItemByIdEndpointDoc
     @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
             "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @GetMapping("/{id}")
@@ -48,7 +49,7 @@ public class VesselItemController {
                 .body(ApiResult.success(response,"Operacion exitosa"));
     }
 
-    @SecurityRequirement(name = "bearer-key")
+    @CreateVesselItemEndpointDoc
     @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
             "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @PostMapping
@@ -58,13 +59,20 @@ public class VesselItemController {
                 .body(ApiResult.success(response,"Item agregado exitosamente"));
     }
 
-    @SecurityRequirement(name = "bearer-key")
+    @UpdateVesselItemEndpointDoc
     @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL')")
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody VesselItemUpdateReq request){
         VesselItemRes response = vesselItemService.update(id,request);
         return ResponseEntity.ok()
                 .body(ApiResult.success(response,"Item de embarcacion actualizado"));
+    }
+
+    @DeleteVesselIemEndpointDoc
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id){
+        vesselItemService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 

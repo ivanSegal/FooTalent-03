@@ -1,8 +1,10 @@
 package com.Incamar.IncaCore.documentation.itemwarehouse;
 
 
+import com.Incamar.IncaCore.dtos.itemwarehouse.ItemWarehouseResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -18,7 +20,7 @@ import java.lang.annotation.*;
         description = """
         Retorna una lista paginada de ítems de almacén cuyo nombre coincida parcialmente
         (ignorando mayúsculas) con el valor proporcionado en el parámetro `nombre`.
-        <strong>Accesible solo para usuarios con rol ADMIN, SUPERVISOR, OPERATOR.</strong>
+        <strong>Accesible solo para usuarios con rol ADMIN, SUPERVISOR, OPERATOR.</strong> pertenecientes al departamento INVENTORY.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )
@@ -28,57 +30,60 @@ import java.lang.annotation.*;
                 description = "Ítems de almacén encontrados exitosamente",
                 content = @Content(
                         mediaType = "application/json",
-                        schema = @Schema(example = """
-                {
-                  "success": true,
-                  "message": "Ítems de almacén obtenidos exitosamente.",
-                  "data": {
-                    "content": [
-                      {
-                        "id": 1,
-                        "name": "Tornillos de acero",
-                        "description": "Caja con 100 tornillos de 5cm",
-                        "stock": 150,
-                        "stockMin": 20,
-                        "warehouseName": "Depósito Central"
-                      },
-                      {
-                        "id": 2,
-                        "name": "Clavos galvanizados",
-                        "description": "Bolsa con 200 clavos de 3cm",
-                        "stock": 80,
-                        "stockMin": 10,
-                        "warehouseName": "Almacén Norte"
-                      }
-                    ],
-                    "pageable": {
-                      "pageNumber": 0,
-                      "pageSize": 20,
-                      "sort": {
-                        "empty": true,
-                        "unsorted": true,
-                        "sorted": false
-                      },
-                      "offset": 0,
-                      "paged": true,
-                      "unpaged": false
-                    },
-                    "last": false,
-                    "totalElements": 2,
-                    "totalPages": 1,
-                    "size": 20,
-                    "number": 0,
-                    "sort": {
-                      "empty": true,
-                      "unsorted": true,
-                      "sorted": false
-                    },
-                    "first": true,
-                    "numberOfElements": 2,
-                    "empty": false
-                  }
-                }
-                """)
+                        schema = @Schema(implementation = ItemWarehouseResponseDto.class),
+                        examples = {
+                                @ExampleObject(
+                                        name = "Búsqueda exitosa (sin stocks aún)",
+                                        summary = "Respuesta con ítems de almacén encontrados y lista de stocks vacía",
+                                        value = """
+                                {
+                                  "success": true,
+                                  "message": "Ítems de almacén obtenidos exitosamente.",
+                                  "data": {
+                                    "content": [
+                                      {
+                                        "id": 1,
+                                        "name": "Tornillos de acero",
+                                        "description": "Caja con 100 tornillos de 5cm",
+                                        "stocks": []
+                                      },
+                                      {
+                                        "id": 2,
+                                        "name": "Clavos galvanizados",
+                                        "description": "Bolsa con 200 clavos de 3cm",
+                                        "stocks": []
+                                      }
+                                    ],
+                                    "pageable": {
+                                      "pageNumber": 0,
+                                      "pageSize": 20,
+                                      "sort": {
+                                        "empty": true,
+                                        "unsorted": true,
+                                        "sorted": false
+                                      },
+                                      "offset": 0,
+                                      "paged": true,
+                                      "unpaged": false
+                                    },
+                                    "last": false,
+                                    "totalElements": 2,
+                                    "totalPages": 1,
+                                    "size": 20,
+                                    "number": 0,
+                                    "sort": {
+                                      "empty": true,
+                                      "unsorted": true,
+                                      "sorted": false
+                                    },
+                                    "first": true,
+                                    "numberOfElements": 2,
+                                    "empty": false
+                                  }
+                                }
+                                """
+                                )
+                        }
                 )
         ),
         @ApiResponse(

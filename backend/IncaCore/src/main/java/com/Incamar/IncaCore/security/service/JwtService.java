@@ -53,8 +53,10 @@ public class JwtService {
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(expiration))
                 .claim("email", jwtData.email())
+                .claim("firstName",jwtData.firstName())
+                .claim("lastName",jwtData.lastName())
                 .claim("role", jwtData.role())
-                .claim("departament",jwtData.department())
+                .claim("department", jwtData.department())
                 .claim("purpose", purpose.name())
                 .signWith(key)
                 .compact();

@@ -22,11 +22,11 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             HttpServletResponse.SC_UNAUTHORIZED,
             "AUTH_ERROR",
             "Acceso no autorizado. Token inválido o ausente.",
-            List.of(authException.getMessage()),
+            List.of("Se requiere estar autenticado para acceder a este recurso"),
             request.getRequestURI()
     );
     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-    response.setContentType("application/json");
+    response.setContentType("application/json;charset=UTF-8");
     new ObjectMapper().writeValue(response.getWriter(), error);
   }
 

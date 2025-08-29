@@ -25,15 +25,15 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         log.error("❌ AccessDeniedHandler invoked for URI: {}", request.getRequestURI());
 
         ErrorResponse error = new ErrorResponse(
-                HttpServletResponse.SC_UNAUTHORIZED,
-                "AUTH_ERROR",
-                "Acceso no autorizado. Token inválido o ausente.",
-                List.of(accessDeniedException.getMessage()),
+                HttpServletResponse.SC_FORBIDDEN,
+                "FORBIDDEN",
+                "Acceso denegado. No tienes permisos para acceder a este recurso.",
+                List.of("El usuario no tiene autorización suficiente para realizar esta acción."),
                 request.getRequestURI()
         );
 
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        response.setContentType("application/json");
+        response.setContentType("application/json;charset=UTF-8");
         new ObjectMapper().writeValue(response.getOutputStream(), error);
     }
 

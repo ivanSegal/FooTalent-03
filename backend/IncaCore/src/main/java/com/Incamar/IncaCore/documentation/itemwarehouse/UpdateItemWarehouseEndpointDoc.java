@@ -1,5 +1,6 @@
 package com.Incamar.IncaCore.documentation.itemwarehouse;
 
+import com.Incamar.IncaCore.dtos.itemwarehouse.ItemWarehouseResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,8 +19,8 @@ import java.lang.annotation.*;
 @Operation(
         summary = "Actualizar ítem de almacén",
         description = """
-        Actualiza la información de un ítem existente dentro de un almacén identificado por su ID único. \
-        Solo usuarios con rol <strong>ADMIN , SUPERVISOR</strong> pueden realizar esta operación.
+        Actualiza el nombre y la descripción de un ítem existente dentro de un almacén identificado por su ID único. \
+        Solo usuarios con rol <strong>ADMIN</strong> o <strong>SUPERVISOR</strong> del departamento INVENTORY pueden realizar esta operación.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )
@@ -29,20 +30,40 @@ import java.lang.annotation.*;
                 description = "Ítem de almacén actualizado correctamente",
                 content = @Content(
                         mediaType = "application/json",
-                        schema = @Schema(example = """
-                        {
-                          "success": true,
-                          "message": "Item de almacen editado exitosamente.",
-                          "data": {
-                            "id": 1,
-                            "name": "Tornillos de acero",
-                            "description": "Caja con 100 tornillos de 5cm",
-                            "stock": 150,
-                            "stockMin": 20,
-                            "warehouseName": "Depósito Central"
-                          }
+                        schema = @Schema(implementation = ItemWarehouseResponseDto.class),
+                        examples = {
+                                @io.swagger.v3.oas.annotations.media.ExampleObject(
+                                        name = "Item actualizado con stocks",
+                                        summary = "Respuesta con ítem de almacén actualizado y lista de stocks",
+                                        value = """
+                                {
+                                  "success": true,
+                                  "message": "Item de almacen editado exitosamente.",
+                                  "data": {
+                                    "id": 1,
+                                    "name": "Tornillos de acero",
+                                    "description": "Caja con 100 tornillos de 5cm",
+                                    "stocks": [
+                                      {
+                                        "stockId": 1,
+                                        "stock": 35,
+                                        "stockMin": 20,
+                                        "warehouseId": 1,
+                                        "warehouseName": "Depósito Central"
+                                      },
+                                      {
+                                        "stockId": 2,
+                                        "stock": 170,
+                                        "stockMin": 20,
+                                        "warehouseId": 2,
+                                        "warehouseName": "Depósito Norte"
+                                      }
+                                    ]
+                                  }
+                                }
+                                """
+                                )
                         }
-                        """)
                 )
         ),
         @ApiResponse(
@@ -104,6 +125,22 @@ import java.lang.annotation.*;
                           "message": "Item de almacen no encontrado con ID: {id}",
                           "errorCode": "RESOURCE_NOT_FOUND",
                           "details": "No existe un ítem con el ID proporcionado",
+                          "path": "/api/item-warehouses/{id}"
+                        }
+                        """)
+                )
+        ),
+        @ApiResponse(
+                responseCode = "409",
+                description = "Conflicto: ya existe un ítem con el mismo nombre",
+                content = @Content(
+                        mediaType = "application/json",
+                        schema = @Schema(example = """
+                        {
+                          "statusCode": 409,
+                          "message": "Item de almacen ya existe con ese nombre.",
+                          "errorCode": "CONFLICT_ERROR",
+                          "details": "No se puede actualizar porque ya existe un ítem con ese nombre",
                           "path": "/api/item-warehouses/{id}"
                         }
                         """)

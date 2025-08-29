@@ -17,7 +17,7 @@ import java.lang.annotation.*;
         summary = "Obtener almacén por ID",
         description = """
 Recupera la información de un almacén existente mediante su identificador único. \
-Accesible para usuarios con roles: <strong>ADMIN, SUPERVISOR, OPERATOR</strong>.
+Accesible para usuarios con roles: <strong>ADMIN, SUPERVISOR, OPERATOR</strong> pertenecientes al departamento INVENTORY.
 """,
         security = @SecurityRequirement(name = "bearer-key")
 )

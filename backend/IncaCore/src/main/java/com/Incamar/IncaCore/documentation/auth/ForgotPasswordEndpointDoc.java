@@ -83,10 +83,10 @@ import java.lang.annotation.*;
                                 example = """
                                     {
                                       "statusCode": 500,
-                                      "message": "Ocurrió un error interno en el servidor",
-                                      "errorCode": "INTERNAL_ERROR",
-                                      "details": ["java.lang.NullPointerException: ..."],
-                                      "path": "/api/auth/forgot-password"
+                                      "message": "Error al registrar el usuario",
+                                      "errorCode": "SERVICE_UNAVAILABLE",
+                                      "details": ["Error inesperado en el servidor."],
+                                       "path": "/api/auth/forgot-password"
                                     }
                                 """
                         )

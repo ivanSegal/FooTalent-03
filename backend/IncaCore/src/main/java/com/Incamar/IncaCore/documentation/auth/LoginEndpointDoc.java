@@ -41,38 +41,23 @@ import java.lang.annotation.*;
         ),
         @ApiResponse(
                 responseCode = "400",
-                description = "Solicitud inválida: credenciales incorrectas o error de validación",
+                description = "Error de validacion de los campos enviados",
                 content = @Content(
                         mediaType = "application/json",
                         examples = {
-                                @ExampleObject(
-                                        name = "Credenciales inválidas",
-                                        summary = "Cuando el username o la contraseña son incorrectos",
-                                        value = """
-                                            {
-                                              "statusCode": 400,
-                                              "message": "Credenciales inválidas",
-                                              "errorCode": "BAD_REQUEST",
-                                              "details": [
-                                                "username: no puede estar vacío"
-                                              ],
-                                              "path": "/auth/login"
-                                            }
-                                        """
-                                ),
                                 @ExampleObject(
                                         name = "Error de validación",
                                         summary = "Cuando faltan campos requeridos o tienen formato incorrecto",
                                         value = """
                                             {
-                                              "statusCode": 400,
-                                              "message": "Falló la validación de los campos",
-                                              "errorCode": "VALIDATION_ERROR",
-                                              "details": [
-                                                "password: La contraseña es requerida"
-                                              ],
-                                              "path": "/auth/login"
-                                            }
+                                               "statusCode": 400,
+                                               "errorCode": "VALIDATION_ERROR",
+                                               "message": "Falló la validación de los campos",
+                                               "details": [
+                                                 "email: El email requerido"
+                                               ],
+                                               "path": "/api/auth/login"
+                                             }
                                         """
                                 )
                         }
@@ -90,9 +75,9 @@ import java.lang.annotation.*;
                                       "errorCode": "BAD_CREDENTIALS",
                                       "message": "Credenciales inválidas",
                                       "details": [
-                                        "El nombre de usuario o la contraseña son incorrectos."
+                                        "El correo o la contraseña son incorrectos."
                                       ],
-                                      "path": "/auth/login"
+                                      "path": "/api/auth/login"
                                     }
                                 """
                         )
@@ -107,9 +92,9 @@ import java.lang.annotation.*;
                                 example = """
                                     {
                                       "statusCode": 500,
-                                      "message": "Ocurrió un error interno en el servidor",
-                                      "errorCode": "INTERNAL_ERROR",
-                                      "details": ["java.lang.NullPointerException: ..."],
+                                      "message": "Error al registrar el usuario",
+                                      "errorCode": "SERVICE_UNAVAILABLE",
+                                      "details": ["Error inesperado en el servidor."],
                                       "path": "/api/auth/login"
                                     }
                                 """

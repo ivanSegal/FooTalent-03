@@ -8,11 +8,12 @@ export interface ServiceTicketListItem {
   vesselAttended: string;
   solicitedBy: string;
   reportTravelNro: string;
-  code: string;
-  checkingNro: number;
+  // code: string;
+  // checkingNro: number;
   vesselName: string;
   vesselId: number;
   responsibleUsername: string;
+  status: boolean;
 }
 
 export type ServiceTicketPage = PageResponse<ServiceTicketListItem>;

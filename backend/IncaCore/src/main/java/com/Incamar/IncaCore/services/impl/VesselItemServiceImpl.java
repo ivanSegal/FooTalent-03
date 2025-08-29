@@ -5,12 +5,14 @@ import com.Incamar.IncaCore.dtos.vesselItem.VesselItemRes;
 import com.Incamar.IncaCore.dtos.vesselItem.VesselItemSearchReq;
 import com.Incamar.IncaCore.dtos.vesselItem.VesselItemUpdateReq;
 import com.Incamar.IncaCore.enums.MaterialType;
+import com.Incamar.IncaCore.exceptions.ResourceNotFoundException;
 import com.Incamar.IncaCore.mappers.VesselItemMapper;
 import com.Incamar.IncaCore.models.Vessel;
 import com.Incamar.IncaCore.models.VesselItem;
 import com.Incamar.IncaCore.repositories.VesselItemRepository;
 import com.Incamar.IncaCore.repositories.VesselRepository;
 import com.Incamar.IncaCore.services.VesselItemService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,7 +37,7 @@ public class VesselItemServiceImpl implements VesselItemService {
     @Override
     public VesselItemRes getById(Long id){
         VesselItem vesselItem = vesselItemRepository.findById(id).
-                orElseThrow();
+                orElseThrow(()-> new ResourceNotFoundException("Componente de Embarcación no encontrado con ID: " + id));
         return vesselItemMapper.toVesselItemRes(vesselItem);
     }
 
@@ -44,21 +46,25 @@ public class VesselItemServiceImpl implements VesselItemService {
 
         VesselItem vesselItem = vesselItemMapper.toVesselItem(request);
 
-        Vessel vessel = vesselRepository.findById(request.vesselId()).orElseThrow();
+        Vessel vessel = vesselRepository.findById(request.vesselId())
+                .orElseThrow(()-> new ResourceNotFoundException("Embarcación no encontrada con ID: " + request.vesselId()));
         vesselItem.setVessel(vessel);
-
-//        if(request.componentId()!=null && request.materialType().equals(MaterialType.SUBCOMPONENTS)){
-//            VesselItem component = vesselItemRepository.findById(request.componentId()).orElseThrow();
-//            vesselItem.setComponent(component);
-//        }
 
         return vesselItemMapper.toVesselItemRes(vesselItemRepository.save(vesselItem));
     }
 
     @Override
     public VesselItemRes update(Long id, VesselItemUpdateReq request){
-        VesselItem vesselItem = vesselItemRepository.findById(id).orElseThrow();
+        VesselItem vesselItem = vesselItemRepository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("Componente de Embarcación no encontrado con ID: " + id));
         vesselItemMapper.update(request, vesselItem);
         return vesselItemMapper.toVesselItemRes(vesselItemRepository.save(vesselItem));
+    }
+
+    @Override
+    public void delete(Long id) {
+        VesselItem vesselItem=vesselItemRepository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("Componente de Embarcación no encontrado con ID: " + id));
+        vesselItemRepository.delete(vesselItem);
     }
 }

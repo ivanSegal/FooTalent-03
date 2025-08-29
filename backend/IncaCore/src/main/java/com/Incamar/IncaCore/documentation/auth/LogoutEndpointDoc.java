@@ -41,14 +41,16 @@ import java.lang.annotation.*;
                         mediaType = "application/json",
                         schema = @Schema(
                                 example = """
-                {
-                  "statusCode": 401,
-                  "errorCode": "AUTH_ERROR",
-                  "message": "Token inválido o ausente",
-                  "details": ["El token JWT no fue proporcionado o es inválido."],
-                  "path": "/api/auth/logout"
-                }
-                """
+                                                {
+                                                  "statusCode": 401,
+                                                  "errorCode": "AUTH_ERROR",
+                                                  "message": "Token inválido o ausente",
+                                                  "details": [
+                                                    "El token JWT no fue proporcionado o es inválido."
+                                                  ],
+                                                  "path": "/api/auth/logout"
+                                                }
+                                            """
                         )
                 )
         ),
@@ -59,14 +61,14 @@ import java.lang.annotation.*;
                         mediaType = "application/json",
                         schema = @Schema(
                                 example = """
-                {
-                  "statusCode": 500,
-                  "errorCode": "INTERNAL_ERROR",
-                  "message": "Error interno del servidor",
-                  "details": ["Detalles técnicos del error"],
-                  "path": "/api/auth/logout"
-                }
-                """
+                                                {
+                                                  "statusCode": 500,
+                                                  "message": "Error al registrar el usuario",
+                                                  "errorCode": "SERVICE_UNAVAILABLE",
+                                                  "details": ["Error inesperado en el servidor."],
+                                                  "path": "/api/auth/logout"
+                                                }
+                                           """
                         )
                 )
         )

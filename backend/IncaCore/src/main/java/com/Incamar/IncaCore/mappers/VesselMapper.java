@@ -2,6 +2,7 @@ package com.Incamar.IncaCore.mappers;
 
 import com.Incamar.IncaCore.dtos.vessels.VesselRequestDto;
 import com.Incamar.IncaCore.dtos.vessels.VesselResponseDto;
+import com.Incamar.IncaCore.enums.VesselStatus;
 import com.Incamar.IncaCore.models.Vessel;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +23,7 @@ public class VesselMapper {
         vessel.setSternType(dto.getSternType());
         vessel.setFuelType(dto.getFuelType());
         vessel.setNavigationHours(dto.getNavigationHours());
+        vessel.setStatus(VesselStatus.OPERATIONAL);
         return vessel;
     }
 
@@ -40,6 +42,7 @@ public class VesselMapper {
         dto.setSternType(vessel.getSternType());
         dto.setFuelType(vessel.getFuelType());
         dto.setNavigationHours(vessel.getNavigationHours());
+        dto.setStatus(vessel.getStatus().name());
         return dto;
     }
 

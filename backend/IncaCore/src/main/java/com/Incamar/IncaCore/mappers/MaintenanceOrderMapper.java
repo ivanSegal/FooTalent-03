@@ -32,6 +32,7 @@ public class MaintenanceOrderMapper {
     public MaintenanceOrderResponseDto toDTO(MaintenanceOrder maintenanceOrder) {
         MaintenanceOrderResponseDto dto = new MaintenanceOrderResponseDto();
         dto.setId(maintenanceOrder.getId());
+        dto.setVesselId(maintenanceOrder.getVessel().getId());
         dto.setVesselName(maintenanceOrder.getVessel().getName());
         dto.setMaintenanceType(maintenanceOrder.getMaintenanceType());
         dto.setStatus(maintenanceOrder.getStatus());
