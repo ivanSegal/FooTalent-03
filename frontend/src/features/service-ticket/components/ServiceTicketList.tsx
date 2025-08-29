@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Button, DatePicker, Input, Modal, Popconfirm, Space, Table, Tooltip, Tag } from "antd";
+import { Button, DatePicker, Input, Modal, Space, Table, Tooltip, Tag } from "antd";
+// SweetAlert confirm helper
+import { showConfirmAlert } from "@/utils/showAlert";
 import type { ColumnsType } from "antd/es/table";
 import type { TableProps } from "antd";
 import { useQuery } from "@tanstack/react-query";
@@ -11,7 +13,7 @@ import {
   ServiceTicketTemplate,
   type ServiceTicketData,
 } from "@/features/service-ticket";
-import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { PlusOutlined, EditOutlined, DeleteOutlined, CheckCircleOutlined } from "@ant-design/icons";
 import PDFGenerator from "@/components/pdf/PDFGenerator";
 
 import type { Dayjs } from "dayjs";
@@ -46,6 +48,15 @@ export default function ServiceTicketList() {
   const [travelsModalDetailId, setTravelsModalDetailId] = useState<number | null>(null);
   const [travelEditing, setTravelEditing] = useState<ServiceTicketTravel | null>(null);
   const [showTravelForm, setShowTravelForm] = useState(false);
+
+  // Resolve current ticket (boleta) from the selected travel detail id
+  const travelsModalTicket = useMemo(() => {
+    if (travelsModalDetailId == null) return null;
+    const entry = Object.entries(detailsByTicketId).find(([, d]) => d?.id === travelsModalDetailId);
+    const ticketId = entry ? Number(entry[0]) : null;
+    if (!ticketId) return null;
+    return items.find((i) => i.id === ticketId) ?? null;
+  }, [travelsModalDetailId, detailsByTicketId, items]);
 
   // filters
   const [search, setSearch] = useState("");
@@ -164,7 +175,6 @@ export default function ServiceTicketList() {
         i.solicitedBy.toLowerCase().includes(term) ||
         i.responsibleUsername.toLowerCase().includes(term) ||
         i.reportTravelNro.toLowerCase().includes(term) ||
-        i.code.toLowerCase().includes(term) ||
         (d?.serviceArea?.toLowerCase?.().includes(term) ?? false) ||
         (d?.serviceType?.toLowerCase?.().includes(term) ?? false) ||
         (d?.description?.toLowerCase?.().includes(term) ?? false) ||
@@ -257,8 +267,26 @@ export default function ServiceTicketList() {
 
     { title: "Solicitado por", dataIndex: "solicitedBy", key: "solicitedBy" },
     { title: "Reporte N°", dataIndex: "reportTravelNro", key: "reportTravelNro" },
-    { title: "Código", dataIndex: "code", key: "code" },
-    { title: "Control N°", dataIndex: "checkingNro", key: "checkingNro", width: 110 },
+    {
+      title: "Estado",
+      dataIndex: "status",
+      key: "status",
+      width: 110,
+      sorter: true,
+      sortOrder:
+        tableSort && tableSort.startsWith("status,")
+          ? tableSort.endsWith("asc")
+            ? "ascend"
+            : tableSort.endsWith("desc")
+              ? "descend"
+              : undefined
+          : undefined,
+      render: (val: boolean) => (
+        <Tag color={val ? "green" : "red"}>{val ? "Abierta" : "Cerrada"}</Tag>
+      ),
+    },
+    // { title: "Código", dataIndex: "code", key: "code" },
+    // { title: "Control N°", dataIndex: "checkingNro", key: "checkingNro", width: 110 },
 
     { title: "Embarcación", dataIndex: "vesselName", key: "vesselName" },
 
@@ -363,32 +391,44 @@ export default function ServiceTicketList() {
               }}
             />
           </Tooltip>
-          <Popconfirm
-            title="Confirmar eliminación"
-            okText="Eliminar"
-            cancelText="Cancelar"
-            onConfirm={async () => {
-              try {
-                await serviceTicketService.remove(record.id);
-                setItems((prev) => prev.filter((x) => x.id !== record.id));
-                setDetailsByTicketId((prev) => {
-                  const copy = { ...prev };
-                  delete copy[record.id];
-                  return copy;
-                });
-              } catch (e) {
-                await showAlert(
-                  "Error al eliminar",
-                  (e as Error)?.message || "No se pudo eliminar",
-                  "error",
+          <Tooltip title="Eliminar">
+            <Button
+              size="small"
+              type="text"
+              danger
+              icon={<DeleteOutlined />}
+              onClick={async () => {
+                const ok = await showConfirmAlert(
+                  "¿Eliminar boleta?",
+                  `Vas a eliminar la boleta #${record.id}${record.reportTravelNro ? ` – ${record.reportTravelNro}` : ""}. Esta acción no se puede deshacer.`,
+                  "Eliminar",
+                  "Cancelar",
+                  { icon: "warning" },
                 );
-              }
-            }}
-          >
-            <Tooltip title="Eliminar">
-              <Button size="small" type="text" danger icon={<DeleteOutlined />} />
-            </Tooltip>
-          </Popconfirm>
+                if (!ok) return;
+                try {
+                  await serviceTicketService.remove(record.id);
+                  setItems((prev) => prev.filter((x) => x.id !== record.id));
+                  setDetailsByTicketId((prev) => {
+                    const copy = { ...prev };
+                    delete copy[record.id];
+                    return copy;
+                  });
+                  await showAlert(
+                    "Eliminado",
+                    `La boleta #${record.id}${record.reportTravelNro ? ` – ${record.reportTravelNro}` : ""} fue eliminada correctamente`,
+                    "success",
+                  );
+                } catch (e) {
+                  await showAlert(
+                    "Error al eliminar",
+                    (e as Error)?.message || "No se pudo eliminar",
+                    "error",
+                  );
+                }
+              }}
+            />
+          </Tooltip>
         </Space>
       ),
     },
@@ -456,7 +496,19 @@ export default function ServiceTicketList() {
 
       {/* Dialogo de crear/editar boleta + detalle */}
       <Modal
-        title={current ? "Editar boleta" : "Nueva boleta"}
+        // title={current ? "Editar boleta" : "Nueva boleta"}
+        title={
+          <div className="mb-2 text-center md:text-left">
+            <div className="primary border-b-2 pb-2">
+              <h2 className="text-900 mb-2 flex items-center justify-center text-2xl font-bold text-gray-900 md:justify-start">
+                <CheckCircleOutlined className="text-primary mr-3 text-3xl text-blue-600" />
+                {current
+                  ? `Modificar Boleta #${current.id}${current.reportTravelNro ? ` – ${current.reportTravelNro}` : ""}`
+                  : "Crear Boleta"}
+              </h2>
+            </div>
+          </div>
+        }
         open={dialog}
         onCancel={onClose}
         footer={null}
@@ -476,7 +528,19 @@ export default function ServiceTicketList() {
 
       {/* Dialogo de agregar/editar viaje unificado en modal de lista */}
       <Modal
-        title={travelsModalDetailId ? `Viajes del detalle #${travelsModalDetailId}` : "Viajes"}
+        // title={travelsModalDetailId ? `Viajes del detalle #${travelsModalDetailId}` : "Viajes"}
+        title={
+          <div className="mb-2 text-center md:text-left">
+            <div className="primary border-b-2 pb-2">
+              <h2 className="text-900 mb-2 flex items-center justify-center text-2xl font-bold text-gray-900 md:justify-start">
+                <CheckCircleOutlined className="text-primary mr-3 text-3xl text-blue-600" />
+                {travelsModalTicket
+                  ? `Viajes de la boleta #${travelsModalTicket.id}${travelsModalTicket.reportTravelNro ? ` – ${travelsModalTicket.reportTravelNro}` : ""}`
+                  : "Viajes"}
+              </h2>
+            </div>
+          </div>
+        }
         open={travelsModalOpen}
         onCancel={closeTravelsModal}
         footer={null}
@@ -533,42 +597,56 @@ export default function ServiceTicketList() {
                   align: "right" as const,
                   render: (_: unknown, tr: ServiceTicketTravel) => (
                     <Space size="small">
-                      <Button
-                        size="small"
-                        type="link"
-                        onClick={() => {
-                          setTravelEditing(tr);
-                          setShowTravelForm(true);
-                        }}
-                      >
-                        Editar
-                      </Button>
-                      <Popconfirm
-                        title="Eliminar viaje?"
-                        okText="Eliminar"
-                        cancelText="Cancelar"
-                        onConfirm={async () => {
-                          try {
-                            await serviceTicketTravelService.remove(tr.id);
-                            setTravelsByDetailId((prev) => ({
-                              ...prev,
-                              [travelsModalDetailId]: (prev[travelsModalDetailId] || []).filter(
-                                (x) => x.id !== tr.id,
-                              ),
-                            }));
-                          } catch (e) {
-                            await showAlert(
-                              "Error",
-                              (e as Error)?.message || "No se pudo eliminar el viaje",
-                              "error",
+                      <Tooltip title="Editar viaje">
+                        <Button
+                          size="small"
+                          type="link"
+                          onClick={() => {
+                            setTravelEditing(tr);
+                            setShowTravelForm(true);
+                          }}
+                          icon={<EditOutlined />}
+                        />
+                      </Tooltip>
+
+                      <Tooltip title="Eliminar viaje">
+                        <Button
+                          size="small"
+                          type="link"
+                          icon={<DeleteOutlined />}
+                          danger
+                          onClick={async () => {
+                            const ok = await showConfirmAlert(
+                              "¿Eliminar viaje?",
+                              `Vas a eliminar el viaje${tr.origin && tr.destination ? ` ${tr.origin} → ${tr.destination}` : ""}${tr.departureTime ? ` (${tr.departureTime} - ${tr.arrivalTime})` : ""}. Esta acción no se puede deshacer.`,
+                              "Eliminar",
+                              "Cancelar",
+                              { icon: "warning" },
                             );
-                          }
-                        }}
-                      >
-                        <Button size="small" type="link" danger>
-                          Eliminar
-                        </Button>
-                      </Popconfirm>
+                            if (!ok) return;
+                            try {
+                              await serviceTicketTravelService.remove(tr.id);
+                              setTravelsByDetailId((prev) => ({
+                                ...prev,
+                                [travelsModalDetailId!]: (prev[travelsModalDetailId!] || []).filter(
+                                  (x) => x.id !== tr.id,
+                                ),
+                              }));
+                              await showAlert(
+                                "Eliminado",
+                                "El viaje fue eliminado correctamente",
+                                "success",
+                              );
+                            } catch (e) {
+                              await showAlert(
+                                "Error",
+                                (e as Error)?.message || "No se pudo eliminar el viaje",
+                                "error",
+                              );
+                            }
+                          }}
+                        />
+                      </Tooltip>
                     </Space>
                   ),
                 },

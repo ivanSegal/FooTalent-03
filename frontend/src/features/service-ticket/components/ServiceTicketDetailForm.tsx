@@ -3,8 +3,14 @@
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Input, Button, TimePicker } from "antd";
-import dayjs from "dayjs";
+import { Input, Button, Select } from "antd";
+import {
+  AppstoreOutlined,
+  ToolOutlined,
+  FileTextOutlined,
+  UserOutlined,
+  CrownOutlined,
+} from "@ant-design/icons";
 import {
   serviceTicketDetailSchema,
   type ServiceTicketDetailInput,
@@ -25,12 +31,17 @@ const defaultValues: Partial<ServiceTicketDetailInput> = {
   serviceArea: "",
   serviceType: "",
   description: "",
-  hoursTraveled: "00:00",
   patronFullName: "",
   marinerFullName: "",
   captainFullName: "",
 };
-
+// Tipos de servicio sugeridos
+const SERVICE_TYPES: { value: string; label: string }[] = [
+  { value: "Carga", label: "Carga" },
+  { value: "Transporte de pasajeros", label: "Transporte de pasajeros" },
+  { value: "Investigación", label: "Investigación" },
+  { value: "Servicios offshore", label: "Servicios offshore" },
+];
 export const ServiceTicketDetailForm: React.FC<Props> = ({
   serviceTicketId,
   current,
@@ -96,7 +107,10 @@ export const ServiceTicketDetailForm: React.FC<Props> = ({
       <div className="grid gap-4 md:grid-cols-2">
         <div className="flex flex-col md:col-span-2">
           <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="serviceArea">
-            Área de servicio
+            <span className="inline-flex items-center gap-1">
+              <AppstoreOutlined />
+              Área de servicio
+            </span>
           </label>
           <Controller
             control={control}
@@ -104,6 +118,7 @@ export const ServiceTicketDetailForm: React.FC<Props> = ({
             render={({ field }) => (
               <Input
                 id="serviceArea"
+                placeholder="Ej: Bahía de Pozuelos"
                 {...field}
                 status={errors.serviceArea ? "error" : undefined}
               />
@@ -116,16 +131,26 @@ export const ServiceTicketDetailForm: React.FC<Props> = ({
 
         <div className="flex flex-col">
           <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="serviceType">
-            Tipo de servicio
+            <span className="inline-flex items-center gap-1">
+              <ToolOutlined />
+              Tipo de servicio
+            </span>
           </label>
           <Controller
             control={control}
             name="serviceType"
             render={({ field }) => (
-              <Input
-                id="serviceType"
+              <Select
                 {...field}
+                value={field.value || undefined}
+                onChange={(v) => field.onChange(v ?? "")}
+                showSearch
+                allowClear
+                placeholder="Ej: Transporte de pasajeros"
+                options={SERVICE_TYPES}
+                optionFilterProp="label"
                 status={errors.serviceType ? "error" : undefined}
+                className="w-full"
               />
             )}
           />
@@ -134,32 +159,12 @@ export const ServiceTicketDetailForm: React.FC<Props> = ({
           )}
         </div>
 
-        <div className="flex flex-col">
-          <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="hoursTraveled">
-            Horas navegadas
-          </label>
-          <Controller
-            control={control}
-            name="hoursTraveled"
-            render={({ field }) => (
-              <TimePicker
-                id="hoursTraveled"
-                format="HH:mm"
-                value={field.value ? dayjs(field.value, "HH:mm") : null}
-                onChange={(d) => field.onChange(d ? d.format("HH:mm") : "00:00")}
-                className="w-full"
-                status={errors.hoursTraveled ? "error" : undefined}
-              />
-            )}
-          />
-          {errors.hoursTraveled && (
-            <p className="mt-1 text-xs text-red-600">{errors.hoursTraveled.message as string}</p>
-          )}
-        </div>
-
         <div className="flex flex-col md:col-span-2">
           <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="description">
-            Descripción del servicio
+            <span className="inline-flex items-center gap-1">
+              <FileTextOutlined />
+              Descripción del servicio
+            </span>
           </label>
           <Controller
             control={control}
@@ -168,6 +173,7 @@ export const ServiceTicketDetailForm: React.FC<Props> = ({
               <Input.TextArea
                 id="description"
                 rows={3}
+                placeholder="Ej: Se realizó el transporte de 50 pasajeros desde el puerto A al puerto B"
                 {...field}
                 status={errors.description ? "error" : undefined}
               />
@@ -180,7 +186,10 @@ export const ServiceTicketDetailForm: React.FC<Props> = ({
 
         <div className="flex flex-col">
           <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="patronFullName">
-            Patrón
+            <span className="inline-flex items-center gap-1">
+              <UserOutlined />
+              Patrón
+            </span>
           </label>
           <Controller
             control={control}
@@ -188,6 +197,7 @@ export const ServiceTicketDetailForm: React.FC<Props> = ({
             render={({ field }) => (
               <Input
                 id="patronFullName"
+                placeholder="Ej: Juan Pérez"
                 {...field}
                 status={errors.patronFullName ? "error" : undefined}
               />
@@ -200,7 +210,10 @@ export const ServiceTicketDetailForm: React.FC<Props> = ({
 
         <div className="flex flex-col">
           <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="marinerFullName">
-            Marinero
+            <span className="inline-flex items-center gap-1">
+              <UserOutlined />
+              Marinero
+            </span>
           </label>
           <Controller
             control={control}
@@ -208,6 +221,7 @@ export const ServiceTicketDetailForm: React.FC<Props> = ({
             render={({ field }) => (
               <Input
                 id="marinerFullName"
+                placeholder="Ej: Luis Gómez"
                 {...field}
                 status={errors.marinerFullName ? "error" : undefined}
               />
@@ -220,7 +234,10 @@ export const ServiceTicketDetailForm: React.FC<Props> = ({
 
         <div className="flex flex-col">
           <label className="mb-1 text-sm font-medium text-gray-700" htmlFor="captainFullName">
-            Capitán
+            <span className="inline-flex items-center gap-1">
+              <CrownOutlined />
+              Capitán
+            </span>
           </label>
           <Controller
             control={control}
@@ -228,6 +245,7 @@ export const ServiceTicketDetailForm: React.FC<Props> = ({
             render={({ field }) => (
               <Input
                 id="captainFullName"
+                placeholder="Ej: Carlos Ramírez"
                 {...field}
                 status={errors.captainFullName ? "error" : undefined}
               />
@@ -239,14 +257,16 @@ export const ServiceTicketDetailForm: React.FC<Props> = ({
         </div>
       </div>
 
-      <div className="flex items-center justify-end gap-3 pt-2">
-        {onClose && (
-          <Button htmlType="button" onClick={onClose}>
-            Cancelar
-          </Button>
-        )}
-        <Button htmlType="submit" type="primary" loading={isSubmitting}>
-          {isSubmitting ? "Guardando..." : current?.id ? "Guardar cambios" : "Guardar"}
+      <div className="grid w-full grid-cols-1 gap-2 pt-2 md:grid-cols-2">
+        <Button onClick={onClose} className="w-full">
+          Cancelar
+        </Button>
+        <Button type="primary" htmlType="submit" loading={isSubmitting} className="w-full">
+          {isSubmitting
+            ? "Guardando..."
+            : current?.id
+              ? "Modificar Boleta Detalle"
+              : "Agregar Boleta Detalle"}
         </Button>
       </div>
     </form>

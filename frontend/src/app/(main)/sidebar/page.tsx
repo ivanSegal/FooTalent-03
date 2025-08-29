@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { MenuItem } from "@/types/menu_Item";
 import { SidebarProps } from "@/types/sidebar_props";
 import Image from "next/image";
-import logo from "@/assets/images/logo-incacore.svg";
+import logo from "@/assets/images/logo-incacore-relieve-blanco.svg";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import Cookies from "js-cookie";
@@ -164,8 +164,8 @@ interface ExtendedSidebarProps extends SidebarProps {
 const defaultMenuItems: MenuItem[] = [
   { id: "dashboard", label: "Dashboard", href: "/dashboard", icon: <DashboardIcon /> },
   { id: "users", label: "Usuarios", href: "/users", icon: <UsersIcon /> },
-  { id: "maintenance", label: "Mantenimiento", href: "/maintenance", icon: <MaintenanceIcon /> },
   { id: "vessels", label: "Embarcaciones", href: "/vessels", icon: <ShippingIcon /> },
+  { id: "maintenance", label: "Mantenimiento", href: "/maintenance", icon: <MaintenanceIcon /> },
   { id: "inventory", label: "Inventario", href: "/inventory", icon: <InventoryIcon /> },
 
   {
@@ -175,7 +175,7 @@ const defaultMenuItems: MenuItem[] = [
     icon: <InventoryIcon />,
   },
 
-  { id: "config", label: "Configuración", href: "/config", icon: <ConfigIcon /> },
+  // { id: "config", label: "Configuración", href: "/config", icon: <ConfigIcon /> },
 ];
 
 const Sidebar: React.FC<ExtendedSidebarProps> = ({

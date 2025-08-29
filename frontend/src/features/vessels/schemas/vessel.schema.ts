@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+export const VESSEL_STATUS = ["OPERATIONAL", "OUT_OF_SERVICE", "UNDER_MAINTENANCE"] as const;
+
 export const vesselSchema = z.object({
   name: z.string().trim().min(1, "Requerido"),
   registrationNumber: z
@@ -36,6 +38,7 @@ export const vesselSchema = z.object({
     .number()
     .int({ message: "Debe ser entero" })
     .nonnegative({ message: "No negativo" }),
+  status: z.enum(VESSEL_STATUS),
 });
 
 export type VesselFormValues = z.infer<typeof vesselSchema>;

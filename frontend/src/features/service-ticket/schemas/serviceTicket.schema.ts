@@ -14,10 +14,13 @@ export const serviceTicketSchema = z.object({
     .string()
     .trim()
     .regex(reportTravelNroRegex, "Formato inválido (AAA-00-0 o AAAA-00-0000, en MAYÚSCULAS)"),
-  code: z.string().min(1, "Requerido"),
-  checkingNro: z.coerce.number().int().nonnegative(),
+  // code: z.string().min(1, "Requerido"),
+  // checkingNro: z.coerce.number().int().nonnegative(),
 
   vesselName: z.string().min(1, "Requerido"),
+
+  // Estado de la orden: true = Abierta, false = Cerrada
+  status: z.boolean(),
 
   responsibleUsername: z.string().optional(),
 });

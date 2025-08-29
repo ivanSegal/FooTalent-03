@@ -49,11 +49,16 @@ export const showConfirmAlert = async (
   text: string,
   confirmButtonText: string = "Sí, confirmar",
   cancelButtonText: string = "Cancelar",
+  options?: {
+    icon?: "success" | "error" | "warning" | "info" | "question";
+    iconColor?: string;
+  },
 ) => {
   const result = await Swal.fire({
     title,
     text,
-    icon: "warning",
+    icon: options?.icon ?? "warning",
+    iconColor: options?.iconColor,
     showCancelButton: true,
     confirmButtonColor: "#d33",
     cancelButtonColor: "#3085d6",

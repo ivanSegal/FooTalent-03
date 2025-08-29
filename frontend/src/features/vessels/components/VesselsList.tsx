@@ -1,21 +1,34 @@
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Button, Input, Modal, Popconfirm, Space, Table, Tag, Tooltip, Tabs } from "antd";
+import { Button, Input, Modal, Space, Table, Tag, Tooltip, Tabs } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import type { TableProps } from "antd";
-import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { PlusOutlined, EditOutlined, DeleteOutlined, CheckCircleOutlined } from "@ant-design/icons";
 import { vesselsService, type Vessel } from "@/features/vessels";
 import { vesselItemHoursService } from "@/features/vessels";
 import type { VesselItemHoursEntry } from "@/features/vessels";
 import VesselsForm from "@/features/vessels/components/VesselsForm";
-import { showAlert } from "@/utils/showAlert";
+import { showAlert, showConfirmAlert } from "@/utils/showAlert";
 import { vesselItemService } from "@/features/vessels";
 import type { VesselItem } from "@/features/vessels";
 import VesselItemForm from "@/features/vessels/components/VesselItemForm";
 import { VesselItemHoursForm } from "@/features/vessels";
 import PDFGenerator from "@/components/pdf/PDFGenerator";
 import { VesselTemplate } from "@/features/vessels";
+
+// Mapeo de estados a etiquetas en español
+const VESSEL_STATUS_LABELS: Record<string, string> = {
+  OPERATIONAL: "Operativa",
+  OUT_OF_SERVICE: "Fuera de servicio",
+  UNDER_MAINTENANCE: "En mantenimiento",
+};
+// Colores por estado (para Tag)
+const VESSEL_STATUS_COLORS: Record<string, string> = {
+  OPERATIONAL: "green",
+  UNDER_MAINTENANCE: "orange",
+  OUT_OF_SERVICE: "red",
+};
 
 export default function VesselsList() {
   const [items, setItems] = useState<Vessel[]>([]);
@@ -96,7 +109,7 @@ export default function VesselsList() {
 
   // Carga todos los ítems una sola vez (o bajo demanda)
   const loadAllItems = useCallback(async (): Promise<VesselItem[]> => {
-    setItemsModalLoading(true);
+    // Prefetch global sin afectar el loading del modal
     try {
       const res = await vesselItemService.list({ page: 0, size: 1000 });
       const list = res.content ?? [];
@@ -105,14 +118,11 @@ export default function VesselsList() {
     } catch {
       setAllItems([]);
       return [];
-    } finally {
-      setItemsModalLoading(false);
     }
   }, []);
 
   // Prefetch de todos los ítems para acelerar la primera apertura del modal
   useEffect(() => {
-    // Prefetch de todos los ítems para acelerar la primera apertura del modal
     void loadAllItems();
   }, [loadAllItems]);
 
@@ -128,32 +138,34 @@ export default function VesselsList() {
     return ref.vesselId ?? ref.vessel_id ?? ref.vessel?.id;
   }, []);
 
-  // Calcula y establece los ítems filtrados para una embarcación
-  const setFilteredItemsFor = useCallback(
-    (vId: number, source?: VesselItem[]) => {
-      const base = source ?? allItems;
-      const filtered = base.filter((it) => getVesselIdFromItem(it) === vId);
-      setItemsModalData(filtered);
-    },
-    [allItems, getVesselIdFromItem],
-  );
+  // Carga ítems de una embarcación específica (para el modal)
+  const loadItemsForVessel = useCallback(async (vId: number) => {
+    setItemsModalLoading(true);
+    try {
+      const res = await vesselItemService.list({ page: 0, size: 1000, vesselId: vId });
+      const list = res.content ?? [];
+      setItemsModalData(list);
+      // Fusiona en caché general para otras funciones (PDF, conteos, etc.)
+      setAllItems((prev) => {
+        const map = new Map(prev.map((x) => [x.id, x] as const));
+        for (const it of list) map.set(it.id, it);
+        return Array.from(map.values());
+      });
+    } catch {
+      setItemsModalData([]);
+    } finally {
+      setItemsModalLoading(false);
+    }
+  }, []);
 
-  // Al abrir el modal de ítems para una embarcación, asegura los datos y filtra
+  // Al abrir el modal de ítems para una embarcación, carga directamente desde el backend
   useEffect(() => {
     if (itemsManagerVesselId != null) {
-      const run = async () => {
-        if (!allItems.length) {
-          const list = await loadAllItems();
-          setFilteredItemsFor(itemsManagerVesselId, list);
-        } else {
-          setFilteredItemsFor(itemsManagerVesselId);
-        }
-        setShowItemForm(false);
-        setCurrentItem(null);
-      };
-      void run();
+      setShowItemForm(false);
+      setCurrentItem(null);
+      void loadItemsForVessel(itemsManagerVesselId);
     }
-  }, [itemsManagerVesselId, allItems.length, loadAllItems, setFilteredItemsFor]);
+  }, [itemsManagerVesselId, loadItemsForVessel]);
 
   const filtered = useMemo(() => {
     const term = search.toLowerCase().trim();
@@ -209,16 +221,40 @@ export default function VesselsList() {
     },
     { title: "Nombre", dataIndex: "name", key: "name", sorter: true },
     { title: "Matrícula", dataIndex: "registrationNumber", key: "registrationNumber" },
-    { title: "ISMM", dataIndex: "ismm", key: "ismm" },
-    { title: "Bandera", dataIndex: "flagState", key: "flagState" },
-    { title: "Señal", dataIndex: "callSign", key: "callSign" },
-    { title: "Puerto", dataIndex: "portOfRegistry", key: "portOfRegistry" },
-    { title: "RIF", dataIndex: "rif", key: "rif" },
-    { title: "Servicio", dataIndex: "serviceType", key: "serviceType" },
-    { title: "Material", dataIndex: "constructionMaterial", key: "constructionMaterial" },
-    { title: "Popa", dataIndex: "sternType", key: "sternType" },
-    { title: "Combustible", dataIndex: "fuelType", key: "fuelType" },
-    { title: "Horas", dataIndex: "navigationHours", key: "navigationHours", width: 100 },
+    // { title: "ISMM", dataIndex: "ismm", key: "ismm" },
+    // { title: "Bandera", dataIndex: "flagState", key: "flagState" },
+    // { title: "Señal", dataIndex: "callSign", key: "callSign" },
+    // { title: "Puerto", dataIndex: "portOfRegistry", key: "portOfRegistry" },
+    // { title: "RIF", dataIndex: "rif", key: "rif" },
+    // { title: "Material", dataIndex: "constructionMaterial", key: "constructionMaterial" },
+    // { title: "Popa", dataIndex: "sternType", key: "sternType" },
+    // { title: "Combustible", dataIndex: "fuelType", key: "fuelType" },
+    {
+      title: "Estado",
+      dataIndex: "status",
+      key: "status",
+      render: (v: Vessel["status"]) => {
+        if (!v) return "—";
+        const key = String(v);
+        const label = VESSEL_STATUS_LABELS[key] ?? key;
+        const color = VESSEL_STATUS_COLORS[key] ?? undefined;
+        return (
+          <Tag
+            color={color}
+            style={{
+              minWidth: 150,
+              textAlign: "center",
+              display: "inline-block",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {label}
+          </Tag>
+        );
+      },
+    },
+    { title: "Horas", dataIndex: "navigationHours", key: "navigationHours" },
+    { title: "Tipo de Servicio", dataIndex: "serviceType", key: "serviceType" },
     {
       title: "Ítems",
       key: "itemsCount",
@@ -309,27 +345,42 @@ export default function VesselsList() {
               }}
             />
           </Tooltip>
-          <Popconfirm
-            title="Confirmar eliminación"
-            okText="Eliminar"
-            cancelText="Cancelar"
-            onConfirm={async () => {
-              try {
-                await vesselsService.remove(record.id);
-                setItems((prev) => prev.filter((x) => x.id !== record.id));
-              } catch (e) {
-                await showAlert(
-                  "Error al eliminar",
-                  (e as Error)?.message || "No se pudo eliminar",
-                  "error",
+          {/* Replaced Popconfirm with SweetAlert confirm */}
+          <Tooltip title="Eliminar">
+            <Button
+              size="small"
+              type="text"
+              icon={<DeleteOutlined />}
+              onClick={async () => {
+                const title = `¿Eliminar embarcación #${record.id}${record.name ? ` – ${record.name}` : ""}?`;
+                const text =
+                  "Esta acción eliminará permanentemente la embarcación seleccionada y no se puede deshacer.";
+                const confirmed = await showConfirmAlert(
+                  title,
+                  text,
+                  "Eliminar embarcación",
+                  "Cancelar",
+                  { icon: "warning" },
                 );
-              }
-            }}
-          >
-            <Tooltip title="Eliminar">
-              <Button size="small" type="text" danger icon={<DeleteOutlined />} />
-            </Tooltip>
-          </Popconfirm>
+                if (!confirmed) return;
+                try {
+                  await vesselsService.remove(record.id);
+                  setItems((prev) => prev.filter((x) => x.id !== record.id));
+                  await showAlert(
+                    "Eliminado",
+                    `Se eliminó la embarcación #${record.id}${record.name ? ` – ${record.name}` : ""}.`,
+                    "success",
+                  );
+                } catch (e) {
+                  await showAlert(
+                    "Error al eliminar",
+                    (e as Error)?.message || "No se pudo eliminar",
+                    "error",
+                  );
+                }
+              }}
+            />
+          </Tooltip>
         </Space>
       ),
     },
@@ -341,7 +392,7 @@ export default function VesselsList() {
     { title: "Descripción", dataIndex: "description", key: "description" },
     { title: "Tipo", dataIndex: "controlType", key: "controlType" },
     { title: "H. acum.", dataIndex: "accumulatedHours", key: "accumulatedHours", width: 100 },
-    { title: "Vida útil", dataIndex: "usefulLifeHours", key: "usefulLifeHours", width: 100 },
+    { title: "Ciclo de Maint.", dataIndex: "usefulLifeHours", key: "usefulLifeHours", width: 100 },
     { title: "Alerta", dataIndex: "alertHours", key: "alertHours", width: 90 },
     { title: "Material", dataIndex: "materialType", key: "materialType" },
     {
@@ -361,29 +412,40 @@ export default function VesselsList() {
               }}
             />
           </Tooltip>
-          <Popconfirm
-            title="Confirmar eliminación"
-            okText="Eliminar"
-            cancelText="Cancelar"
-            onConfirm={async () => {
-              try {
-                await vesselItemService.remove(record.id);
-                setItemsModalData((prev) => prev.filter((x) => x.id !== record.id));
-                // También actualizamos el caché general
-                setAllItems((prev) => prev.filter((x) => x.id !== record.id));
-              } catch (e) {
-                await showAlert(
-                  "Error al eliminar",
-                  (e as Error)?.message || "No se pudo eliminar",
-                  "error",
-                );
-              }
-            }}
-          >
-            <Tooltip title="Eliminar ítem">
-              <Button size="small" type="text" danger icon={<DeleteOutlined />} />
-            </Tooltip>
-          </Popconfirm>
+          {/* Replaced Popconfirm with SweetAlert confirm */}
+          <Tooltip title="Eliminar ítem">
+            <Button
+              size="small"
+              type="text"
+              icon={<DeleteOutlined />}
+              onClick={async () => {
+                const title = `¿Eliminar ítem #${record.id}${record.name ? ` – ${record.name}` : ""}?`;
+                const text =
+                  "Esta acción eliminará permanentemente el ítem y no se puede deshacer.";
+                const confirmed = await showConfirmAlert(title, text, "Eliminar ítem", "Cancelar", {
+                  icon: "warning",
+                });
+                if (!confirmed) return;
+                try {
+                  await vesselItemService.remove(record.id);
+                  setItemsModalData((prev) => prev.filter((x) => x.id !== record.id));
+                  // También actualizamos el caché general en memoria
+                  setAllItems((prev) => prev.filter((x) => x.id !== record.id));
+                  await showAlert(
+                    "Eliminado",
+                    `Se eliminó el ítem #${record.id}${record.name ? ` – ${record.name}` : ""}.`,
+                    "success",
+                  );
+                } catch (e) {
+                  await showAlert(
+                    "Error al eliminar",
+                    (e as Error)?.message || "No se pudo eliminar",
+                    "error",
+                  );
+                }
+              }}
+            />
+          </Tooltip>
         </Space>
       ),
     },
@@ -445,7 +507,18 @@ export default function VesselsList() {
 
       <Modal
         open={dialog}
-        title={current ? `Editar embarcación #${current.id}` : "Nueva embarcación"}
+        title={
+          <div className="mb-2 text-center md:text-left">
+            <div className="primary border-b-2 pb-2">
+              <h2 className="text-900 mb-2 flex items-center justify-center text-2xl font-bold text-gray-900 md:justify-start">
+                <CheckCircleOutlined className="text-primary mr-3 text-3xl text-blue-600" />
+                {current
+                  ? `Modificar Embarcación #${current.id}${current.name ? ` – ${current.name}` : ""}`
+                  : "Crear Embarcación"}
+              </h2>
+            </div>
+          </div>
+        }
         onCancel={() => {
           setCurrent(null);
           setDialog(false);
@@ -491,8 +564,9 @@ export default function VesselsList() {
               <Button
                 size="small"
                 onClick={async () => {
-                  const list = await loadAllItems();
-                  if (itemsManagerVesselId != null) setFilteredItemsFor(itemsManagerVesselId, list);
+                  if (itemsManagerVesselId != null) {
+                    await loadItemsForVessel(itemsManagerVesselId);
+                  }
                 }}
                 disabled={itemsModalLoading}
               >
@@ -559,7 +633,16 @@ export default function VesselsList() {
       <Modal
         open={hoursVesselId != null}
         title={
-          hoursVesselId != null ? `Cargar horas – Embarcación #${hoursVesselId}` : "Cargar horas"
+          <div className="mb-2 text-center md:text-left">
+            <div className="primary border-b-2 pb-2">
+              <h2 className="text-900 mb-2 flex items-center justify-center text-2xl font-bold text-gray-900 md:justify-start">
+                <CheckCircleOutlined className="text-primary mr-3 text-3xl text-blue-600" />
+                {hoursVesselId != null
+                  ? `Cargar horas – Embarcación #${hoursVesselId}`
+                  : "Cargar horas"}
+              </h2>
+            </div>
+          </div>
         }
         onCancel={() => {
           setHoursVesselId(null);
@@ -601,14 +684,17 @@ export default function VesselsList() {
                           for (const u of updated) map.set(u.id, u);
                           return Array.from(map.values());
                         });
-                        // Refrescar historial local filtrado sin cerrar modal
-                        const all = allHistoryRows.length ? allHistoryRows : [];
-                        if (all.length && hoursVesselId != null) {
-                          const filtered = all.filter((r) => r.vesselId === hoursVesselId);
-                          setHoursHistoryRows(filtered);
-                        }
-                        setHoursInitialReport(null);
-                        setHoursActiveTab("history");
+                        // Recargar historial desde backend para reflejar la nueva carga
+                        (async () => {
+                          const all = await loadHistoryAll(historyPageSize);
+                          setAllHistoryRows(all);
+                          if (hoursVesselId != null) {
+                            const filtered = all.filter((r) => r.vesselId === hoursVesselId);
+                            setHoursHistoryRows(filtered);
+                          }
+                          setHoursInitialReport(null);
+                          setHoursActiveTab("history");
+                        })();
                       }}
                       onCancel={() => {
                         setHoursInitialReport(null);

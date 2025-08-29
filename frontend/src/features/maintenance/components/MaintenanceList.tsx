@@ -5,7 +5,6 @@ import {
   Tag,
   Button,
   Space,
-  Popconfirm,
   Input,
   Select,
   Tooltip,
@@ -19,6 +18,7 @@ import {
   FilterOutlined,
   PlusOutlined,
   CheckCircleOutlined,
+  ToolOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import type { Dayjs } from "dayjs";
@@ -29,10 +29,13 @@ import {
   maintenanceService,
   MaintenanceTemplate,
   type MaintenanceListItem,
+  MaintenanceActivityForm,
+  type MaintenanceActivityItem,
+  maintenanceActivitiesService,
 } from "@/features/maintenance";
 import type { TableProps } from "antd";
 import { NormalizedApiError } from "@/types/api";
-import { showAlert } from "@/utils/showAlert";
+import { showAlert, showConfirmAlert } from "@/utils/showAlert";
 import PDFGenerator from "@/components/pdf/PDFGenerator";
 
 dayjs.extend(customParseFormat);
@@ -54,14 +57,82 @@ export const MaintenanceList = () => {
   const [maintenanceList, setMaintenanceList] = useState<MaintenanceListItem | null>(null);
   const [maintenanceDialog, setMaintenanceDialog] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  // Nuevo: estado para actividades (crear/editar)
+  const [activities, setActivities] = useState<MaintenanceActivityItem[]>([]);
+  const [selectedActivity, setSelectedActivity] = useState<MaintenanceActivityItem | null>(null);
+  const [showActivityForm, setShowActivityForm] = useState(false);
+  // Modal y datos para ver actividades por orden (similar a Ítems en Vessels)
+  const [activitiesManagerOrderId, setActivitiesManagerOrderId] = useState<number | null>(null);
+  const [activitiesModalData, setActivitiesModalData] = useState<MaintenanceActivityItem[]>([]);
+  console.log("activitiesModalData", activitiesModalData);
+  const [activitiesModalLoading, setActivitiesModalLoading] = useState(false);
+  // Nuevo: cache de conteos por orden y paginación del modal
+  const [countsByOrder, setCountsByOrder] = useState<Record<number, number>>({});
+  const [activitiesModalPage, setActivitiesModalPage] = useState<number>(1);
+  const [activitiesModalSize, setActivitiesModalSize] = useState<number>(10);
+  const [activitiesModalTotal, setActivitiesModalTotal] = useState<number>(0);
+  // Filtros y ordenamiento
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string | undefined>(undefined);
-  // Nuevo filtro por tipo de mantenimiento
   const [typeFilter, setTypeFilter] = useState<string | undefined>(undefined);
   const [fechaProgRange, setFechaProgRange] = useState<[Dayjs, Dayjs] | null>(null);
-  // Ordenamiento remoto (por defecto id desc)
   const [tableSort, setTableSort] = useState<string | undefined>("id,desc");
+  // Nuevo: estado de paginación visible de la tabla principal (para precargar conteos visibles)
+  const [tablePage, setTablePage] = useState<number>(1);
+  const [tablePageSize, setTablePageSize] = useState<number>(8);
+
+  // Cargar actividades para una orden vía endpoint /search (server-side paginado)
+  const loadActivitiesForOrder = useCallback(
+    async (orderId: number, page = activitiesModalPage, size = activitiesModalSize) => {
+      setActivitiesModalLoading(true);
+      try {
+        const resp = await maintenanceActivitiesService.searchByOrder(orderId, {
+          page: page - 1,
+          size,
+        });
+        console.log("resp", resp);
+        setActivitiesModalData(resp.content ?? []);
+        setActivitiesModalTotal(resp.totalElements ?? resp.content?.length ?? 0);
+        setActivitiesModalPage((resp.number ?? page - 1) + 1);
+        setActivitiesModalSize(resp.size ?? size);
+      } finally {
+        setActivitiesModalLoading(false);
+      }
+    },
+    [activitiesModalPage, activitiesModalSize],
+  );
+
+  // Obtener conteo de actividades para una orden (para el Tag en la lista principal)
+  const refreshCountForOrder = useCallback(async (orderId: number) => {
+    try {
+      const count = await maintenanceActivitiesService.countByOrder(orderId);
+      setCountsByOrder((prev) => ({ ...prev, [orderId]: count }));
+    } catch {
+      setCountsByOrder((prev) => ({ ...prev, [orderId]: 0 }));
+    }
+  }, []);
+
+  // Precargar conteos para filas visibles en la tabla principal
+  const preloadCountsFor = useCallback(
+    (orders: MaintenanceListItem[]) => {
+      const idsToFetch = orders
+        .map((o) => o.id)
+        .filter((id): id is number => typeof id === "number")
+        .filter((id) => countsByOrder[id] === undefined);
+      if (!idsToFetch.length) return;
+      // Ejecutar en paralelo (el tamaño visible es pequeño)
+      void Promise.all(idsToFetch.map((id) => refreshCountForOrder(id)));
+    },
+    [countsByOrder, refreshCountForOrder],
+  );
+
+  // Al abrir el modal de actividades, cargar listado y conteo desde el backend
+  useEffect(() => {
+    if (activitiesManagerOrderId != null) {
+      void loadActivitiesForOrder(activitiesManagerOrderId);
+      void refreshCountForOrder(activitiesManagerOrderId);
+    }
+  }, [activitiesManagerOrderId, loadActivitiesForOrder, refreshCountForOrder]);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -85,12 +156,14 @@ export const MaintenanceList = () => {
   }, [load]);
 
   const handleTableChange: TableProps<MaintenanceListItem>["onChange"] = (
-    _pagination,
+    pagination,
     _filters,
     sorter,
   ) => {
+    // Actualiza pagina actual para precarga de conteos
+    if (pagination && pagination.current) setTablePage(pagination.current);
+    if (pagination && pagination.pageSize) setTablePageSize(pagination.pageSize);
     if (Array.isArray(sorter)) {
-      // En este caso usamos solo el primero si existiera (no activamos multi-sort visualmente)
       const s = sorter[0];
       let order: "asc" | "desc" | undefined;
       if (s?.order === "ascend") order = "asc";
@@ -109,6 +182,9 @@ export const MaintenanceList = () => {
     setMaintenanceList(null); // Limpia el estado del mantenimiento seleccionado
     setMaintenanceDialog(false);
   };
+  // Nuevo: cerrar modal de actividad (crear/editar)
+  // Removed old closeActivityForm (switched to inline onClose that refreshes from backend)
+
   const filtered = useMemo(() => {
     const term = search.toLowerCase();
     return maintenanceLists.filter((i) => {
@@ -138,6 +214,13 @@ export const MaintenanceList = () => {
       return matchesSearch && matchesStatus && matchesType && matchesFechaProg;
     });
   }, [maintenanceLists, search, statusFilter, typeFilter, fechaProgRange]);
+
+  // Pre-cargar conteos para las filas visibles de la tabla principal (ubicado después de 'filtered')
+  useEffect(() => {
+    const start = (tablePage - 1) * tablePageSize;
+    const visible = filtered.slice(start, start + tablePageSize);
+    preloadCountsFor(visible);
+  }, [filtered, tablePage, tablePageSize, preloadCountsFor]);
 
   const columns: ColumnsType<MaintenanceListItem> = [
     // Identificador de la orden
@@ -244,6 +327,30 @@ export const MaintenanceList = () => {
       render: (v: MaintenanceListItem["finishedAt"]) => displayDate(v),
       responsive: ["lg"],
     },
+    // Actividades (similar a Ítems en Vessels)
+    {
+      title: "Actividades",
+      key: "activitiesCount",
+      width: 110,
+      render: (_: unknown, record) => {
+        const count = record.id != null ? countsByOrder[record.id] : 0;
+        return (
+          <Tooltip title="Ver actividades">
+            <Tag
+              color={count ? "blue" : undefined}
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                setActivitiesManagerOrderId(record.id ?? null);
+                setSelectedActivity(null);
+                setShowActivityForm(false);
+              }}
+            >
+              {count ?? 0} {count === 1 ? "actividad" : "actividades"}
+            </Tag>
+          </Tooltip>
+        );
+      },
+    },
     // Acciones al final
     {
       title: "Acciones",
@@ -258,6 +365,19 @@ export const MaintenanceList = () => {
               fileName={`orden-mantenimiento-${record.id ?? "sin-id"}.pdf`}
             />
           </Tooltip>
+          {/* Nueva actividad: abre modal de actividades con formulario */}
+          <Tooltip title="Nueva actividad">
+            <Button
+              size="small"
+              type="text"
+              icon={<ToolOutlined />}
+              onClick={() => {
+                setActivitiesManagerOrderId(record.id ?? null);
+                setSelectedActivity(null);
+                setShowActivityForm(true);
+              }}
+            />
+          </Tooltip>
           <Tooltip title="Editar">
             <Button
               size="small"
@@ -269,38 +389,134 @@ export const MaintenanceList = () => {
               }}
             />
           </Tooltip>
-          <Popconfirm
-            title="Confirmar eliminación"
-            description="Esta acción no se puede deshacer"
-            okText="Eliminar"
-            cancelText="Cancelar"
-          >
-            <Tooltip title="Eliminar">
-              <Button size="small" type="text" danger icon={<DeleteOutlined />} />
-            </Tooltip>
-          </Popconfirm>
+          <Tooltip title="Eliminar">
+            <Button
+              size="small"
+              type="text"
+              danger
+              icon={<DeleteOutlined />}
+              onClick={async () => {
+                const confirmed = await showConfirmAlert(
+                  "Confirmar eliminación",
+                  "Esta acción no se puede deshacer",
+                  "Eliminar",
+                  "Cancelar",
+                  { icon: "warning" },
+                );
+                if (!confirmed) return;
+                if (record.id == null) return;
+                try {
+                  await maintenanceService.remove(record.id);
+                  await load();
+                  await showAlert("Éxito", "Orden eliminada.", "success");
+                } catch (e) {
+                  await showAlert(
+                    "Error al eliminar",
+                    (e as Error)?.message || "No se pudo eliminar la orden",
+                    "error",
+                  );
+                }
+              }}
+            />
+          </Tooltip>
         </Space>
       ),
     },
   ];
-  if (loading) {
-    return (
-      <main className="min-h-screen bg-gray-50 p-8">
-        <div className="mx-auto space-y-6">
-          {/* Header skeleton */}
-          <Skeleton active title={{ width: 260 }} paragraph={false} />
-          {/* Card/list skeleton */}
-          <div className="rounded-md border border-gray-200 bg-white p-4">
-            <div className="mb-4 flex items-center justify-between gap-3">
-              <Skeleton.Input active style={{ width: 260 }} />
-              <Skeleton.Button active />
-            </div>
-            <Skeleton active paragraph={{ rows: 6 }} />
-          </div>
-        </div>
-      </main>
-    );
-  }
+
+  // Columnas del modal de actividades por orden
+  const activitiesModalColumns: ColumnsType<MaintenanceActivityItem> = [
+    { title: "ID", dataIndex: "id", key: "id", width: 80 },
+    { title: "Tipo", dataIndex: "activityType", key: "activityType" },
+    {
+      title: "Ítem",
+      key: "vesselItem",
+      render: (_: unknown, r: MaintenanceActivityItem) => r.vesselItemName ?? `#${r.vesselItemId}`,
+    },
+    { title: "Descripción", dataIndex: "description", key: "description" },
+    {
+      title: "Mov. inventario",
+      dataIndex: "inventoryMovementIds",
+      key: "inventoryMovementIds",
+      width: 200,
+      render: (_: unknown, r: MaintenanceActivityItem) => {
+        const ids = r.inventoryMovementIds ?? r.inventoryMovementsIds;
+        return Array.isArray(ids) && ids.length ? (
+          <span className="font-mono text-xs">[{ids.join(", ")}]</span>
+        ) : (
+          <span className="text-gray-400">—</span>
+        );
+      },
+    },
+    {
+      title: "Acciones",
+      key: "acciones",
+      align: "right" as const,
+      width: 200,
+      render: (_: unknown, record: MaintenanceActivityItem) => (
+        <Space size="small">
+          <Tooltip title="Editar actividad">
+            <Button
+              size="small"
+              type="text"
+              icon={<EditOutlined />}
+              onClick={() => {
+                setSelectedActivity(record);
+                setShowActivityForm(true);
+              }}
+            />
+          </Tooltip>
+          <Tooltip title="Eliminar actividad">
+            <Button
+              size="small"
+              type="text"
+              danger
+              icon={<DeleteOutlined />}
+              onClick={async () => {
+                const confirmed = await showConfirmAlert(
+                  "Confirmar eliminación",
+                  "Esta acción no se puede deshacer",
+                  "Eliminar",
+                  "Cancelar",
+                  { icon: "warning" },
+                );
+                if (!confirmed) return;
+                try {
+                  await maintenanceActivitiesService.remove(record.id);
+                  await Promise.all([
+                    loadActivitiesForOrder(
+                      record.maintenanceOrderId,
+                      activitiesModalPage,
+                      activitiesModalSize,
+                    ),
+                    refreshCountForOrder(record.maintenanceOrderId),
+                  ]);
+                  await showAlert("Éxito", "Actividad eliminada.", "success");
+                } catch (e) {
+                  await showAlert(
+                    "Error al eliminar",
+                    (e as Error)?.message || "No se pudo eliminar la actividad",
+                    "error",
+                  );
+                }
+              }}
+            />
+          </Tooltip>
+        </Space>
+      ),
+    },
+  ];
+
+  // vesselId que usará el formulario (create/edit) dentro del modal de actividades
+  const vesselIdForActivityForm = useMemo(() => {
+    const orderId = selectedActivity?.maintenanceOrderId ?? activitiesManagerOrderId ?? null;
+    if (orderId != null) {
+      const order = maintenanceLists.find((o) => o.id === orderId);
+      return order?.vesselId;
+    }
+    return undefined;
+  }, [selectedActivity, activitiesManagerOrderId, maintenanceLists]);
+
   return (
     <main className="min-h-screen bg-gray-50 p-8">
       <div className="mx-auto">
@@ -383,17 +599,11 @@ export const MaintenanceList = () => {
               size="small"
               rowKey="id"
               columns={columns}
+              loading={loading}
               dataSource={filtered}
               onChange={handleTableChange}
               pagination={{ pageSize: 8, showSizeChanger: false }}
-              // onRow={
-              //   onSelect
-              //     ? (record) => ({
-              //         onClick: () => onSelect?.(record),
-              //         className: "cursor-pointer hover:bg-gray-50",
-              //       })
-              //     : undefined
-              // }
+              scroll={{ x: "max-content" }}
             />
           </div>
         </section>
@@ -418,6 +628,114 @@ export const MaintenanceList = () => {
           setMaintenanceLists={setMaintenanceLists}
           maintenanceList={maintenanceList}
           hideMaintenanceFormDialog={hideMaintenanceFormDialog}
+        />
+      </Modal>
+
+      {/* Modal para ver actividades por orden (incluye crear/editar) */}
+      <Modal
+        open={activitiesManagerOrderId != null}
+        title={
+          activitiesManagerOrderId != null
+            ? `Actividades de la Orden #${activitiesManagerOrderId}`
+            : "Actividades"
+        }
+        onCancel={() => {
+          setActivitiesManagerOrderId(null);
+          setActivitiesModalData([]);
+          setSelectedActivity(null);
+          setShowActivityForm(false);
+          setActivitiesModalPage(1);
+          setActivitiesModalTotal(0);
+        }}
+        footer={null}
+        width={900}
+      >
+        <div className="mb-3 flex items-center justify-between">
+          <span className="text-sm text-gray-600">Total: {activitiesModalTotal}</span>
+          <div className="flex items-center gap-2">
+            <Button
+              size="small"
+              onClick={async () => {
+                if (activitiesManagerOrderId != null)
+                  await loadActivitiesForOrder(
+                    activitiesManagerOrderId,
+                    activitiesModalPage,
+                    activitiesModalSize,
+                  );
+              }}
+              disabled={activitiesModalLoading}
+            >
+              Actualizar
+            </Button>
+            <Button
+              size="small"
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => {
+                setSelectedActivity(null);
+                setShowActivityForm(true);
+              }}
+            >
+              Agregar actividad
+            </Button>
+          </div>
+        </div>
+
+        {showActivityForm && activitiesManagerOrderId != null && (
+          <div className="mb-3 rounded-md border border-gray-200 p-3">
+            {(() => {
+              const order = maintenanceLists.find((o) => o.id === activitiesManagerOrderId);
+              const initialOrder = selectedActivity
+                ? undefined
+                : order
+                  ? `${order.id}-${order.vesselName}-${order.maintenanceType}`
+                  : undefined;
+              return (
+                <MaintenanceActivityForm
+                  activities={activities}
+                  setActivities={setActivities}
+                  activity={selectedActivity}
+                  onClose={async () => {
+                    // Reemplaza closeActivityForm para refrescar listado y conteo desde backend
+                    if (activitiesManagerOrderId != null) {
+                      await loadActivitiesForOrder(
+                        activitiesManagerOrderId,
+                        activitiesModalPage,
+                        activitiesModalSize,
+                      );
+                      await refreshCountForOrder(activitiesManagerOrderId);
+                    }
+                    setSelectedActivity(null);
+                    setShowActivityForm(false);
+                  }}
+                  initialMaintenanceOrder={initialOrder}
+                  vesselId={vesselIdForActivityForm}
+                  maintenanceOrderId={activitiesManagerOrderId}
+                />
+              );
+            })()}
+          </div>
+        )}
+
+        <Table
+          size="small"
+          rowKey="id"
+          columns={activitiesModalColumns}
+          dataSource={activitiesModalData}
+          loading={activitiesModalLoading}
+          pagination={{
+            pageSize: activitiesModalSize,
+            current: activitiesModalPage,
+            total: activitiesModalTotal,
+            showSizeChanger: false,
+            onChange: (page) => {
+              setActivitiesModalPage(page);
+              if (activitiesManagerOrderId != null) {
+                void loadActivitiesForOrder(activitiesManagerOrderId, page, activitiesModalSize);
+              }
+            },
+          }}
+          scroll={{ x: "max-content" }}
         />
       </Modal>
     </main>
