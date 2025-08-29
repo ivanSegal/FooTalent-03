@@ -19,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/vessel-item")
@@ -69,10 +71,27 @@ public class VesselItemController {
     }
 
     @DeleteVesselIemEndpointDoc
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id){
         vesselItemService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @MantenimenceVesselItemsEndpointDoc
+    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
+            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
+    @GetMapping("/maintenance-required")
+    public ResponseEntity<?> getItemsRequiringMaintenanceWithoutActiveOrders() {
+        List<VesselItemRes> response = vesselItemService.findItemsRequiringMaintenanceWithoutActiveOrders();
+        return ResponseEntity.ok().body(ApiResult.success(response,"Lista de componentes que requieren mantenimiento"));
+    }
+
+    @NotificationEmailVesselItemEndpoindDoc
+    @PostMapping("/maintenance-alert")
+    public ResponseEntity<?> sendMaintenanceAlert(@RequestParam String email) {
+        vesselItemService.vesselItemsAlert(email);
+        return ResponseEntity.ok().body(ApiResult.success("Se ha enviaddo un correo con la inormación requerida"));
     }
 
 

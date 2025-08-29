@@ -3,6 +3,7 @@ package com.Incamar.IncaCore.services.impl;
 import com.Incamar.IncaCore.dtos.vesselItemHours.VesselItemHoursReq;
 import com.Incamar.IncaCore.dtos.vesselItemHours.VesselItemHoursRes;
 import com.Incamar.IncaCore.dtos.vesselItemHours.VesselItemHoursUpdateReq;
+import com.Incamar.IncaCore.enums.MaintenanceOrderStatus;
 import com.Incamar.IncaCore.exceptions.ResourceNotFoundException;
 import com.Incamar.IncaCore.mappers.VesselItemHoursMapper;
 import com.Incamar.IncaCore.models.*;
@@ -24,6 +25,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -110,56 +112,4 @@ public class VesselItemHoursServiceImpl implements VesselItemHoursService {
 
         return vesselItemHoursMapper.toDto(existing);
     }
-
-    //Se envia notificación a las 7 de la mañana hora mexico
-    @Scheduled(cron = "0 0 8 * * *", zone = "America/Mexico_City")
-    public void executeDailyTask() {
-        List<VesselData> vesselDataList = new ArrayList<>();
-
-        vesselRepository.findAll().forEach(vessel -> {
-            List<ItemData> itemsData = new ArrayList<>();
-
-            vessel.getItems().forEach(item -> {
-                if(item.getAccumulatedHours().compareTo(BigDecimal.valueOf(item.getAlertHours()))>=0){
-                    ItemData itemData = new ItemData(
-                            item.getId(),
-                            item.getName(),
-                            item.getAccumulatedHours(),
-                            item.getUsefulLifeHours(),
-                            item.getAlertHours()
-                    );
-                    itemsData.add(itemData);
-                }
-            });
-
-            if (!itemsData.isEmpty()) {
-                VesselData vesselData = new VesselData(vessel.getName(), itemsData);
-                vesselDataList.add(vesselData);
-            }
-        });
-
-        User user = userRepository.findByEmail("edgarcamberos18@gmail.com").orElseThrow();
-        sendEmail(user,vesselDataList);
-
-    }
-
-    private record ItemData(Long id, String componente, BigDecimal horasAcumuladas, int intervaloMantenimiento, int umbralMantenimiento) {}
-    private record VesselData(String vesselName, List<ItemData> items) {}
-
-    public void sendEmail(User user, List<VesselData> vesselDataList ){
-        Map<String, Object> templateModel = Map.of(
-                "nombreResponsable", user.getEmployee().getFirstName() + " " + user.getEmployee().getLastName(),
-                "vessels", vesselDataList
-        );
-
-        emailService.sendHtmlEmail(
-                user.getEmail(),
-                "Notificación de Mantenimiento Preventivo",
-                "component-maintenance-alert",
-                templateModel
-        );
-    }
-
-
-
 }

@@ -40,7 +40,7 @@ import java.lang.annotation.*;
                      "activityType": "INSPECCION",
                      "vesselItemName": "Motor Principal",
                      "description": "...",
-                     "inventoryMovementsIds": [1,2]
+                     "inventoryMovementIds": [1,2]
                     },
                     {
                      "id": 2,
@@ -48,7 +48,7 @@ import java.lang.annotation.*;
                      "activityType": "INSPECCION",
                      "vesselItemName": "Generador",
                      "description": "...",
-                     "inventoryMovementsIds": "null"
+                     "inventoryMovementIds": "null"
                     }
                   ],
                   "pageable": {
