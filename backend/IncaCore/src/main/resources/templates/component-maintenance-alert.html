@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificación de Mantenimiento Preventivo</title>
+</head>
+<body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #f5f5f5;">
+
+<table role="presentation" style="width: 100%; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); border-collapse: collapse;">
+
+    <!-- Encabezado -->
+    <tr>
+        <td style="padding: 40px 30px; text-align: center; background: linear-gradient(135deg, #0ed5b0 0%, #266ef8 100%);">
+            <h1 style="color: #ffffff; margin: 0; font-size: 26px; font-weight: 600; letter-spacing: -0.5px;">
+                Notificación de Mantenimiento Preventivo
+            </h1>
+        </td>
+    </tr>
+
+    <!-- Cuerpo -->
+    <tr>
+        <td style="padding: 40px 30px;">
+            <p style="font-size: 18px; color: #2c3e50; margin-bottom: 20px;">
+                Estimado <strong th:text="${nombreResponsable}" style="color: #266ef8;">[Responsable]</strong>,
+            </p>
+
+            <p style="margin-bottom: 20px; font-size: 16px; color: #34495e; line-height: 1.8;">
+                Se ha generado una notificación de <strong>mantenimiento preventivo</strong>.
+                A continuación encontrará los detalles agrupados por embarcación:
+            </p>
+
+            <!-- Iterar por cada embarcación -->
+            <div th:each="vessel : ${vessels}">
+                <h2 style="color: #266ef8; margin-top: 30px; font-size: 20px;">
+                    🚢 Embarcación: <span th:text="${vessel.vesselName}">[Nombre Embarcación]</span>
+                </h2>
+
+                <!-- Tabla de componentes de la embarcación -->
+                <table style="width: 100%; margin-bottom: 25px; border-collapse: collapse; border: 1px solid #ddd;">
+                    <thead>
+                    <tr style="background-color: #e6fdf9; text-align: left;">
+                        <th style="padding: 10px;">ID</th>
+                        <th style="padding: 10px;">Componente</th>
+                        <th style="padding: 10px;">Horas acumuladas</th>
+                        <th style="padding: 10px;">Intervalo de mantenimiento</th>
+                        <th style="padding: 10px;">Umbral de mantenimiento</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="item : ${vessel.items}" style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 10px;" th:text="${item.id}">[ID]</td>
+                        <td style="padding: 10px;" th:text="${item.componente}">[Nombre Componente]</td>
+                        <td style="padding: 10px;" th:text="${item.horasAcumuladas}">[1200]</td>
+                        <td style="padding: 10px;" th:text="${item.intervaloMantenimiento}">[1500]</td>
+                        <td style="padding: 10px;" th:text="${item.umbralMantenimiento}">[1400]</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p style="margin-bottom: 25px; font-size: 16px; color: #34495e;">
+                Le recomendamos programar los mantenimientos a la brevedad para garantizar la seguridad y correcta operación de sus embarcaciones.
+            </p>
+
+            <!-- Botón -->
+            <table role="presentation" style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <td style="text-align: center; padding-bottom: 30px;">
+                        <a th:href="${detalleMantenimientoUrl}" style="background: linear-gradient(135deg, #0ed5b0 0%, #266ef8 100%); color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 50px; font-weight: 600; display: inline-block; font-size: 18px; transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);">
+                            Ver detalles completos
+                        </a>
+                    </td>
+                </tr>
+            </table>
+
+            <p style="margin-top: 10px; margin-bottom: -20px; text-align: center; font-size: 14px; color: #7f8c8d; font-style: italic;">
+                Este es un mensaje automático, por favor no responda a este correo.
+            </p>
+        </td>
+    </tr>
+
+    <!-- Footer -->
+    <tr>
+        <td style="padding: 20px 30px; text-align: center; background: linear-gradient(135deg, #0ed5b0 0%, #266ef8 100%);">
+            <p style="margin: 0; font-size: 14px; color: #fdfdfd;">
+                © 2025 Tu Empresa. Todos los derechos reservados.
+            </p>
+        </td>
+    </tr>
+
+</table>
+</body>
+</html>

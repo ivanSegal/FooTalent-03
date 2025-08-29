@@ -34,7 +34,7 @@ import java.lang.annotation.*;
                                     {
                                       "success": true,
                                       "message": "Contraseña cambiada correctamente",
-                                      "data": { "token": "eyJhbGci..." }
+                                      "data": { null }
                                     }
                                 """
                         )

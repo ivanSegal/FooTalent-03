@@ -52,8 +52,8 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateById(@PathVariable UUID id, @RequestBody @Valid UpdateUserReq request){
-        userService.updateById(id, request);
-        return ResponseEntity.ok().body(ApiResult.success("Actualizacion eixosa"));
+        UserSearchRes response = userService.updateById(id, request);
+        return ResponseEntity.ok().body(ApiResult.success(response,"Actualizacion eixosa"));
     }
 
     @DeleteUserEndpointDoc

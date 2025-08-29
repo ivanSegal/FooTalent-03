@@ -14,7 +14,7 @@ public interface UserService {
 
     UserSearchRes findById(UUID id);
 
-    void updateById(UUID id, UpdateUserReq request);
+    UserSearchRes updateById(UUID id, UpdateUserReq request);
 
     void deleteById(UUID id);
 }

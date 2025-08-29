@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -32,4 +35,7 @@ public class Vessel {
 
     @Enumerated(EnumType.STRING)
     private VesselStatus status;
+
+    @OneToMany(mappedBy = "vessel", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<VesselItem> items = new ArrayList<>();
 }

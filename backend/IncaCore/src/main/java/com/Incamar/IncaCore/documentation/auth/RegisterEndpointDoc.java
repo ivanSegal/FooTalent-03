@@ -30,18 +30,23 @@ import java.lang.annotation.*;
                 @ApiResponse(
                         responseCode = "201",
                         description = "Registro exitoso",
-                        content =
-                        @Content(
+                        content = @Content(
                                 mediaType = "application/json",
-                                schema =
-                                @Schema(
-                                        example =
-                                                """
-                                                {
-                                                  "success": true,
-                                                  "message": "Registro exitoso",
-                                                  "data": {null}
-                                                }
+                                schema = @Schema(
+                                      example = """
+                                                   {
+                                                     "success": true,
+                                                     "message": "Registro completado con éxito",
+                                                     "data": {
+                                                       "id": "9a0ddb38-b67f-4828-b50c-844701da868f",
+                                                       "firstName": "Juan",
+                                                       "lastName": "Perez",
+                                                       "email": "juan.perez@example.com",
+                                                       "role": "ADMIN",
+                                                       "department": null,
+                                                       "accountStatus": "ACTIVE"
+                                                     }
+                                                   }
                                                 """
                                 )
                         )
@@ -53,29 +58,19 @@ import java.lang.annotation.*;
                                 mediaType = "application/json",
                                 examples = {
                                         @ExampleObject(
-                                                name = "Contraseña y confirmación no coinciden",
-                                                summary = "Cuando las contraseñas no coinciden",
-                                                value = """
-                                                {
-                                                  "statusCode": 400,
-                                                  "message": "Contraseña y la confirmación de contraseña no coinciden.",
-                                                  "errorCode": "BAD_REQUEST",
-                                                  "details": ["Las contraseñas deben ser iguales."],
-                                                  "path": "/api/auth/register"
-                                                }
-                                                """
-                                        ),
-                                        @ExampleObject(
                                                 name = "Error de validación",
                                                 summary = "Cuando faltan campos obligatorios o no cumplen formato",
                                                 value = """
-                                                {
-                                                  "statusCode": 400,
-                                                  "message": "Falló la validación de los campos",
-                                                  "errorCode": "VALIDATION_ERROR",
-                                                  "details": ["email: no puede estar vacío."],
-                                                  "path": "/api/auth/register"
-                                                }
+                                                        {
+                                                           "statusCode": 400,
+                                                           "errorCode": "VALIDATION_ERROR",
+                                                           "message": "Falló la validación de los campos",
+                                                           "details": [
+                                                             "email: El email es requerido",
+                                                             "lastName: El apellido es requerido"
+                                                           ],
+                                                           "path": "/api/auth/register"
+                                                         }
                                                 """
                                         )
                                 }
@@ -88,31 +83,35 @@ import java.lang.annotation.*;
                                 mediaType = "application/json",
                                 schema = @Schema(
                                         example = """
-                                        {
-                                          "statusCode": 401,
-                                          "errorCode": "UNAUTHORIZED",
-                                          "message": "No autorizado. Token inválido o ausente.",
-                                          "details": [],
-                                          "path": "/api/auth/register"
-                                        }
+                                                {
+                                                   "statusCode": 401,
+                                                   "errorCode": "AUTH_ERROR",
+                                                   "message": "Acceso no autorizado. Token inválido o ausente.",
+                                                   "details": [
+                                                     "Se requiere estar autenticado para acceder a este recurso"
+                                                   ],
+                                                   "path": "/api/auth/register"
+                                                 }
                                         """
                                 )
                         )
                 ),
                 @ApiResponse(
                         responseCode = "403",
-                        description = "Prohibido: rol insuficiente para realizar la operación",
+                        description = "El usuario autenticado no tiene los permisos para usar esta acceder a este recurso",
                         content = @Content(
                                 mediaType = "application/json",
                                 schema = @Schema(
                                         example = """
-                                        {
-                                          "statusCode": 403,
-                                          "errorCode": "FORBIDDEN",
-                                          "message": "Acceso denegado. No tiene permisos para realizar esta acción.",
-                                          "details": [],
-                                          "path": "/api/auth/register"
-                                        }
+                                                {
+                                                   "statusCode": 403,
+                                                   "errorCode": "FORBIDDEN",
+                                                   "message": "Acceso denegado: no tienes permisos para acceder a este recurso",
+                                                   "details": [
+                                                     "El usuario no tiene autorización suficiente para realizar esta acción."
+                                                   ],
+                                                   "path": "/api/auth/register"
+                                                 }
                                         """
                                 )
                         )
@@ -158,7 +157,31 @@ import java.lang.annotation.*;
                                                 """
                                 )
                         )
+                ),
+                @ApiResponse(
+                        responseCode = "503",
+                        description = "Error interno relacionado con el servicio SMTP",
+                        content =
+                        @Content(
+                                mediaType = "application/json",
+                                schema =
+                                @Schema(
+                                        example =
+                                                """
+                                                        {
+                                                           "statusCode": 503,
+                                                           "errorCode": "MAIL_ERROR",
+                                                           "message": "Error de autenticación al enviar el correo: verifica usuario y contraseña del SMTP",
+                                                           "details": [
+                                                             "Authentication failed"
+                                                           ],
+                                                           "path": "/api/auth/register"
+                                                         }
+                                                """
+                                )
+                        )
                 )
+
         }
 )
 public @interface RegisterEndpointDoc {}

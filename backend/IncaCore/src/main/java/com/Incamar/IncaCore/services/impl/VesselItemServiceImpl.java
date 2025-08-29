@@ -5,6 +5,7 @@ import com.Incamar.IncaCore.dtos.vesselItem.VesselItemRes;
 import com.Incamar.IncaCore.dtos.vesselItem.VesselItemSearchReq;
 import com.Incamar.IncaCore.dtos.vesselItem.VesselItemUpdateReq;
 import com.Incamar.IncaCore.enums.MaterialType;
+import com.Incamar.IncaCore.exceptions.ResourceNotFoundException;
 import com.Incamar.IncaCore.mappers.VesselItemMapper;
 import com.Incamar.IncaCore.models.Vessel;
 import com.Incamar.IncaCore.models.VesselItem;
@@ -36,7 +37,7 @@ public class VesselItemServiceImpl implements VesselItemService {
     @Override
     public VesselItemRes getById(Long id){
         VesselItem vesselItem = vesselItemRepository.findById(id).
-                orElseThrow();
+                orElseThrow(()-> new ResourceNotFoundException("Componente de Embarcación no encontrado con ID: " + id));
         return vesselItemMapper.toVesselItemRes(vesselItem);
     }
 
@@ -45,7 +46,8 @@ public class VesselItemServiceImpl implements VesselItemService {
 
         VesselItem vesselItem = vesselItemMapper.toVesselItem(request);
 
-        Vessel vessel = vesselRepository.findById(request.vesselId()).orElseThrow();
+        Vessel vessel = vesselRepository.findById(request.vesselId())
+                .orElseThrow(()-> new ResourceNotFoundException("Embarcación no encontrada con ID: " + request.vesselId()));
         vesselItem.setVessel(vessel);
 
         return vesselItemMapper.toVesselItemRes(vesselItemRepository.save(vesselItem));
@@ -53,14 +55,16 @@ public class VesselItemServiceImpl implements VesselItemService {
 
     @Override
     public VesselItemRes update(Long id, VesselItemUpdateReq request){
-        VesselItem vesselItem = vesselItemRepository.findById(id).orElseThrow();
+        VesselItem vesselItem = vesselItemRepository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("Componente de Embarcación no encontrado con ID: " + id));
         vesselItemMapper.update(request, vesselItem);
         return vesselItemMapper.toVesselItemRes(vesselItemRepository.save(vesselItem));
     }
 
     @Override
     public void delete(Long id) {
-        VesselItem vesselItem=vesselItemRepository.findById(id).orElseThrow(()->new EntityNotFoundException("No se encontro ningun componente con id "+ id));
+        VesselItem vesselItem=vesselItemRepository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("Componente de Embarcación no encontrado con ID: " + id));
         vesselItemRepository.delete(vesselItem);
     }
 }

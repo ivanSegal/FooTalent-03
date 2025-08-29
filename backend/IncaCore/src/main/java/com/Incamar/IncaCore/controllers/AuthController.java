@@ -3,6 +3,7 @@ package com.Incamar.IncaCore.controllers;
 import com.Incamar.IncaCore.documentation.auth.*;
 import com.Incamar.IncaCore.dtos.auth.*;
 import com.Incamar.IncaCore.dtos.auth.LoginRes;
+import com.Incamar.IncaCore.dtos.users.UserSearchRes;
 import com.Incamar.IncaCore.services.AuthService;
 import com.Incamar.IncaCore.utils.ApiResult;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,9 +28,9 @@ public class AuthController {
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/register")
   public ResponseEntity<?> register(@RequestBody @Valid RegisterReq request) {
-    authService.register(request);
+    UserSearchRes response = authService.register(request);
     return ResponseEntity.status(HttpStatus.CREATED)
-            .body(ApiResult.success("Registro completado con éxito"));
+            .body(ApiResult.success(response,"Registro completado con éxito"));
   }
 
   @LoginEndpointDoc

@@ -2,6 +2,7 @@ package com.Incamar.IncaCore.services.impl;
 
 import com.Incamar.IncaCore.dtos.auth.*;
 import com.Incamar.IncaCore.dtos.auth.LoginRes;
+import com.Incamar.IncaCore.dtos.users.UserSearchRes;
 import com.Incamar.IncaCore.models.Employee;
 import com.Incamar.IncaCore.models.User;
 import com.Incamar.IncaCore.enums.TokenPurpose;
@@ -74,7 +75,7 @@ public class AuthServiceImpl implements AuthService {
      */
     @Override
     @Transactional
-    public void register(RegisterReq request) {
+    public UserSearchRes register(RegisterReq request) {
         String rawPassword = passwordGenerator.generate(8);
         String encodedPassword = passwordEncoder.encode(rawPassword);
 
@@ -85,6 +86,8 @@ public class AuthServiceImpl implements AuthService {
         User savedUser = userRepository.save(user);
 
         sendWelcomeEmail(savedUser, savedUser.getEmployee(), rawPassword);
+
+        return userMapper.toUserSearchRes(savedUser);
     }
 
     /**
