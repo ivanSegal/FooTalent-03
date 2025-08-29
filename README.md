@@ -400,96 +400,84 @@
 
 
 
-<!-- Team Q-A -->
-<table align="center">
+<!-- ================== SEPARADOR VISUAL ================== -->
+<hr style="border: 0; height: 1px; background: #ccc; margin: 40px auto; width: 80%;">
+
+<!-- ================== QA TEAM ================== -->
+<table align="center" style="border-collapse: collapse; margin: 20px auto; text-align: center;">
+
+  <!-- ================== TÍTULO DEL EQUIPO ================== -->
   <tr>
-    <td colspan="4" align="center"><h2>🔍 QA Team</h2></td>
+    <td colspan="4" align="center" style="padding: 15px 0;">
+      <h2>🔍 QA Team</h2>
+    </td>
   </tr>
-  
-  <!-- Fila 1: 2 perfiles -->
+
+  <!-- ================== FILA 1 ================== -->
   <tr>
-    <td></td> <!-- Celda vacía para centrar -->
-    
-  <!-- Mikhail Garcilano -->
-  <td align="center">
-      <img src="https://avatars.githubusercontent.com/u/206953006?v=4" width="100" style="border-radius: 50%;"/><br/>
+    <!-- Mikhail Garcilano -->
+    <td align="center" style="padding: 10px;">
+      <img src="https://avatars.githubusercontent.com/u/206953006?v=4" width="80" height="80" style="border-radius: 50%;" /><br/>
       <strong>Mikhail Garcilano</strong><br/>
       QA Automation Engineer<br/>
-      <!-- LinkedIn -->
       <a href="https://www.linkedin.com/in/mikhailgarcilano/">
         <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white" />
       </a>
-      <!-- GitHub -->
       <a href="https://github.com/MikhailGarcilano">
-        <img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" />
-      </a>
-    </td>
-
-  <!-- Camila Duarte -->
-  <td align="center">
-      <img src="https://images.weserv.nl/?url=github.com/camiladuarte.png&h=100&w=100&fit=cover&mask=circle" width="100" /><br/>
-      <strong>Camila Duarte</strong><br/>
-      QA Manual Analyst<br/>
-      <!-- LinkedIn -->
-      <a href="#">
-        <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white" />
-      </a>
-      <!-- GitHub -->
-      <a href="#">
-        <img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" />
-      </a>
-    </td>
-    
-  <td></td>
-  </tr>
-
-  <!-- Fila 2: 2 perfiles -->
-  <tr>
-    <td></td>
-    
-  <!-- Rafael Michelin (ACTUALIZADO) -->
-  <td align="center">
-      <img src="https://avatars.githubusercontent.com/u/127878158?v=4" width="100" style="border-radius: 50%;"/><br/>
-      <strong>Rafael Michelin</strong><br/>
-      QA Lead<br/>
-      <!-- LinkedIn -->
-      <a href="https://www.linkedin.com/in/rafael-michelin">
-        <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white" />
-      </a>
-      <!-- GitHub -->
-      <a href="https://github.com/Rafael-Bira">
-        <img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" />
+        <img src="https://img.shields.io/badge/GitHub-100000?style=flat&logo=github&logoColor=white" />
       </a>
     </td>
 
   <!-- Gabriela Pardo -->
-  <td align="center">
-      <img src="https://images.weserv.nl/?url=github.com/gabrielapardo.png&h=100&w=100&fit=cover&mask=circle" width="100" /><br/>
+  <td align="center" style="padding: 10px;">
+      <img src="https://images.weserv.nl/?url=github.com/gabrielapardo.png&h=80&w=80&fit=cover&mask=circle" width="80" height="80" /><br/>
       <strong>Gabriela Pardo</strong><br/>
       QA Automation<br/>
-      <!-- LinkedIn -->
       <a href="#">
         <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white" />
       </a>
-      <!-- GitHub -->
       <a href="#">
-        <img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" />
+        <img src="https://img.shields.io/badge/GitHub-100000?style=flat&logo=github&logoColor=white" />
       </a>
     </td>
-    
-  <td></td>
+
+  <!-- Camila Duarte -->
+  <td align="center" style="padding: 10px;">
+      <img src="https://images.weserv.nl/?url=github.com/camiladuarte.png&h=80&w=80&fit=cover&mask=circle" width="80" height="80" /><br/>
+      <strong>Camila Duarte</strong><br/>
+      QA Manual Analyst<br/>
+      <a href="#">
+        <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white" />
+      </a>
+      <a href="#">
+        <img src="https://img.shields.io/badge/GitHub-100000?style=flat&logo=github&logoColor=white" />
+      </a>
+    </td>
+
+  <!-- Rafael Michelin -->
+  <td align="center" style="padding: 10px;">
+      <img src="https://avatars.githubusercontent.com/u/127878158?v=4" width="80" height="80" style="border-radius: 50%;" /><br/>
+      <strong>Rafael Michelin</strong><br/>
+      QA Lead<br/>
+      <a href="https://www.linkedin.com/in/rafael-michelin">
+        <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white" />
+      </a>
+      <a href="https://github.com/Rafael-Bira">
+        <img src="https://img.shields.io/badge/GitHub-100000?style=flat&logo=github&logoColor=white" />
+      </a>
+    </td>
   </tr>
 
-  <!-- Tecnologías QA -->
+  <!-- ================== TECNOLOGÍAS QA ================== -->
   <tr>
-    <td colspan="4" align="center" style="padding: 15px 0;">
-      <h2 align="center">Herramientas QA</h2>
-      <div style="max-width: 100%; display: flex; flex-wrap: wrap; justify-content: center; gap: 4px;">
+    <td colspan="4" align="center" style="padding: 20px 0;">
+      <h2>⚙️ Herramientas QA</h2>
+      <div style="max-width: 100%; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px;">
         <img src="https://img.shields.io/badge/-Selenium-43B02A?style=flat&logo=selenium&logoColor=white" alt="Selenium">
         <img src="https://img.shields.io/badge/-Cypress-17202C?style=flat&logo=cypress&logoColor=white" alt="Cypress">
         <img src="https://img.shields.io/badge/-Postman-FF6C37?style=flat&logo=postman&logoColor=white" alt="Postman">
         <img src="https://img.shields.io/badge/-Jira-0052CC?style=flat&logo=jira&logoColor=white" alt="Jira">
-        <img src="https://img.shields.io/badge/-Playwright-2EAD33?style=flat&logo=&logoColor=white" alt="Playwright">
+        <img src="https://img.shields.io/badge/-Playwright-2EAD33?style=flat&logo=playwright&logoColor=white" alt="Playwright">
       </div>
     </td>
   </tr>
