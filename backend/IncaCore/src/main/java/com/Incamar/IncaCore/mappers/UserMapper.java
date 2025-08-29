@@ -24,7 +24,8 @@ public interface UserMapper {
     @Mapping(target = "lastName", source = "employee.lastName")
     JwtDataDto toJwtDataDto(User user);
 
-    @Mapping(target = "fullName", expression = "java(user.getEmployee() != null ? user.getEmployee().getFirstName() + \" \" + user.getEmployee().getLastName() : null)")
+    @Mapping(target = "firstName", source = "employee.firstName")
+    @Mapping(target = "lastName", source = "employee.lastName")
     @Mapping(target = "role", expression = "java(user.getRole().name())")
     @Mapping(target = "accountStatus", expression = "java(user.getAccountStatus().name())")
     UserSearchRes toUserSearchRes(User user);
