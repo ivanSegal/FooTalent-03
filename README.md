@@ -548,6 +548,58 @@
 
 
 
+<!-- ================== SEPARADOR VISUAL ================== -->
+<hr style="border: 0; height: 1px; background: #ccc; margin: 40px auto; width: 80%;">
+
+<table align="center">
+  <tr>
+    <td align="center">
+      <h2>🧭 Project Manager</h2>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <!-- Avatar en círculo -->
+      <img src="https://images.weserv.nl/?url=avatars.githubusercontent.com/u/83551117?v=4&h=100&w=100&fit=cover&mask=circle" width="100" /><br/>
+      <strong>Jhonatan Remón</strong><br/>
+      Project Manager<br/><br/>
+      <!-- Links -->
+      <a href="https://www.linkedin.com/in/jhonatanremon/">
+        <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white" />
+      </a>
+      <a href="https://github.com/Jhone-fori-freelancer">
+        <img src="https://img.shields.io/badge/GitHub-100000?style=flat&logo=github&logoColor=white" />
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <h3>🛠 Herramientas de Gestión</h3>
+      <p>
+        <img src="https://img.shields.io/badge/Git%20Project-F05032?style=flat&logo=git&logoColor=white" />
+        <img src="https://img.shields.io/badge/Notion-000000?style=flat&logo=notion&logoColor=white" />
+        <img src="https://img.shields.io/badge/Figma-F24E1E?style=flat&logo=figma&logoColor=white" />
+        <img src="https://img.shields.io/badge/Google%20Drive-4285F4?style=flat&logo=googledrive&logoColor=white" />
+        <img src="https://img.shields.io/badge/Discord-5865F2?style=flat&logo=discord&logoColor=white" />
+        <img src="https://img.shields.io/badge/Google%20Meet-00897B?style=flat&logo=googlemeet&logoColor=white" />
+        <img src="https://img.shields.io/badge/Slack-4A154B?style=flat&logo=slack&logoColor=white" />
+        <img src="https://img.shields.io/badge/Jira-0052CC?style=flat&logo=jira&logoColor=white" />
+        <img src="https://img.shields.io/badge/Trello-0079BF?style=flat&logo=trello&logoColor=white" />
+        <img src="https://img.shields.io/badge/Asana-F06A6A?style=flat&logo=asana&logoColor=white" />
+      </p>
+    </td>
+  </tr>
+</table>
+
+
+
+
+
+
+
+<!-- ================== SEPARADOR VISUAL ================== -->
+<hr style="border: 0; height: 1px; background: #ccc; margin: 40px auto; width: 80%;">
+
 
 
 
