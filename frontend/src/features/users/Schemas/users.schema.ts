@@ -1,41 +1,47 @@
 // users/schemas/users.schema.ts
-
 import { z } from 'zod';
 
 // Schema para crear usuario
 export const createUserSchema = z.object({
-  username: z
+  firstName: z
     .string()
-    .min(3, 'El nombre de usuario debe tener al menos 3 caracteres')
-    .max(50, 'El nombre de usuario no puede exceder 50 caracteres')
-    .regex(/^[a-zA-Z0-9_-]+$/, 'El nombre de usuario solo puede contener letras, números, guiones y guiones bajos'),
-  
-  fullName: z
+    .min(2, 'El nombre debe tener al menos 2 caracteres')
+    .max(50, 'El nombre no puede exceder 50 caracteres'),
+
+  lastName: z
     .string()
-    .min(2, 'El nombre completo debe tener al menos 2 caracteres')
-    .max(100, 'El nombre completo no puede exceder 100 caracteres'),
-  
+    .min(2, 'El apellido debe tener al menos 2 caracteres')
+    .max(50, 'El apellido no puede exceder 50 caracteres'),
+
   email: z
     .string()
     .email('Ingrese un email válido')
     .min(5, 'El email debe tener al menos 5 caracteres')
     .max(100, 'El email no puede exceder 100 caracteres'),
-  
+
   password: z
     .string()
     .min(6, 'La contraseña debe tener al menos 6 caracteres')
     .max(100, 'La contraseña no puede exceder 100 caracteres')
-    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, 'La contraseña debe contener al menos una minúscula, una mayúscula y un número'),
-  
+    .regex(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+      'La contraseña debe contener al menos una minúscula, una mayúscula y un número'
+    ),
+
   role: z.enum(['ADMIN', 'SUPERVISOR', 'OPERATOR'], {
-  message: 'Seleccione un rol válido'
-}),
+    message: 'Seleccione un rol válido'
+  }),
+
   department: z.string().optional(),
 });
 
 // Schema para actualizar usuario
-export const updateUserSchema = createUserSchema.partial().extend({
-  accountStatus: z.enum(['ACTIVE', 'INACTIVE', 'SUSPENDED']).optional(),
+export const updateUserSchema = z.object({
+  firstName: z.string().min(1, "El nombre es requerido"),
+  lastName: z.string().min(1, "El apellido es requerido"),
+  role: z.string().min(1, "El rol es requerido"), 
+  department: z.string().min(1, "El departamento es requerido"),
+  accountStatus: z.string().min(1, "El estado es requerido"),
 });
 
 // Schema para filtros de usuarios
@@ -80,7 +86,4 @@ export const validateEmail = (email: string): boolean => {
 export const validatePassword = (password: string): boolean => {
   return createUserSchema.shape.password.safeParse(password).success;
 };
-
-export const validateUsername = (username: string): boolean => {
-  return createUserSchema.shape.username.safeParse(username).success;
-};
+;

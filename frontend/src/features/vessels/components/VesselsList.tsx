@@ -403,7 +403,7 @@ export default function VesselsList() {
   ];
 
   return (
-    <main className="min-h-screen bg-gray-50 p-8">
+    <main className="ml-16 min-h-screen bg-gray-50 p-8">
       <div className="mx-auto">
         <header className="mb-8 flex flex-wrap items-center justify-between gap-4">
           <div>
@@ -424,7 +424,8 @@ export default function VesselsList() {
                 />
               </div>
               <div className="flex justify-end">
-                <Button type="primary" icon={<PlusOutlined />} onClick={() => setDialog(true)}>
+                <Button type="primary" icon={<PlusOutlined />} onClick={() => setDialog(true)}
+                style={{ backgroundColor: "#496490" }}>
                   Nueva embarcación
                 </Button>
               </div>

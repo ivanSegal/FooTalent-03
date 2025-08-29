@@ -1,21 +1,20 @@
-
 import api from "@/services/api";
 import Cookies from "js-cookie";
-import { 
-  User, 
-  PaginatedResponse, 
-  ApiResponse, 
-  CreateUserRequest, 
+import {
+  User,
+  PaginatedResponse,
+  ApiResponse,
+  CreateUserRequest,
   UpdateUserRequest,
   UserFilters,
-  PaginationParams 
+  PaginationParams,
 } from "../Types/user.types";
 
 export class UsersService {
   private static instance: UsersService;
-  
+
   private constructor() {}
-  
+
   public static getInstance(): UsersService {
     if (!UsersService.instance) {
       UsersService.instance = new UsersService();
@@ -48,10 +47,7 @@ export class UsersService {
   public hasValidToken(authToken?: string): boolean {
     return this.getAuthToken(authToken) !== null;
   }
-  private buildQueryParams(
-    pagination: PaginationParams,
-    filters?: UserFilters
-  ): URLSearchParams {
+  private buildQueryParams(pagination: PaginationParams, filters?: UserFilters): URLSearchParams {
     const params = new URLSearchParams({
       page: pagination.page.toString(),
       size: pagination.size.toString(),
@@ -77,31 +73,45 @@ export class UsersService {
   }
 
   /*Filtrar usuarios localmente*/
-  public filterUsersLocally(usersList: User[], searchTerm: string): User[] {
-    if (!searchTerm.trim()) return usersList;
+  public filterUsersLocally(
+    usersList: User[],
+    filters: { search?: string; role?: string; department?: string; status?: string },
+  ): User[] {
+    let filtered = [...usersList];
 
-    const term = searchTerm.toLowerCase().trim();
+    if (filters.search?.trim()) {
+      const term = filters.search.toLowerCase().trim();
+      filtered = filtered.filter((user) => {
+        const firstName = user.firstName?.toLowerCase() || "";
+        const lastName = user.lastName?.toLowerCase() || "";
+        const email = user.email?.toLowerCase() || "";
+        const role = user.role?.toLowerCase().replace("_", " ") || "";
+        const fullName = `${firstName} ${lastName}`.trim();
 
-    return usersList.filter((user) => {
-      const username = user.username?.toLowerCase() || "";
-      const fullName = user.fullName?.toLowerCase() || "";
-      const email = user.email?.toLowerCase() || "";
-      const role = user.role?.toLowerCase().replace("_", " ") || "";
+        return fullName.includes(term) || email.includes(term) || role.includes(term);
+      });
+    }
 
-      return (
-        username.includes(term) ||
-        fullName.includes(term) ||
-        email.includes(term) ||
-        role.includes(term)
-      );
-    });
+    if (filters.role) {
+      filtered = filtered.filter((user) => user.role === filters.role);
+    }
+
+    if (filters.department?.trim()) {
+      const dep = filters.department.toLowerCase();
+      filtered = filtered.filter((user) => user.department?.toLowerCase().includes(dep));
+    }
+    if (filters.status) {
+      filtered = filtered.filter((user) => user.accountStatus === filters.status);
+    }
+
+    return filtered;
   }
 
   /*Obtener usuarios con paginación y filtros*/
   public async fetchUsers(
     pagination: PaginationParams,
     filters?: UserFilters,
-    authToken?: string
+    authToken?: string,
   ): Promise<{ users: User[]; totalPages: number; totalElements: number; currentPage: number }> {
     if (!this.hasValidToken(authToken)) {
       throw new Error("⚠️ Token de autenticación requerido para cargar usuarios.");
@@ -160,29 +170,64 @@ export class UsersService {
   /*Crear un nuevo usuario*/
   public async createUser(userData: CreateUserRequest): Promise<User> {
     try {
-      const response = await api.post<ApiResponse<User>>("/users", userData);
+      const response = await api.post<ApiResponse<User>>("/auth/register", userData);
       return response.data.data;
     } catch (err: any) {
       console.error("Error creating user:", err);
+
+      if (err.response?.status === 409) {
+        throw new Error(
+          "No se pudo completar el registro. Intenta con un correo diferente o contacta al administrador.",
+        );
+      }
+
       throw new Error(err.message || "Error al crear el usuario");
     }
   }
 
   /*Actualizar un usuario existente*/
   public async updateUser(userId: string, userData: UpdateUserRequest): Promise<User> {
+    if (!this.hasValidToken()) {
+      throw new Error("⚠️ Token de autenticación requerido para actualizar usuarios.");
+    }
+
     try {
-      const response = await api.put<ApiResponse<User>>(`/users/${userId}`, userData);
+      const token = this.getAuthToken();
+      const response = await api.put<ApiResponse<User>>(`/users/${userId}`, userData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
       return response.data.data;
     } catch (err: any) {
       console.error("Error updating user:", err);
+
+      // Manejo más específico de errores
+      if (err.response?.status === 401) {
+        throw new Error("No tienes autorización para actualizar este usuario");
+      } else if (err.response?.status === 404) {
+        throw new Error("Usuario no encontrado");
+      } else if (err.response?.status === 400) {
+        throw new Error(err.response?.data?.message || "Datos inválidos para la actualización");
+      }
+
       throw new Error(err.message || "Error al actualizar el usuario");
     }
   }
-
   /*Elimina un usuario*/
-  public async deleteUser(userId: string): Promise<void> {
+  public async deleteUser(userId: string, authToken?: string): Promise<void> {
+    if (!this.hasValidToken(authToken)) {
+      throw new Error("⚠️ Token de autenticación requerido para eliminar usuarios.");
+    }
+
     try {
-      await api.delete(`/users/${userId}`);
+      await api.delete(`/users/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${this.getAuthToken(authToken)}`,
+        },
+      });
     } catch (err: any) {
       console.error("Error deleting user:", err);
       throw new Error(err.message || "Error al eliminar el usuario");
@@ -191,7 +236,7 @@ export class UsersService {
 
   /*Genera URL de avatar*/
   public generateAvatarUrl(user: User): string {
-    const name = user.fullName || user.username;
+    const name = `${user.firstName} ${user.lastName}`.trim();
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=496490&color=fff&size=40&rounded=true&bold=true`;
   }
 

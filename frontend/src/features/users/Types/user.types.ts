@@ -1,15 +1,16 @@
 export interface User {
-  uuid: string;
-  id?: string;   
+  uuid?: string;
+  id: string;   
   username: string;
-  fullName: string;
+  firstName: string; 
+  lastName: string;  
   email: string;
   role: string;
   department?: string;
   accountStatus: string;
   password?: string;
-  createdAt?: string;
 }
+
 
 export interface PaginatedResponse {
   content: User[];
@@ -39,30 +40,29 @@ export interface ApiResponse<T> {
 }
 
 export interface CreateUserRequest {
-  username: string;
+  firstName: string;
+  lastName: string;
+  email: string;
   password: string;
   role: string;
-  fullName: string;
-  email: string;
-  department?: string; 
-  createdAt?: string;
+  department: string;
+  accountStatus?: string;
 }
 
 export interface UpdateUserRequest {
-  username?: string;
-  password?: string; 
-  role?: string;
-  fullName?: string;
-  email?: string;
-  accountStatus?: string;
+  firstName: string;
+  lastName: string;
+  role: string;
   department?: string;
+  accountStatus: string;
 }
 
+
 export interface UserFilters {
-  role?: string;
-  accountStatus?: string;
-  department?: string;
   search?: string;
+  role?: string;
+  department?: string;
+  accountStatus?: string;
 }
 
 export interface PaginationParams {

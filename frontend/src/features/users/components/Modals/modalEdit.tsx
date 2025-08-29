@@ -1,66 +1,62 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { LoadingOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { z } from "zod";
+
+// Schema mínimo solo con firstName y lastName
+const editUserSchema = z.object({
+  firstName: z
+    .string()
+    .min(2, "El nombre debe tener al menos 2 caracteres")
+    .max(50, "El nombre no puede exceder 50 caracteres"),
+  lastName: z
+    .string()
+    .min(2, "El apellido debe tener al menos 2 caracteres")
+    .max(50, "El apellido no puede exceder 50 caracteres"),
+});
 
 export const EditUserModal: React.FC<{
   isOpen: boolean;
   onClose: () => void;
   user: any;
-  onUpdateUser: (userId: string, userData: any) => Promise<void>;
+  onUpdateUser: (userId: string, userData: { firstName: string; lastName: string }) => Promise<void>;
 }> = ({ isOpen, onClose, user, onUpdateUser }) => {
-  const [formData, setFormData] = useState({
-    fullName: user?.fullName || '',
-    email: user?.email || '',
-    username: user?.username || '',
-    role: user?.role || ''
-  });
+  const [formData, setFormData] = useState({ firstName: "", lastName: "" });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-   const roles = [
-    { value: 'ADMIN', label: 'Administrador' },
-    { value: 'SUPERVISOR', label: 'Encargado' },
-    { value: 'OPERATOR', label: 'Personal' }
-  ];
-  React.useEffect(() => {
+  useEffect(() => {
     if (user) {
       setFormData({
-        fullName: user.fullName || '',
-        email: user.email || '',
-        username: user.username || '',
-        role: user.role || ''
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
       });
     }
   }, [user]);
 
+  const handleInputChange = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    if (errors[field]) setErrors((prev) => ({ ...prev, [field]: "" }));
+  };
+
   const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-
-    if (!formData.fullName.trim()) {
-      newErrors.fullName = 'El nombre completo es requerido';
+    try {
+      editUserSchema.parse(formData);
+      setErrors({});
+      return true;
+    } catch (error: any) {
+      if (error.errors) {
+        const newErrors: Record<string, string> = {};
+        error.errors.forEach((err: any) => {
+          if (err.path?.[0]) newErrors[err.path[0]] = err.message;
+        });
+        setErrors(newErrors);
+      }
+      return false;
     }
-
-    if (!formData.email.trim()) {
-      newErrors.email = 'El correo electrónico es requerido';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'El correo electrónico no es válido';
-    }
-
-    if (!formData.username.trim()) {
-      newErrors.username = 'El nombre de usuario es requerido';
-    }
-
-    if (!formData.role) {
-      newErrors.role = 'Debe seleccionar un rol';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (!validateForm()) return;
 
     setLoading(true);
@@ -68,7 +64,7 @@ export const EditUserModal: React.FC<{
       await onUpdateUser(user.uuid, formData);
       handleClose();
     } catch (error) {
-      console.error('Error updating user:', error);
+      console.error("Error updating user:", error);
     } finally {
       setLoading(false);
     }
@@ -79,13 +75,6 @@ export const EditUserModal: React.FC<{
     onClose();
   };
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
-    }
-  };
-
   if (!isOpen || !user) return null;
 
   return (
@@ -93,95 +82,34 @@ export const EditUserModal: React.FC<{
       <div className="bg-white rounded-lg max-w-md w-full mx-4 shadow-xl">
         <form onSubmit={handleSubmit}>
           <div className="p-6 pb-4">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">
-              Editar usuario
-            </h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">Editar usuario</h2>
 
+            {/* Nombre */}
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Nombre completo
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Nombre</label>
               <input
                 type="text"
-                value={formData.fullName}
-                onChange={(e) => handleInputChange('fullName', e.target.value)}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 
-                  focus:ring-blue-500 focus:border-transparent ${
-                  errors.fullName ? 'border-red-300' : 'border-gray-300'
+                value={formData.firstName}
+                onChange={(e) => handleInputChange("firstName", e.target.value)}
+                className={`w-full px-3 py-2 border rounded-lg ${
+                  errors.firstName ? "border-red-300" : "border-gray-300"
                 }`}
               />
-              {errors.fullName && (
-                <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>
-              )}
+              {errors.firstName && <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>}
             </div>
 
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Correo Electrónico
-              </label>
-              <input
-                type="email"
-                value={formData.email}
-                onChange={(e) => handleInputChange('email', e.target.value)}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 
-                  focus:ring-blue-500 focus:border-transparent ${
-                  errors.email ? 'border-red-300' : 'border-gray-300'
-                }`}
-              />
-              {errors.email && (
-                <p className="text-red-500 text-xs mt-1">{errors.email}</p>
-              )}
-            </div>
-
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Nombre de usuario
-              </label>
-              <input
-                type="text"
-                value={formData.username}
-                onChange={(e) => handleInputChange('username', e.target.value)}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 
-                  focus:ring-blue-500 focus:border-transparent ${
-                  errors.username ? 'border-red-300' : 'border-gray-300'
-                }`}
-              />
-              {errors.username && (
-                <p className="text-red-500 text-xs mt-1">{errors.username}</p>
-              )}
-            </div>
-
+            {/* Apellido */}
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Rol del usuario
-              </label>
-              <div className="relative">
-                <select
-                  value={formData.role}
-                  onChange={(e) => handleInputChange('role', e.target.value)}
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 
-                    focus:ring-blue-500 focus:border-transparent appearance-none bg-white ${
-                    errors.role ? 'border-red-300' : 'border-gray-300'
-                  }`}
-                >
-                  <option value="">Seleccionar un rol...</option>
-                  {roles.map((role) => (
-                    <option key={role.value} value={role.value}>
-                      {role.label}
-                    </option>
-                  ))}
-                </select>
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" 
-                  viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
-                    d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
-              </div>
-              {errors.role && (
-                <p className="text-red-500 text-xs mt-1">{errors.role}</p>
-              )}
+              <label className="block text-sm font-medium text-gray-700 mb-2">Apellido</label>
+              <input
+                type="text"
+                value={formData.lastName}
+                onChange={(e) => handleInputChange("lastName", e.target.value)}
+                className={`w-full px-3 py-2 border rounded-lg ${
+                  errors.lastName ? "border-red-300" : "border-gray-300"
+                }`}
+              />
+              {errors.lastName && <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>}
             </div>
           </div>
 
@@ -190,17 +118,15 @@ export const EditUserModal: React.FC<{
               type="button"
               onClick={handleClose}
               disabled={loading}
-              className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 
-              rounded-lg font-medium hover:bg-gray-50 transition-colors"
+              className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-4 py-2 text-white rounded-lg font-medium hover:opacity-90 
-              transition-opacity flex items-center justify-center gap-2"
-              style={{ backgroundColor: '#496490' }}
+              className="flex-1 px-4 py-2 text-white rounded-lg flex items-center justify-center gap-2"
+              style={{ backgroundColor: "#496490" }}
             >
               {loading && <LoadingOutlined spin />}
               Guardar cambios

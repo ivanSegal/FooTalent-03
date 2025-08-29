@@ -2,40 +2,35 @@
 
 import React, { useState, useEffect } from "react";
 import { User, CreateUserRequest, UpdateUserRequest } from "./../Types/user.types";
-import { createUserSchema, updateUserSchema, USER_ROLES, ACCOUNT_STATUS } from "./../Schemas/users.schema";
 import {
-  CloseOutlined,
-  LoadingOutlined,
-  EyeOutlined,
-  EyeInvisibleOutlined,
-} from "@ant-design/icons";
+  createUserSchema,
+  updateUserSchema,
+  USER_ROLES,
+  ACCOUNT_STATUS,
+} from "./../Schemas/users.schema";
+import { CloseOutlined, LoadingOutlined } from "@ant-design/icons";
 
 interface UsersFormProps {
-  user?: User;
+  user?: User | null;
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (userData: CreateUserRequest | UpdateUserRequest) => Promise<void>;
+  onCreate?: (userData: CreateUserRequest) => Promise<void>;
+  onEdit?: (userId: string, userData: UpdateUserRequest) => Promise<void>;
   loading?: boolean;
 }
 
-export function UsersForm({
-  user,
-  isOpen,
-  onClose,
-  onSubmit,
-  loading,
-}: UsersFormProps) {
+export function UsersForm({ user, isOpen, onClose, onCreate, onEdit, loading }: UsersFormProps) {
   const [formData, setFormData] = useState<{
-    username: string;
-    fullName: string;
+    firstName: string;
+    lastName: string;
     email: string;
-    password?: string; // Hacemos opcional password
+    password?: string;
     role: string;
     department: string;
     accountStatus: string;
   }>({
-    username: "",
-    fullName: "",
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
     role: "",
@@ -44,17 +39,21 @@ export function UsersForm({
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   const isEditMode = !!user;
 
-  // Cargar datos del usuario si está en modo edición
+  const departments = [
+    { value: "INVENTORY", label: "Inventario" },
+    { value: "MAINTENANCE", label: "Mantenimiento" },
+    { value: "VESSEL", label: "Embarcaciones" },
+  ];
+
   useEffect(() => {
     if (user && isOpen) {
       setFormData({
-        username: user.username || "",
-        fullName: user.fullName || "",
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
         email: user.email || "",
         password: "",
         role: user.role || "",
@@ -62,10 +61,9 @@ export function UsersForm({
         accountStatus: user.accountStatus || "ACTIVE",
       });
     } else if (!user && isOpen) {
-      // Resetear formulario para nuevo usuario
       setFormData({
-        username: "",
-        fullName: "",
+        firstName: "",
+        lastName: "",
         email: "",
         password: "",
         role: "",
@@ -77,27 +75,24 @@ export function UsersForm({
   }, [user, isOpen]);
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    
-    // Limpiar error del campo cuando el usuario empiece a escribir
+    setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: "" }));
+      setErrors((prev) => ({ ...prev, [field]: "" }));
     }
   };
 
   const validateForm = (): boolean => {
     try {
+      const dataToValidate = { ...formData };
+
       if (isEditMode) {
-        // Para edición, la contraseña es opcional
-        const dataToValidate = { ...formData };
-        if (!dataToValidate.password || dataToValidate.password.trim() === "") {
-          delete dataToValidate.password;
-        }
+        // En edición, validamos los campos requeridos para actualizar
         updateUserSchema.parse(dataToValidate);
       } else {
-        // Para crear, todos los campos son requeridos
-        createUserSchema.parse(formData);
+        // En creación, validamos todos los campos requeridos
+        createUserSchema.parse(dataToValidate);
       }
+
       setErrors({});
       return true;
     } catch (error: any) {
@@ -116,23 +111,53 @@ export function UsersForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+    console.log("1. Submit iniciado, isEditMode:", isEditMode); // Debug
+    console.log("2. FormData:", formData); // Debug
+
     if (!validateForm()) {
+      console.log("3. Validación falló, errores:", errors); // Debug
       return;
     }
 
     setSubmitting(true);
+
     try {
-      const submitData = { ...formData };
-      
-      // Si es edición y no hay contraseña, no la incluimos
-      if (isEditMode && (!submitData.password || submitData.password.trim() === "")) {
-        delete submitData.password;
+      if (isEditMode && user && onEdit) {
+        console.log("4. Entrando a edición");
+        const userId = user.uuid || user.id;
+        if (!userId) {
+          setErrors({ submit: "ID de usuario no definido" });
+          setSubmitting(false);
+          return;
+        }
+        const updateData: UpdateUserRequest = {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          role: formData.role,
+          department: formData.department,
+          accountStatus: formData.accountStatus,
+        };
+
+        await onEdit(userId, updateData);
+        console.log("✔ Usuario actualizado");
+      } else if (!isEditMode && onCreate) {
+        console.log("4. Entrando a creación");
+        const createData: CreateUserRequest = {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          password: formData.password || "",
+          role: formData.role,
+          department: formData.department,
+          accountStatus: formData.accountStatus,
+        };
+        await onCreate(createData);
+        console.log("✔ Usuario creado");
       }
 
-      await onSubmit(submitData as CreateUserRequest | UpdateUserRequest);
       onClose();
     } catch (error: any) {
+      console.error("❌ Error en submit:", error);
       setErrors({ submit: error.message || "Error al guardar el usuario" });
     } finally {
       setSubmitting(false);
@@ -141,8 +166,8 @@ export function UsersForm({
 
   const handleClose = () => {
     setFormData({
-      username: "",
-      fullName: "",
+      firstName: "",
+      lastName: "",
       email: "",
       password: "",
       role: "",
@@ -156,7 +181,7 @@ export function UsersForm({
   if (!isOpen) return null;
 
   return (
-    <div className="backdrop-blur-sm fixed inset-0 z-50 flex items-center justify-center bg-opacity-50">
+    <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
       <div className="mx-4 w-full max-w-lg rounded-lg bg-white shadow-xl">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
@@ -174,53 +199,75 @@ export function UsersForm({
         {/* Form */}
         <form onSubmit={handleSubmit} className="px-6 py-4">
           <div className="space-y-4">
-
-            {/* Full Name */}
+            {/* Campos comunes (crear/editar) */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Nombre completo 
-              </label>
+              <label className="mb-1 block text-sm font-medium text-gray-700">Nombre</label>
               <input
                 type="text"
-                value={formData.fullName}
-                onChange={(e) => handleInputChange("fullName", e.target.value)}
-                className={`w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.fullName ? "border-red-300" : "border-gray-300"
+                value={formData.firstName}
+                onChange={(e) => handleInputChange("firstName", e.target.value)}
+                className={`w-full rounded-lg border px-3 py-2 ${
+                  errors.firstName ? "border-red-300" : "border-gray-300"
                 }`}
-                placeholder="Ingrese el nombre completo"
               />
-              {errors.fullName && (
-                <p className="mt-1 text-sm text-red-600">{errors.fullName}</p>
-              )}
+              {errors.firstName && <p className="mt-1 text-sm text-red-600">{errors.firstName}</p>}
             </div>
 
-            {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Correo electrónico
-              </label>
+              <label className="mb-1 block text-sm font-medium text-gray-700">Apellido</label>
               <input
-                type="email"
-                value={formData.email}
-                onChange={(e) => handleInputChange("email", e.target.value)}
-                className={`w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.email ? "border-red-300" : "border-gray-300"
+                type="text"
+                value={formData.lastName}
+                onChange={(e) => handleInputChange("lastName", e.target.value)}
+                className={`w-full rounded-lg border px-3 py-2 ${
+                  errors.lastName ? "border-red-300" : "border-gray-300"
                 }`}
-                placeholder="Ingrese el correo electrónico"
               />
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email}</p>
-              )}
+              {errors.lastName && <p className="mt-1 text-sm text-red-600">{errors.lastName}</p>}
             </div>
-            {/* Role */}
+            {/* Campos para CREAR */}
+            {!isEditMode && (
+              <>
+                {/* Email */}
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
+                    Correo electrónico
+                  </label>
+                  <input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => handleInputChange("email", e.target.value)}
+                    className={`w-full rounded-lg border px-3 py-2 ${
+                      errors.email ? "border-red-300" : "border-gray-300"
+                    }`}
+                  />
+                  {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
+                </div>
+
+                {/* Password */}
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">Contraseña</label>
+                  <input
+                    type="password"
+                    value={formData.password || ""}
+                    onChange={(e) => handleInputChange("password", e.target.value)}
+                    className={`w-full rounded-lg border px-3 py-2 ${
+                      errors.password ? "border-red-300" : "border-gray-300"
+                    }`}
+                  />
+                  {errors.password && (
+                    <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+                  )}
+                </div>
+              </>
+            )}
+
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Rol de usuario
-              </label>
+              <label className="mb-1 block text-sm font-medium text-gray-700">Rol</label>
               <select
                 value={formData.role}
                 onChange={(e) => handleInputChange("role", e.target.value)}
-                className={`w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                className={`w-full rounded-lg border px-3 py-2 ${
                   errors.role ? "border-red-300" : "border-gray-300"
                 }`}
               >
@@ -231,68 +278,40 @@ export function UsersForm({
                   </option>
                 ))}
               </select>
-              {errors.role && (
-                <p className="mt-1 text-sm text-red-600">{errors.role}</p>
-              )}
+              {errors.role && <p className="mt-1 text-sm text-red-600">{errors.role}</p>}
             </div>
 
-            {/* Password */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Contraseña {isEditMode ? "(dejar vacío para no cambiar)" : ""}
-              </label>
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  value={formData.password || ""}
-                  onChange={(e) => handleInputChange("password", e.target.value)}
-                  className={`w-full rounded-lg border px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    errors.password ? "border-red-300" : "border-gray-300"
-                  }`}
-                  placeholder={isEditMode ? "Nueva contraseña (opcional)" : "Ingrese la contraseña"}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600"
-                >
-                  {showPassword ? (
-                    <EyeInvisibleOutlined className="h-5 w-5" />
-                  ) : (
-                    <EyeOutlined className="h-5 w-5" />
-                  )}
-                </button>
-              </div>
-              {errors.password && (
-                <p className="mt-1 text-sm text-red-600">{errors.password}</p>
-              )}
-            </div>
-
-            
-            {/* Department */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Departamento
-              </label>
-              <input
-                type="text"
+              <label className="mb-1 block text-sm font-medium text-gray-700">Departamento</label>
+              <select
                 value={formData.department}
                 onChange={(e) => handleInputChange("department", e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Ingrese el departamento (opcional)"
-              />
+                className={`w-full rounded-lg border px-3 py-2 ${
+                  errors.department ? "border-red-300" : "border-gray-300"
+                }`}
+              >
+                <option value="">Seleccionar un departamento...</option>
+                {departments.map((d) => (
+                  <option key={d.value} value={d.value}>
+                    {d.label}
+                  </option>
+                ))}
+              </select>
+              {errors.department && (
+                <p className="mt-1 text-sm text-red-600">{errors.department}</p>
+              )}
             </div>
 
-            {/* Account Status (solo en modo edición) */}
+            {/* AccountStatus solo en edición */}
             {isEditMode && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="mb-1 block text-sm font-medium text-gray-700">
                   Estado de la cuenta
                 </label>
                 <select
                   value={formData.accountStatus}
                   onChange={(e) => handleInputChange("accountStatus", e.target.value)}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border px-3 py-2"
                 >
                   {Object.entries(ACCOUNT_STATUS).map(([key, label]) => (
                     <option key={key} value={key}>
@@ -303,12 +322,7 @@ export function UsersForm({
               </div>
             )}
 
-            {/* Error general */}
-            {errors.submit && (
-              <div className="rounded-lg border border-red-200 bg-red-50 p-3">
-                <p className="text-sm text-red-600">{errors.submit}</p>
-              </div>
-            )}
+            {errors.submit && <div className="text-sm text-red-600">{errors.submit}</div>}
           </div>
 
           {/* Footer */}
@@ -316,7 +330,7 @@ export function UsersForm({
             <button
               type="button"
               onClick={handleClose}
-              className="rounded-lg border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              className="rounded-lg border border-gray-300 px-4 py-2"
               disabled={submitting}
             >
               Cancelar
@@ -324,7 +338,7 @@ export function UsersForm({
             <button
               type="submit"
               disabled={submitting || loading}
-              className="flex items-center gap-2 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex items-center gap-2 rounded-lg px-4 py-2 text-white"
               style={{ backgroundColor: "#496490", color: "white" }}
             >
               {(submitting || loading) && <LoadingOutlined spin />}

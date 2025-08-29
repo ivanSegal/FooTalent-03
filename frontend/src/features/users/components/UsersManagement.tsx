@@ -7,7 +7,7 @@ import { UserDetailsModal } from "./Modals/modalUsersDetails";
 import { UsersForm } from "./UsersForm";
 import { UsersList } from "./UsersList";
 import { usersService } from "./../Services/users.service";
-import { User, CreateUserRequest, UpdateUserRequest } from "./../Types/user.types";
+import { User, CreateUserRequest, UpdateUserRequest, UserFilters } from "./../Types/user.types";
 import {
   PlusOutlined,
   FilterOutlined,
@@ -15,6 +15,7 @@ import {
   LoadingOutlined,
   ExclamationCircleOutlined,
 } from "@ant-design/icons";
+import { UsersFiltersModal } from "./Modals/modalFilters";
 
 interface Props {
   authToken?: string;
@@ -32,6 +33,11 @@ const UsersManagement: React.FC<Props> = ({ authToken: propAuthToken }) => {
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
   const [pageSize] = useState(10);
+  // Estados de filtros
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+  const [filters, setFilters] = useState<{ role?: string; department?: string; status?: string }>(
+    {},
+  );
 
   // Estados de modales
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -39,7 +45,7 @@ const UsersManagement: React.FC<Props> = ({ authToken: propAuthToken }) => {
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deletingUser, setDeletingUser] = useState<User | null>(null);
-  
+
   // NUEVO: Estados para el modal de detalles
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
@@ -48,7 +54,7 @@ const UsersManagement: React.FC<Props> = ({ authToken: propAuthToken }) => {
   const hasValidToken = usersService.hasValidToken(propAuthToken);
 
   // Cargar usuarios
-  const fetchUsers = async (page: number = 0, search: string = "") => {
+  const fetchUsers = async (page: number = 0, filters: UserFilters = {}) => {
     if (!hasValidToken) {
       setError("⚠️ Token de autenticación requerido para cargar usuarios.");
       return;
@@ -60,11 +66,17 @@ const UsersManagement: React.FC<Props> = ({ authToken: propAuthToken }) => {
     try {
       const result = await usersService.fetchUsers(
         { page, size: pageSize },
-        { search: search.trim() || undefined },
+        {}, // 👈 no mandamos search al backend
         propAuthToken,
       );
 
-      setUsers(result.users);
+      // Aplicar búsqueda local
+      const filtered = usersService.filterUsersLocally(result.users, {
+        ...filters,
+        search: searchTerm,
+      });
+
+      setUsers(filtered);
       setTotalPages(result.totalPages);
       setTotalElements(result.totalElements);
       setCurrentPage(result.currentPage);
@@ -93,7 +105,7 @@ const UsersManagement: React.FC<Props> = ({ authToken: propAuthToken }) => {
 
     const timeoutId = setTimeout(() => {
       setCurrentPage(0);
-      fetchUsers(0, searchTerm);
+      fetchUsers(0, { search: searchTerm });
     }, 500);
 
     return () => clearTimeout(timeoutId);
@@ -124,41 +136,31 @@ const UsersManagement: React.FC<Props> = ({ authToken: propAuthToken }) => {
   const handleCreateUser = async (userData: CreateUserRequest) => {
     try {
       await usersService.createUser(userData);
-      fetchUsers(currentPage, searchTerm);
+      fetchUsers(currentPage, { search: searchTerm });
       setShowCreateModal(false);
     } catch (err: any) {
       throw new Error(err.message || "Error al crear usuario");
     }
   };
 
-  const handleUpdateUser = async (userData: UpdateUserRequest) => {
-    if (!editingUser) return;
-
+  const handleUpdateUser = async (userId: string, userData: UpdateUserRequest) => {
     try {
-      await usersService.updateUser(editingUser.uuid, userData);
-      fetchUsers(currentPage, searchTerm);
+      if (!userId) throw new Error("ID de usuario requerido");
+      console.log("Actualizando usuario:", userId, userData);
+      await usersService.updateUser(userId, userData);
+      fetchUsers(currentPage, { search: searchTerm });
       setShowEditModal(false);
       setEditingUser(null);
     } catch (err: any) {
+      console.error("Error en handleUpdateUser:", err);
       throw new Error(err.message || "Error al actualizar usuario");
     }
   };
 
-  // Wrapper functions para manejar la unión de tipos
-  const handleCreateSubmit = async (userData: CreateUserRequest | UpdateUserRequest) => {
-    // En modo crear, userData debería ser CreateUserRequest
-    await handleCreateUser(userData as CreateUserRequest);
-  };
-
-  const handleEditSubmit = async (userData: CreateUserRequest | UpdateUserRequest) => {
-    // En modo editar, userData debería ser UpdateUserRequest
-    await handleUpdateUser(userData as UpdateUserRequest);
-  };
-
   const handleDeleteUser = async (userId: string) => {
     try {
-      await usersService.deleteUser(userId);
-      fetchUsers(currentPage, searchTerm);
+      await usersService.deleteUser(userId, propAuthToken);
+      fetchUsers(currentPage, { search: searchTerm });
       setShowDeleteModal(false);
       setDeletingUser(null);
     } catch (err: any) {
@@ -168,11 +170,11 @@ const UsersManagement: React.FC<Props> = ({ authToken: propAuthToken }) => {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    fetchUsers(page, searchTerm);
+    fetchUsers(page, { search: searchTerm });
   };
 
   const handleRefresh = () => {
-    fetchUsers(currentPage, searchTerm);
+    fetchUsers(currentPage, { search: searchTerm });
   };
 
   return (
@@ -222,7 +224,7 @@ const UsersManagement: React.FC<Props> = ({ authToken: propAuthToken }) => {
                     onClick={() => setShowCreateModal(true)}
                     disabled={!hasValidToken}
                     className="flex items-center gap-2 rounded-lg px-4 py-2 font-medium text-white transition-colors hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
-                    style={{ backgroundColor: "#496490"}}
+                    style={{ backgroundColor: "#496490" }}
                   >
                     <PlusOutlined className="h-4 w-4" />
                     Agregar nuevo usuario
@@ -230,6 +232,7 @@ const UsersManagement: React.FC<Props> = ({ authToken: propAuthToken }) => {
 
                   <button
                     disabled={!hasValidToken}
+                    onClick={() => setIsFiltersOpen(true)}
                     className="flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 font-medium text-white transition-colors hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
                     style={{ backgroundColor: "#496490" }}
                   >
@@ -279,11 +282,10 @@ const UsersManagement: React.FC<Props> = ({ authToken: propAuthToken }) => {
             </div>
 
             {/* Table Header */}
-            <div className="border-b border-gray-200 ">
-              <div className="grid grid-cols-4 gap-4 px-6 py-4">
+            <div className="border-b border-gray-200">
+              <div className="grid grid-cols-3 gap-4 px-6 py-4">
                 <div className="text-sm font-medium text-gray-700">Usuario</div>
                 <div className="text-sm font-medium text-gray-700">Rol</div>
-                <div className="text-sm font-medium text-gray-700">Fecha de creación</div>
                 <div className="text-sm font-medium text-gray-700">Acciones</div>
               </div>
             </div>
@@ -358,25 +360,28 @@ const UsersManagement: React.FC<Props> = ({ authToken: propAuthToken }) => {
         </div>
 
         {/* Modals */}
-        {/* Modal para crear usuario */}
-        <UsersForm
-          isOpen={showCreateModal}
-          onClose={() => setShowCreateModal(false)}
-          onSubmit={handleCreateSubmit}
-          loading={loading}
-        />
+        {showCreateModal && (
+          <UsersForm
+            isOpen={showCreateModal}
+            onClose={() => setShowCreateModal(false)}
+            onCreate={handleCreateUser}
+            loading={loading}
+          />
+        )}
 
-        {/* Modal para editar usuario */}
-        <UsersForm
-          user={editingUser || undefined}
-          isOpen={showEditModal}
-          onClose={() => {
-            setShowEditModal(false);
-            setEditingUser(null);
-          }}
-          onSubmit={handleEditSubmit}
-          loading={loading}
-        />
+        {/* CORRECCIÓN: Modal para editar usuario */}
+        {showEditModal && editingUser && (
+          <UsersForm
+            user={editingUser}
+            isOpen={showEditModal}
+            onClose={() => {
+              setShowEditModal(false);
+              setEditingUser(null);
+            }}
+            onEdit={handleUpdateUser}
+            loading={loading}
+          />
+        )}
 
         {/* Modal para eliminar usuario */}
         {showDeleteModal && deletingUser && (
@@ -399,6 +404,16 @@ const UsersManagement: React.FC<Props> = ({ authToken: propAuthToken }) => {
           authToken={propAuthToken}
         />
       </div>
+      {/* Modal para filtros del usuario */}
+      <UsersFiltersModal
+        isOpen={isFiltersOpen}
+        onClose={() => setIsFiltersOpen(false)}
+        onApply={(appliedFilters) => {
+          setFilters(appliedFilters); // guardar filtros
+          setCurrentPage(0);
+          fetchUsers(0, { search: searchTerm, ...appliedFilters }); // combinar búsqueda + filtros
+        }}
+      />
     </>
   );
 };

@@ -43,7 +43,23 @@ export const login = async (
   const token = payload.data?.token;
   if (!token) throw new Error("No se recibió token en la respuesta de login");
 
+  // Guardar en cookie
   saveTokenInCookie(token);
+
+  // Guardar también en localStorage
+  localStorage.setItem("authToken", token);
+  console.log("Token guardado en localStorage");
+
+  try {
+    const payloadDecoded = JSON.parse(atob(token.split(".")[1]));
+    if (payloadDecoded.sub) {
+      localStorage.setItem("userId", payloadDecoded.sub);
+      console.log("UserId guardado en localStorage:", payloadDecoded.sub);
+    }
+  } catch (error) {
+    console.error("Error extracting userId from token:", error);
+  }
+
   // Decodifica el token para obtener el email
   let email: string | undefined = undefined;
   try {
@@ -53,8 +69,10 @@ export const login = async (
   } catch (err) {
     console.warn("No se pudo decodificar el token JWT", err);
   }
+
   return { token, email };
 };
+
 // Servicio para solicitar recuperación de contraseña
 export const forgotPassword = async (
   data: ForgotPasswordRequest,
@@ -65,6 +83,7 @@ export const forgotPassword = async (
   );
   return body;
 };
+
 // Registro de usuario
 export const register = async (data: RegisterRequest): Promise<ApiResponse<unknown>> => {
   // Backend espera { email, role, firstName, lastName, department }

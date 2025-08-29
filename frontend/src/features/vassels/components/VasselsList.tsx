@@ -171,7 +171,7 @@ export default function VasselsList() {
   const expandedRowRender = (record: Vassel) => {
     const entry = itemsByVassel[record.id];
     return (
-      <div className="p-2">
+      <div className="p-2 ml-16">
         <Table
           size="small"
           rowKey="id"

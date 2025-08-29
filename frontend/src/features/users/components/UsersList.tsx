@@ -3,12 +3,7 @@
 import React from "react";
 import { User } from "./../Types/user.types";
 import { usersService } from "./../Services/users.service";
-import {
-  EyeOutlined,
-  EditOutlined,
-  DeleteOutlined,
-  LoadingOutlined,
-} from "@ant-design/icons";
+import { EyeOutlined, EditOutlined, DeleteOutlined, LoadingOutlined } from "@ant-design/icons";
 
 interface UsersListProps {
   users: User[];
@@ -29,19 +24,18 @@ export const UsersList: React.FC<UsersListProps> = ({
   searchTerm = "",
   hasValidToken = true,
 }) => {
-  
-const getRoleStyle = (role: string): string => {
-  switch (role) {
-    case "ADMIN":
-      return "border border-red-200 bg-red-100 text-red-800";
-    case "SUPERVISOR":
-      return "border border-blue-200 bg-blue-100 text-blue-800";
-    case "OPERATOR":
-      return "border border-green-200 bg-green-100 text-green-800";
-    default:
-      return "border border-gray-200 bg-gray-100 text-gray-800";
-  }
-};
+  const getRoleStyle = (role: string): string => {
+    switch (role) {
+      case "ADMIN":
+        return "border border-red-200 bg-red-100 text-red-800";
+      case "SUPERVISOR":
+        return "border border-blue-200 bg-blue-100 text-blue-800";
+      case "OPERATOR":
+        return "border border-green-200 bg-green-100 text-green-800";
+      default:
+        return "border border-gray-200 bg-gray-100 text-gray-800";
+    }
+  };
   const getStatusIndicatorColor = (accountStatus: string): string => {
     switch (accountStatus) {
       case "ACTIVE":
@@ -89,20 +83,21 @@ const getRoleStyle = (role: string): string => {
   return (
     <div className="divide-y divide-gray-200">
       {users.map((user) => (
-        <div
-          key={user.uuid}
-          className="grid grid-cols-4 gap-4 px-6 py-4 transition-colors hover:bg-gray-50"
+  <div
+    key={user.uuid || user.id}
+          className="grid grid-cols-3 gap-4 px-6 py-4 transition-colors hover:bg-gray-50"
         >
-          {/* User with Avatar and Name */}
           <div className="flex items-center gap-3">
             <div className="relative">
               <img
                 src={usersService.generateAvatarUrl(user)}
-                alt={`Avatar de ${user.username}`}
+                alt={`Avatar de ${user.firstName} ${user.lastName}`}
                 className="h-10 w-10 rounded-full border-2 border-gray-200 object-cover shadow-sm"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
-                  target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username.charAt(0))}&background=6b7280&color=fff&size=40`;
+                  target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                    `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`
+                  )}&background=6b7280&color=fff&size=40`;
                 }}
               />
               {/* Status indicator */}
@@ -113,44 +108,27 @@ const getRoleStyle = (role: string): string => {
             </div>
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-semibold text-gray-900">
-                {user.fullName || user.username}
+                {user.firstName} {user.lastName}
               </p>
-              {user.email && (
-                <p className="truncate text-xs text-gray-500">
-                  {user.email}
-                </p>
-              )}
+              {user.email && <p className="truncate text-xs text-gray-500">{user.email}</p>}
             </div>
           </div>
 
           {/* Role */}
           <div className="flex items-center">
-            <span className={`rounded-full px-3 py-1 text-xs font-medium ${getRoleStyle(user.role)}`}>
+            <span
+              className={`rounded-full px-3 py-1 text-xs font-medium ${getRoleStyle(user.role)}`}
+            >
               {user.role.replace("_", " ")}
             </span>
-            {user.department && (
-              <div className="ml-2 text-xs text-gray-500">
-                {user.department}
-              </div>
-            )}
+            {user.department && <div className="ml-2 text-xs text-gray-500">{user.department}</div>}
           </div>
 
-          {/* Created Date */}
-          <div className="flex items-center">
-            <div className="text-sm text-gray-700">
-              <div>{usersService.formatDate(user.createdAt)}</div>
-              {user.createdAt && (
-                <div className="text-xs text-gray-500">
-                  {usersService.formatTime(user.createdAt)}
-                </div>
-              )}
-            </div>
-          </div>
 
           {/* Actions */}
           <div className="flex items-center gap-1">
             <button
-              onClick={() => onView(user.uuid)}
+              onClick={() => onView(user.id)}
               className="group rounded-lg p-2 text-gray-500 transition-colors hover:bg-blue-50 hover:text-blue-600"
               title="Ver detalles del usuario"
             >
