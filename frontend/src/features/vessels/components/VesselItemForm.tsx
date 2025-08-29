@@ -99,16 +99,15 @@ export default function VesselItemForm({ vesselId, current, onSaved, onCancel }:
                 {...field}
                 options={[
                   { label: "Navegación", value: "NAVIGATION" },
-                  { label: "Comunicación", value: "COMMUNICATION" },
-                  { label: "Seguridad", value: "SAFETY" },
-                  { label: "Motor", value: "ENGINE" },
-                  { label: "Eléctrico", value: "ELECTRICAL" },
-                  { label: "Otro", value: "OTHER" },
+                  { label: "Propio", value: "OWN" },
                 ]}
                 status={errors.controlType ? "error" : undefined}
               />
             )}
           />
+          {errors.controlType ? (
+            <p className="mt-1 text-xs text-red-600">{errors.controlType.message as string}</p>
+          ) : null}
         </div>
         <div>
           <label className="mb-1 block text-sm font-medium">Horas acumuladas</label>
@@ -129,7 +128,7 @@ export default function VesselItemForm({ vesselId, current, onSaved, onCancel }:
           ) : null}
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium">Vida útil (horas)</label>
+          <label className="mb-1 block text-sm font-medium">Ciclo de mantenimiento (horas)</label>
           <Controller
             name="usefulLifeHours"
             control={control}
@@ -174,15 +173,16 @@ export default function VesselItemForm({ vesselId, current, onSaved, onCancel }:
                 {...field}
                 options={[
                   { label: "Componentes", value: "COMPONENTS" },
-                  { label: "Consumibles", value: "CONSUMABLES" },
-                  { label: "Repuestos", value: "SPARE_PARTS" },
-                  { label: "Herramientas", value: "TOOLS" },
-                  { label: "Otro", value: "OTHER" },
+                  { label: "Subcomponentes", value: "SUBCOMPONENTS" },
+                  { label: "Suministros", value: "SUPPLIES" },
                 ]}
                 status={errors.materialType ? "error" : undefined}
               />
             )}
           />
+          {errors.materialType ? (
+            <p className="mt-1 text-xs text-red-600">{errors.materialType.message as string}</p>
+          ) : null}
         </div>
       </div>
       <div className="flex justify-end gap-2 pt-2">

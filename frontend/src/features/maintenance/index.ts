@@ -8,3 +8,4 @@ export * from "./components/MaintenanceTemplate";
 export * from "./types/maintenanceActivities.types";
 export * from "./schemas/maintenanceActivity.schema";
 export * from "./services/maintenanceActivities.service";
+export * from "./components/MaintenanceActivityForm";

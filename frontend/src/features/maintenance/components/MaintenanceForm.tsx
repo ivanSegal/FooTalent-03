@@ -288,13 +288,19 @@ export const MaintenanceForm: React.FC<Props> = ({
           />
         </div>
       </div>
-      <div className="flex items-center justify-end gap-3 pt-2">
+      <div className="grid w-full grid-cols-1 gap-2 pt-2 md:grid-cols-2">
         {hideMaintenanceFormDialog && (
-          <Button htmlType="button" onClick={hideMaintenanceFormDialog}>
+          <Button htmlType="button" onClick={hideMaintenanceFormDialog} className="w-full">
             Cancelar
           </Button>
         )}
-        <Button htmlType="submit" type="primary" loading={isSubmitting} disabled={isSubmitting}>
+        <Button
+          htmlType="submit"
+          type="primary"
+          loading={isSubmitting}
+          disabled={isSubmitting}
+          className="w-full"
+        >
           {isSubmitting ? "Guardando..." : isDirty ? "Guardar cambios" : "Guardar"}
         </Button>
       </div>

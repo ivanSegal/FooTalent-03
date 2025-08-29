@@ -29,10 +29,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             token: {
               // Brand align with provided palette
               // Primary: #3758F9, Success: #13C296, Text Base: #1E293B
-              colorPrimary: "#3758F9",
+              colorPrimary: "#496490",
               colorSuccess: "#13C296",
               colorLink: "#3758F9",
               colorTextBase: "#1E293B",
+
               // Using #49649B as an assumption for the second swatch (please confirm)
               colorInfo: "#49649B",
               borderRadius: 6,
