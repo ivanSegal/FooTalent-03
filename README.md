@@ -488,92 +488,54 @@
 
 
 
-<table align="center">
+<!-- ================== SEPARADOR VISUAL ================== -->
+<hr style="border: 0; height: 1px; background: #ccc; margin: 40px auto; width: 80%;">
+
+<!-- ================== FRONTEND TEAM ================== -->
+<table align="center" style="border-collapse: collapse; margin: 20px auto; text-align: center;">
+
+  <!-- ================== TÍTULO DEL EQUIPO ================== -->
   <tr>
-    <td colspan="4" align="center"><h2>🎨 Frontend Team</h2></td>
+    <td colspan="2" align="center" style="padding: 15px 0;">
+      <h2>🎨 Frontend Team</h2>
+    </td>
   </tr>
-  
-  <!-- Fila 1: 2 perfiles -->
+
+  <!-- ================== FILA ÚNICA ================== -->
   <tr>
-    <td></td> <!-- Celda vacía para centrar -->
-    
-  <!-- Luis Angel Quispe Navarro -->
-  <td align="center">
-      <img src="https://images.weserv.nl/?url=github.com/luisangelquispe.png&h=100&w=100&fit=cover&mask=circle" width="100" style="border-radius: 50%;"/><br/>
-      <strong>Luis Angel Quispe Navarro</strong><br/>
-      Frontend Developer<br/>
-      <!-- LinkedIn -->
+    <!-- Alfredo Castillo -->
+    <td align="center" style="padding: 10px;">
+      <img src="https://images.weserv.nl/?url=github.com/alfredocastillo.png&h=80&w=80&fit=cover&mask=circle" width="80" height="80" /><br/>
+      <strong>Alfredo Castillo</strong><br/>
+      Frontend Lead<br/>
       <a href="#">
         <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white" />
       </a>
-      <!-- GitHub -->
       <a href="#">
-        <img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" />
+        <img src="https://img.shields.io/badge/GitHub-100000?style=flat&logo=github&logoColor=white" />
       </a>
     </td>
 
-  <!-- Nataly Castañeda (ACTUALIZADO) -->
-  <td align="center">
-      <img src="https://avatars.githubusercontent.com/u/115433779?v=4" width="100" style="border-radius: 50%;"/><br/>
+  <!-- Nataly Castañeda -->
+  <td align="center" style="padding: 10px;">
+      <img src="https://avatars.githubusercontent.com/u/115433779?v=4" width="80" height="80" style="border-radius: 50%;" /><br/>
       <strong>Nataly Castañeda</strong><br/>
       Frontend Developer (React)<br/>
-      <!-- LinkedIn -->
       <a href="https://www.linkedin.com/in/nataly-castaneda/">
         <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white" />
       </a>
-      <!-- GitHub -->
       <a href="https://github.com/nath1710">
-        <img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" />
+        <img src="https://img.shields.io/badge/GitHub-100000?style=flat&logo=github&logoColor=white" />
       </a>
     </td>
-    
-  <td></td>
   </tr>
 
-  <!-- Fila 2: 2 perfiles -->
+  <!-- ================== TECNOLOGÍAS FRONTEND ================== -->
   <tr>
-    <td></td>
-    
-  <!-- Alfredo Castillo -->
-  <td align="center">
-      <img src="https://images.weserv.nl/?url=github.com/alfredocastillo.png&h=100&w=100&fit=cover&mask=circle" width="100" style="border-radius: 50%;"/><br/>
-      <strong>Alfredo Castillo</strong><br/>
-      Frontend Lead<br/>
-      <!-- LinkedIn -->
-      <a href="#">
-        <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white" />
-      </a>
-      <!-- GitHub -->
-      <a href="#">
-        <img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" />
-      </a>
-    </td>
-
-  <!-- Massimo Bochetti -->
-  <td align="center">
-      <img src="https://images.weserv.nl/?url=github.com/massimobochetti.png&h=100&w=100&fit=cover&mask=circle" width="100" style="border-radius: 50%;"/><br/>
-      <strong>Massimo Bochetti</strong><br/>
-      Frontend (Vue.js)<br/>
-      <!-- LinkedIn -->
-      <a href="#">
-        <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white" />
-      </a>
-      <!-- GitHub -->
-      <a href="#">
-        <img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" />
-      </a>
-    </td>
-    
-  <td></td>
-  </tr>
-
-  <!-- Tecnologías Frontend -->
-  <tr>
-    <td colspan="4" align="center" style="padding: 15px 0;">
-      <h2 align="center">Tecnologías Frontend</h2>
-      <div style="max-width: 100%; display: flex; flex-wrap: wrap; justify-content: center; gap: 4px;">
+    <td colspan="2" align="center" style="padding: 20px 0;">
+      <h2>⚙️ Tecnologías Frontend</h2>
+      <div style="max-width: 100%; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px;">
         <img src="https://img.shields.io/badge/-React-61DAFB?style=flat&logo=react&logoColor=black" alt="React">
-        <img src="https://img.shields.io/badge/-Vue.js-4FC08D?style=flat&logo=vuedotjs&logoColor=white" alt="Vue.js">
         <img src="https://img.shields.io/badge/-TypeScript-3178C6?style=flat&logo=typescript&logoColor=white" alt="TypeScript">
         <img src="https://img.shields.io/badge/-Tailwind_CSS-06B6D4?style=flat&logo=tailwindcss&logoColor=white" alt="Tailwind CSS">
         <img src="https://img.shields.io/badge/-Vite-646CFF?style=flat&logo=vite&logoColor=white" alt="Vite">
@@ -581,6 +543,7 @@
     </td>
   </tr>
 </table>
+
 
 
 
