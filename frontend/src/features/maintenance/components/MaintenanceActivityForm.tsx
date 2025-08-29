@@ -18,6 +18,7 @@ import type { MaintenanceActivityItem } from "../types/maintenanceActivities.typ
 import { vesselItemService, type VesselItem } from "@/features/vessels";
 import { showAlert } from "@/utils/showAlert";
 import { NormalizedApiError } from "@/types/api";
+import { inventoryMovementService } from "@/features/inventory-items/services/inventoryMovement.service";
 
 const { TextArea } = Input;
 
@@ -68,6 +69,11 @@ export const MaintenanceActivityForm: React.FC<Props> = ({
   const [items, setItems] = useState<VesselItem[]>([]);
   const [itemsLoading, setItemsLoading] = useState(false);
   const [itemSearch, setItemSearch] = useState("");
+  // New: inventory movements options
+  const [movementOptions, setMovementOptions] = useState<Array<{ label: string; value: number }>>(
+    [],
+  );
+  const [movementLoading, setMovementLoading] = useState(false);
 
   const vesselItemPlaceholder = useMemo(
     () => (vesselId ? "Buscar ítem por nombre" : "Seleccione una orden con embarcación"),
@@ -121,6 +127,41 @@ export const MaintenanceActivityForm: React.FC<Props> = ({
     };
   }, [vesselId, itemSearch, getVesselIdFromItem]);
 
+  // Load inventory movements for the select options
+  useEffect(() => {
+    let ignore = false;
+    const loadMovements = async () => {
+      setMovementLoading(true);
+      try {
+        const page = await inventoryMovementService.list({ page: 0, size: 100, sort: "date,desc" });
+        const opts = (page.content ?? []).map((m) => {
+          const maxLen = 60;
+          const rawReason = (m.reason ?? "").trim();
+          const reasonShort = rawReason
+            ? rawReason.length > maxLen
+              ? `${rawReason.slice(0, maxLen)}…`
+              : rawReason
+            : "";
+          const parts = [`#${m.id}`, m.date];
+          if (reasonShort) parts.push(reasonShort);
+          return {
+            label: parts.join(" · "),
+            value: m.id,
+          };
+        });
+        if (!ignore) setMovementOptions(opts);
+      } catch {
+        if (!ignore) setMovementOptions([]);
+      } finally {
+        if (!ignore) setMovementLoading(false);
+      }
+    };
+    void loadMovements();
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
   useEffect(() => {
     if (activity) {
       reset({ ...defaultValues, ...activity } as MaintenanceActivityFormValues);
@@ -169,10 +210,7 @@ export const MaintenanceActivityForm: React.FC<Props> = ({
     await showAlert("Formulario incompleto", "Por favor corrige los errores marcados.", "warning");
   };
 
-  const movementOptions = useMemo(() => {
-    const ids = Array.from(new Set([...(activity?.inventoryMovementIds ?? []), 1, 2, 3, 4, 5]));
-    return ids.map((id) => ({ label: `Movimiento #${id}`, value: id }));
-  }, [activity]);
+  // movementOptions now provided by state loaded from inventory movements service
 
   return (
     <form onSubmit={handleSubmit(onSubmit, onInvalid)} className="space-y-4">
@@ -285,6 +323,9 @@ export const MaintenanceActivityForm: React.FC<Props> = ({
                 value={field.value ?? []}
                 onChange={(v) => field.onChange(v)}
                 options={movementOptions}
+                loading={movementLoading}
+                showSearch
+                optionFilterProp="label"
                 allowClear
               />
             )}
