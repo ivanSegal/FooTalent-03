@@ -1,17 +1,6 @@
 "use client";
 import React, { useState, useMemo, useCallback, useEffect } from "react";
-import {
-  Table,
-  Tag,
-  Button,
-  Space,
-  Input,
-  Select,
-  Tooltip,
-  DatePicker,
-  Skeleton,
-  Modal,
-} from "antd";
+import { Table, Tag, Button, Space, Input, Select, Tooltip, DatePicker, Modal } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
