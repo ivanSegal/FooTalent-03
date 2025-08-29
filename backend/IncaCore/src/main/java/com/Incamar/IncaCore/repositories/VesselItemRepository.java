@@ -1,5 +1,6 @@
 package com.Incamar.IncaCore.repositories;
 
+import com.Incamar.IncaCore.enums.MaintenanceOrderStatus;
 import com.Incamar.IncaCore.models.VesselItem;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +25,22 @@ public interface VesselItemRepository extends JpaRepository<VesselItem,Long> {
     );
 
     List<VesselItem> findByVesselId(Long vesselId);
+
+    @Query("""
+        SELECT i
+        FROM VesselItem i
+        WHERE i.accumulatedHours >= i.alertHours
+          AND NOT EXISTS (
+            SELECT 1
+            FROM Activity a
+            JOIN a.maintenanceOrder mo
+            WHERE a.vesselItem = i
+              AND mo.status IN :statuses
+          ) 
+    """)
+    List<VesselItem> findItemsRequiringMaintenanceWithoutActiveOrders(@Param("statuses") List<MaintenanceOrderStatus> statuses);
+
+
 
 
 

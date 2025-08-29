@@ -11,12 +11,15 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface VesselItemMapper {
 
      @Mapping(target = "vesselId", source = "vessel.id")
      VesselItemRes toVesselItemRes(VesselItem vesselItem);
 
+     List<VesselItemRes> toVesselItemResList(List<VesselItem> vesselItems);
 
      default Page<VesselItemRes> toVesselItemRes(Page<VesselItem> vesselItems) {
           return vesselItems.map(this::toVesselItemRes);
