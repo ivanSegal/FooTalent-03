@@ -38,7 +38,7 @@ public class ActivityMapper {
                     .stream()
                     .map(InventoryMovement::getId)
                     .toList();
-            responseDto.setInventoryMovementsIds(movementIds);
+            responseDto.setInventoryMovementIds(movementIds);
         }
         responseDto.setDescription(activity.getDescription());
         return responseDto;

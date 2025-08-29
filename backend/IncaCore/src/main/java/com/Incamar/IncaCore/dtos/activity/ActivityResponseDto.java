@@ -13,5 +13,5 @@ public class ActivityResponseDto {
     private Long vesselItemId;
     private String vesselItemName;
     private String description;
-    private List<Long> inventoryMovementsIds;
+    private List<Long> inventoryMovementIds;
 }
