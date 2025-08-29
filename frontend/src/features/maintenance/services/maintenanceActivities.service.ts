@@ -43,8 +43,7 @@ function coerceIds(val: unknown): number[] | undefined {
 
 function normalizeActivityFromApi(raw: unknown): MaintenanceActivityItem {
   const obj = (raw ?? {}) as Record<string, unknown>;
-  const idsSource =
-    obj["inventoryMovementIds"] ?? obj["inventoryMovementsIds"] ?? obj["inventoryMovementId"];
+  const idsSource = obj["inventoryMovementIds"] ?? obj["inventoryMovementId"];
   const ids = coerceIds(idsSource);
 
   const toNumberMaybe = (v: unknown): number | undefined => {

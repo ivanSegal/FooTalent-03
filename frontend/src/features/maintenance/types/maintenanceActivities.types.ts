@@ -9,5 +9,4 @@ export interface MaintenanceActivityItem {
   vesselItemName?: string; // opcional, para mostrar
   description: string;
   inventoryMovementIds?: number[]; // canónica en frontend
-  inventoryMovementsIds?: number[]; // alias que puede venir del backend (GET)
 }
