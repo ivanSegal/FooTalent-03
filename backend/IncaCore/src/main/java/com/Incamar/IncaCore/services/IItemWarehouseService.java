@@ -17,7 +17,7 @@ public interface IItemWarehouseService {
 
     void deleteById(Long id);
 
-    ItemWarehouseResponseDto editWarehouse(Long id, @Valid ItemWarehouseUpdateDto itemWarehouseDto);
+    ItemWarehouseResponseDto editItemWarehouse(Long id, @Valid ItemWarehouseUpdateDto itemWarehouseDto);
 
     Page<ItemWarehouseResponseDto> getAllItemsWarehouse(Pageable pageable);
 

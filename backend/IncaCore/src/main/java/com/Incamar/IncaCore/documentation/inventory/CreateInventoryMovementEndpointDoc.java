@@ -1,6 +1,5 @@
 package com.Incamar.IncaCore.documentation.inventory;
 
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -17,9 +16,9 @@ import java.lang.annotation.*;
 @Operation(
         summary = "Crear un movimiento de inventario",
         description = """
-        Registra un nuevo movimiento de inventario (ENTRADA o SALIDA) para un ítem específico en un almacén. \
+        Registra un nuevo movimiento de inventario (ENTRADA o SALIDA) para uno o varios ítems específicos en un almacén. \
         Actualiza automáticamente el stock del ítem y registra al usuario responsable. \
-        Requiere autenticación de usuarios con rol <strong>ADMIN, OPERATOR, SUPERVISOR </strong> que pertenezcan al departamento INVENTARY
+        Requiere autenticación de usuarios con rol <strong>ADMIN, OPERATOR, SUPERVISOR</strong> del departamento INVENTORY.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )
@@ -29,25 +28,35 @@ import java.lang.annotation.*;
                 description = "Movimiento de inventario creado correctamente",
                 content = @Content(
                         mediaType = "application/json",
-                        schema = @Schema(
-                                example = """
-                    {
-                      "success": true,
-                      "message": "Movimiento de inventario creado correctamente.",
-                      "data": {
-                        "id": 10,
-                        "itemWarehouseId": 1,
-                        "itemWarehouseName": "Tornillos de acero",
-                        "movementType": "ENTRADA",
-                        "quantity": 50,
-                        "date": "2025-08-26",
-                        "reason": "Reposición de stock",
-                        "responsibleId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-                        "responsibleName": "Jose Gonzales"
-                      }
-                    }
-                """
-                        )
+                        examples = {
+                                @ExampleObject(
+                                        name = "Movimiento creado",
+                                        summary = "Respuesta con detalle del movimiento y los ítems involucrados",
+                                        value = """
+                                        {
+                                          "success": true,
+                                          "message": "Movimiento de inventario creado correctamente.",
+                                          "data": {
+                                            "id": 44,
+                                            "warehouseId": 1,
+                                            "warehouseName": "Depósito Central",
+                                            "movementType": "ENTRADA",
+                                            "date": "2025-08-24",
+                                            "reason": "Ingreso por compra de proveedor",
+                                            "responsibleId": "ad1e461d-04c2-4a4c-be93-56260c2245fb",
+                                            "responsibleName": "Juan Pérez",
+                                            "movementDetails": [
+                                              {
+                                                "itemWarehouseId": 1,
+                                                "itemWarehouseName": "Tornillos de acero",
+                                                "quantity": 50
+                                              }
+                                            ]
+                                          }
+                                        }
+                                        """
+                                )
+                        }
                 )
         ),
         @ApiResponse(
@@ -60,13 +69,13 @@ import java.lang.annotation.*;
                                         name = "Campos inválidos",
                                         summary = "Cuando faltan datos o tienen formato incorrecto",
                                         value = """
-                                            {
-                                              "statusCode": 400,
-                                              "message": "Error de validación en los datos",
-                                              "errorCode": "VALIDATION_ERROR",
-                                              "detailsError": "quantity: debe ser mayor que 0, reason: no puede estar vacío",
-                                              "path": "/api/inventory-movements/create"
-                                            }
+                                        {
+                                          "statusCode": 400,
+                                          "message": "Error de validación en los datos",
+                                          "errorCode": "VALIDATION_ERROR",
+                                          "detailsError": "quantity: debe ser mayor que 0, reason: no puede estar vacío",
+                                          "path": "/api/inventory-movements/create"
+                                        }
                                         """
                                 )
                         }
@@ -79,14 +88,14 @@ import java.lang.annotation.*;
                         mediaType = "application/json",
                         schema = @Schema(
                                 example = """
-                    {
-                      "statusCode": 404,
-                      "message": "Item de almacen o usuario no encontrado",
-                      "errorCode": "RESOURCE_NOT_FOUND",
-                      "detailsError": "...",
-                      "path": "/api/inventory-movements/create"
-                    }
-                """
+                                {
+                                  "statusCode": 404,
+                                  "message": "Item de almacen o usuario no encontrado",
+                                  "errorCode": "RESOURCE_NOT_FOUND",
+                                  "detailsError": "...",
+                                  "path": "/api/inventory-movements/create"
+                                }
+                                """
                         )
                 )
         ),
@@ -97,14 +106,14 @@ import java.lang.annotation.*;
                         mediaType = "application/json",
                         schema = @Schema(
                                 example = """
-                    {
-                      "statusCode": 409,
-                      "message": "Stock insuficiente para el ítem con ID: 1",
-                      "errorCode": "CONFLICT",
-                      "detailsError": "...",
-                      "path": "/api/inventory-movements/create"
-                    }
-                """
+                                {
+                                  "statusCode": 409,
+                                  "message": "Stock insuficiente para el ítem con ID: 1",
+                                  "errorCode": "CONFLICT",
+                                  "detailsError": "...",
+                                  "path": "/api/inventory-movements/create"
+                                }
+                                """
                         )
                 )
         ),
@@ -115,14 +124,14 @@ import java.lang.annotation.*;
                         mediaType = "application/json",
                         schema = @Schema(
                                 example = """
-                    {
-                      "statusCode": 401,
-                      "message": "Acceso no autorizado",
-                      "errorCode": "AUTH_ERROR",
-                      "details": "...",
-                      "path": "/error"
-                    }
-                """
+                                {
+                                  "statusCode": 401,
+                                  "message": "Acceso no autorizado",
+                                  "errorCode": "AUTH_ERROR",
+                                  "details": "...",
+                                  "path": "/error"
+                                }
+                                """
                         )
                 )
         ),
@@ -133,14 +142,14 @@ import java.lang.annotation.*;
                         mediaType = "application/json",
                         schema = @Schema(
                                 example = """
-                    {
-                      "statusCode": 403,
-                      "message": "Acceso denegado",
-                      "errorCode": "FORBIDDEN",
-                      "details": "...",
-                      "path": "/api/inventory-movements/create"
-                    }
-                """
+                                {
+                                  "statusCode": 403,
+                                  "message": "Acceso denegado",
+                                  "errorCode": "FORBIDDEN",
+                                  "details": "...",
+                                  "path": "/api/inventory-movements/create"
+                                }
+                                """
                         )
                 )
         ),
@@ -151,14 +160,14 @@ import java.lang.annotation.*;
                         mediaType = "application/json",
                         schema = @Schema(
                                 example = """
-                    {
-                      "statusCode": 500,
-                      "message": "Internal Server Error",
-                      "errorCode": "INTERNAL_ERROR",
-                      "detailsError": "...",
-                      "path": "/api/inventory-movements/create"
-                    }
-                """
+                                {
+                                  "statusCode": 500,
+                                  "message": "Internal Server Error",
+                                  "errorCode": "INTERNAL_ERROR",
+                                  "detailsError": "...",
+                                  "path": "/api/inventory-movements/create"
+                                }
+                                """
                         )
                 )
         )

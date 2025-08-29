@@ -1,5 +1,6 @@
 package com.Incamar.IncaCore.documentation.itemwarehouse;
 
+import com.Incamar.IncaCore.dtos.itemwarehouse.ItemWarehouseResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -29,25 +30,25 @@ import java.lang.annotation.*;
                 description = "Ítem de almacén creado correctamente",
                 content = @Content(
                         mediaType = "application/json",
-                        schema = @Schema(
-                                example = """
-                    {
-                      "success": true,
-                      "message": "Item de almacen creado correctamente.",
-                      "data": {
-                        "id": 1,
-                        "name": "Tornillos de acero",
-                        "description": "Caja con 100 tornillos de 5cm",
-                        "stock": 500,
-                        "stockMin": 50,
-                        "warehouse": {
-                          "id": 2,
-                          "name": "Depósito Central"
-                        }
-                      }
-                    }
+                        schema = @Schema(implementation = ItemWarehouseResponseDto.class),
+                        examples = {
+                                @ExampleObject(
+                                        name = "Item creado (sin stocks aún)",
+                                        summary = "Respuesta exitosa al crear un ítem nuevo. La lista de stocks está vacía.",
+                                        value = """
+                {
+                  "success": true,
+                  "message": "Item de almacen creado correctamente.",
+                  "data": {
+                    "id": 1,
+                    "name": "Tornillos de acero",
+                    "description": "Caja con 100 tornillos de 5cm",
+                    "stocks": []
+                  }
+                }
                 """
-                        )
+                                )
+                        }
                 )
         ),
         @ApiResponse(
@@ -70,24 +71,6 @@ import java.lang.annotation.*;
                                         """
                                 )
                         }
-                )
-        ),
-        @ApiResponse(
-                responseCode = "404",
-                description = "El almacén especificado no existe",
-                content = @Content(
-                        mediaType = "application/json",
-                        schema = @Schema(
-                                example = """
-                    {
-                      "statusCode": 404,
-                      "message": "Almacen no encontrado con ID: 99",
-                      "errorCode": "RESOURCE_NOT_FOUND",
-                      "detailsError": "...",
-                      "path": "/api/items-warehouse/create"
-                    }
-                """
-                        )
                 )
         ),
         @ApiResponse(

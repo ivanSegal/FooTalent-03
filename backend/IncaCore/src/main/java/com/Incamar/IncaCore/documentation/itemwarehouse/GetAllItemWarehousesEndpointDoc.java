@@ -1,8 +1,10 @@
 package com.Incamar.IncaCore.documentation.itemwarehouse;
 
 
+import com.Incamar.IncaCore.dtos.itemwarehouse.ItemWarehouseResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -30,7 +32,12 @@ import java.lang.annotation.*;
                 description = "Lista paginada de ítems de almacén obtenida exitosamente",
                 content = @Content(
                         mediaType = "application/json",
-                        schema = @Schema(example = """
+                        schema = @Schema(implementation = ItemWarehouseResponseDto.class),
+                        examples = {
+                                @ExampleObject(
+                                        name = "Lista de ítems",
+                                        summary = "Respuesta con ítems de almacén y sus stocks (inicialmente vacíos)",
+                                        value = """
                 {
                   "success": true,
                   "message": "Se visualizan exitosamente todos los items de almacen.",
@@ -40,17 +47,13 @@ import java.lang.annotation.*;
                         "id": 1,
                         "name": "Tornillos de acero",
                         "description": "Caja con 100 tornillos de 5cm",
-                        "stock": 150,
-                        "stockMin": 20,
-                        "warehouseName": "Depósito Central"
+                        "stocks": []
                       },
                       {
                         "id": 2,
                         "name": "Tuercas M5",
                         "description": "Bolsa con 200 tuercas",
-                        "stock": 300,
-                        "stockMin": 50,
-                        "warehouseName": "Almacén Norte"
+                        "stocks": []
                       }
                     ],
                     "pageable": {
@@ -80,7 +83,9 @@ import java.lang.annotation.*;
                     "empty": false
                   }
                 }
-                """)
+                """
+                                )
+                        }
                 )
         ),
         @ApiResponse(

@@ -56,9 +56,9 @@ public class ItemWarehouseController {
     @UpdateItemWarehouseEndpointDoc
     @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','INVENTORY')")
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResult<?>> editWarehouse(@PathVariable Long id,
+    public ResponseEntity<ApiResult<?>> editItemWarehouse(@PathVariable Long id,
                                                       @Valid @RequestBody ItemWarehouseUpdateDto itemWarehouseDto) {
-        ItemWarehouseResponseDto itemWarehouseResponseDto =  itemWarehouseService.editWarehouse(id, itemWarehouseDto);
+        ItemWarehouseResponseDto itemWarehouseResponseDto =  itemWarehouseService.editItemWarehouse(id, itemWarehouseDto);
         return ResponseEntity.ok(ApiResult.success(itemWarehouseResponseDto,"Item de almacen editado exitosamente."));
     }
 
