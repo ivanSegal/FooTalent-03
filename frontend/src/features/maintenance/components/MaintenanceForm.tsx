@@ -17,8 +17,7 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import { MaintenanceFormValues, maintenanceSchema } from "../schemas/maintenance.schema";
 import { MaintenanceListItem, maintenanceService } from "@/features/maintenance";
 
-
-import { vasselsService, type Vassel } from "@/features/vassels";
+import { vesselsService, type Vessel } from "@/features/vessels";
 
 const { TextArea } = Input;
 
@@ -57,12 +56,12 @@ export const MaintenanceForm: React.FC<Props> = ({
     defaultValues,
   });
   // Cargar embarcaciones para el select
-  const [vassels, setVassels] = React.useState<Vassel[]>([]);
+  const [vessels, setVessels] = React.useState<Vessel[]>([]);
   useEffect(() => {
     void (async () => {
       try {
-        const res = await vasselsService.list({ page: 0, size: 100 });
-        setVassels(res.content);
+        const res = await vesselsService.list({ page: 0, size: 100 });
+        setVessels(res.content);
       } catch {
         // Ignorar error de carga inicial
       }
@@ -82,7 +81,7 @@ export const MaintenanceForm: React.FC<Props> = ({
   const onSubmit: SubmitHandler<MaintenanceFormValues> = async (data) => {
     try {
       // Incluir vesselId si el usuario eligió una embarcación válida
-      const selected = vassels.find((v) => v.name === data.vesselName);
+      const selected = vessels.find((v) => v.name === data.vesselName);
       const payload: Partial<MaintenanceListItem> = selected
         ? { ...data, vesselId: selected.id }
         : { ...data };
@@ -130,7 +129,7 @@ export const MaintenanceForm: React.FC<Props> = ({
                 optionFilterProp="label"
                 value={field.value ?? undefined}
                 onChange={(val) => field.onChange(val)}
-                options={vassels.map((v) => ({ label: v.name, value: v.name }))}
+                options={vessels.map((v) => ({ label: v.name, value: v.name }))}
               />
             )}
           />

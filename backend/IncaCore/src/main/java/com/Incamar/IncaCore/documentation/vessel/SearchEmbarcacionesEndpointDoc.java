@@ -17,7 +17,7 @@ import java.lang.annotation.*;
         description = """
         Retorna una lista paginada de embarcaciones cuyo nombre coincida parcialmente \
         (ignorando mayúsculas) con el valor proporcionado en el parámetro `nombre`. \
-        <strong>Solo accesible para usuarios con rol ADMIN.</strong>
+        <strong>Solo accesible para usuarios con rol <strong>ADMIN, SUPERVISOR, OPERATOR</strong>.
         """,
         security = @SecurityRequirement(name = "bearer-key")
 )
