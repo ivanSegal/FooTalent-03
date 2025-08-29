@@ -42,7 +42,7 @@ import java.lang.annotation.*;
                              "activityType": "INSPECCION",
                              "vesselItemName": "Motor Principal",
                              "description": "...",
-                             "inventoryMovementId": "2"
+                             "inventoryMovementsIds": [2]
                           }
                         }
                         """)

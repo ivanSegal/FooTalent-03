@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class ActivityRequestDto {
     @NotNull(groups = Create.class)
@@ -26,8 +28,10 @@ public class ActivityRequestDto {
     )
     @NotNull(groups = Create.class)
     private String activityType;
-    @Schema(description = "Id del movimiento del almacen a la que se le asociará esta orden.", example = "2")
-    private Long inventoryMovementId;
+    /*@Schema(description = "Id del movimiento del almacen a la que se le asociará esta orden.", example = "2")
+    private Long inventoryMovementId;*/
+    @Schema(description = "Ids de los movimientos del almacén asociados a esta actividad.", example = "[1,2,3]")
+    private List<Long> inventoryMovementIds;
     private String description;
 
     public interface Create {}

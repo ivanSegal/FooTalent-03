@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -33,9 +36,19 @@ public class Activity {
     @Column(name = "description")
     private String description;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    /*@OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "inventory_movement_id")
-    private InventoryMovement inventoryMovement;
+    private InventoryMovement inventoryMovement;*/
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "activity_inventory_movement",
+            joinColumns = @JoinColumn(name = "activity_id"),
+            inverseJoinColumns = @JoinColumn(name = "inventory_movement_id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"activity_id", "inventory_movement_id"})
+
+    )
+    private List<InventoryMovement> inventoryMovements = new ArrayList<>();
 
     public String getMaintenanceOrderSummary() {
         return maintenanceOrder.getId() + "-" +

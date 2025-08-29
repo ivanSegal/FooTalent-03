@@ -52,7 +52,7 @@ import java.lang.annotation.*;
                         "maintenanceOrderId": "1",
                         "vesselItemId": "2",
                         "activityType": "INSPECCION",
-                        "inventoryMovementId":"2",
+                        "inventoryMovementsIds": [1,2],
                         "description":"...",
                       }
                     }
