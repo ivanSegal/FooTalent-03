@@ -206,7 +206,7 @@ export default function VasselsList() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-50 p-8">
+    <main className="ml-16 min-h-screen bg-gray-50 p-8">
       <div className="mx-auto">
         <header className="mb-8 flex flex-wrap items-center justify-between gap-4">
           <div>

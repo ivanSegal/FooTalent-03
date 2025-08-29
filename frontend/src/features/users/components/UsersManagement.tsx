@@ -178,9 +178,9 @@ const UsersManagement: React.FC<Props> = ({ authToken: propAuthToken }) => {
   return (
     <>
       <Sidebar />
-      <div className="min-h-screen p-6" style={{ backgroundColor: "#F8FAFC" }}>
+      <div className="ml-16 min-h-screen p-6" style={{ backgroundColor: "#F8FAFC" }}>
         <div className="mx-auto max-w-7xl">
-          {/* Main Table Container */}
+          {/* Main Table */}
           <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
             {/* Toolbar */}
             <div className="border-b border-gray-200 bg-white p-4">
@@ -349,7 +349,7 @@ const UsersManagement: React.FC<Props> = ({ authToken: propAuthToken }) => {
             </div>
           )}
 
-          {/* Stats Footer */}
+          {/* Footer */}
           {!loading && users.length > 0 && (
             <div className="mt-4 text-sm text-gray-600">
               Página {currentPage + 1} de {totalPages} • Total: {totalElements} usuarios
@@ -391,7 +391,7 @@ const UsersManagement: React.FC<Props> = ({ authToken: propAuthToken }) => {
           />
         )}
 
-        {/* NUEVO: Modal para ver detalles del usuario */}
+        {/* Modal para ver detalles del usuario */}
         <UserDetailsModal
           isOpen={showDetailsModal}
           onClose={handleCloseDetailsModal}
