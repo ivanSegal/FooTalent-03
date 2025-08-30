@@ -30,16 +30,12 @@ public class TravelController {
     }
 
     @GetTravelsByDetailEndpointDoc
-    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
-            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @GetMapping("/detail/{detailId}")
     public ResponseEntity<List<TravelResponseDto>> getByDetail(@PathVariable Long detailId) {
         return ResponseEntity.ok(travelService.getByDetailId(detailId));
     }
 
     @GetTotalHoursByDetailEndpointDoc
-    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
-            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @GetMapping("/detail/{detailId}/total-hours")
     public ResponseEntity<String> getTotalHours(@PathVariable Long detailId) {
         return ResponseEntity.ok(travelService.getTotalTraveledTime(detailId));

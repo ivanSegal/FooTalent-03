@@ -190,7 +190,6 @@ export default function InventoryMovementForm({ current, onSaved, onCancel }: Pr
       await showAlert("Error", (e as Error)?.message || "No se pudo guardar", "error");
     }
   };
-  console.log("error", errors);
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
       <div>

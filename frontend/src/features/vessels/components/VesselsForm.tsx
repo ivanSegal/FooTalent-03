@@ -125,7 +125,6 @@ export default function VesselsForm({ current, onSaved, onCancel }: Props) {
   React.useEffect(() => {
     reset(toFormDefaults(current ?? null));
   }, [current, reset]);
-
   const onSubmit = async (values: VesselFormValues) => {
     try {
       let saved: Vessel;

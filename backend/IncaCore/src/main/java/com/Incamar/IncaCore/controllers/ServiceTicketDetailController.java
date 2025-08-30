@@ -27,16 +27,12 @@ public class ServiceTicketDetailController {
     private final ServiceTicketDetailServiceImpl serviceTicketDetailService;
 
     @GetAllServiceTicketDetailsEndpointDoc
-    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
-            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @GetMapping
     public ResponseEntity<Page<ServiceTicketDetailResponseDto>> getAll(@ParameterObject Pageable pageable) {
         return ResponseEntity.ok(serviceTicketDetailService.getAll(pageable));
     }
 
     @GetByIdServiceTicketDetailsEndpointDoc
-    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
-            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @GetMapping("/{id}")
     public ResponseEntity<ServiceTicketDetailResponseDto> getSTDetailById(@PathVariable Long id){
         return ResponseEntity.ok(serviceTicketDetailService.getById(id));
@@ -74,8 +70,6 @@ public class ServiceTicketDetailController {
     }
 
     @GetByServiceTicketIdEndpointDoc
-    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
-            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @GetMapping("/by-ticket/{ticketId}")
     public ResponseEntity<ServiceTicketDetailResponseDto> getByServiceTicketId(@PathVariable Long ticketId) {
         return ResponseEntity.ok(serviceTicketDetailService.getByServiceTicketId(ticketId));

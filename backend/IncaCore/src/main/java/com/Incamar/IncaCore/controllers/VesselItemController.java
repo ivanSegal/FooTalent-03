@@ -32,8 +32,6 @@ public class VesselItemController {
     private final VesselItemService vesselItemService;
 
     @GetAllVesselItemEndpointDoc
-    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
-            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @GetMapping
     public ResponseEntity<?> getAllWithSearch(@ParameterObject @Valid VesselItemSearchReq request, @ParameterObject Pageable pageable){
         Page<VesselItemRes> response = vesselItemService.getAllWithSearch(request,pageable);
@@ -42,8 +40,6 @@ public class VesselItemController {
     }
 
     @GetVesselItemByIdEndpointDoc
-    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
-            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id){
         VesselItemRes response = vesselItemService.getById(id);
@@ -79,8 +75,6 @@ public class VesselItemController {
     }
 
     @MantenimenceVesselItemsEndpointDoc
-    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
-            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @GetMapping("/maintenance-required")
     public ResponseEntity<?> getItemsRequiringMaintenanceWithoutActiveOrders() {
         List<VesselItemRes> response = vesselItemService.findItemsRequiringMaintenanceWithoutActiveOrders();
@@ -91,7 +85,7 @@ public class VesselItemController {
     @PostMapping("/maintenance-alert")
     public ResponseEntity<?> sendMaintenanceAlert(@RequestParam String email) {
         vesselItemService.vesselItemsAlert(email);
-        return ResponseEntity.ok().body(ApiResult.success("Se ha enviaddo un correo con la inormación requerida"));
+        return ResponseEntity.ok().body(ApiResult.success("Se ha enviaddo un correo con la información requerida"));
     }
 
 

@@ -47,7 +47,6 @@ export const maintenanceService = {
   },
 
   async create(payload: Partial<MaintenanceListItem>): Promise<MaintenanceListItem> {
-    console.log("Creating maintenance order with payload:", payload);
     const { data } = await api.post<MaintenanceListItem | ApiResult<MaintenanceListItem>>(
       BASE,
       payload,
@@ -56,8 +55,6 @@ export const maintenanceService = {
   },
 
   async update(id: number, payload: Partial<MaintenanceListItem>): Promise<MaintenanceListItem> {
-    console.log("Editing maintenance order with payload:", payload);
-
     const { data } = await api.put<MaintenanceListItem | ApiResult<MaintenanceListItem>>(
       `${BASE}/${id}`,
       payload,

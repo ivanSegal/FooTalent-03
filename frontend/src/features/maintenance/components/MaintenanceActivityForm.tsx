@@ -54,7 +54,6 @@ export const MaintenanceActivityForm: React.FC<Props> = ({
   vesselId,
   maintenanceOrderId,
 }) => {
-  console.log("activity", activity); // React Hook Form
   const {
     handleSubmit,
     control,

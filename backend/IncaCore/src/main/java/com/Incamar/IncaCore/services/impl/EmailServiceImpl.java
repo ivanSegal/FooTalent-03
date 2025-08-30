@@ -1,5 +1,6 @@
 package com.Incamar.IncaCore.services.impl;
 
+import com.Incamar.IncaCore.exceptions.EmailSendingException;
 import com.Incamar.IncaCore.services.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -37,11 +38,9 @@ public class EmailServiceImpl implements EmailService {
             helper.setText(htmlBody, true);
 
             javaMailSender.send(message);
-            log.info("HTML email sent to {}", to);
 
         } catch (MessagingException e) {
-            log.error("Error sending email to {}: {}", to, e.getMessage(), e);
-            throw new RuntimeException("Failed to send email", e);
+            throw new EmailSendingException("Failed to send email", e);
         }
     }
 

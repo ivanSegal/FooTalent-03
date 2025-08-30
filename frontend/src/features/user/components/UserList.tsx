@@ -18,7 +18,6 @@ export default function UserList() {
     queryKey: ["users", { page: 0, size: 20, sort: tableSort }],
     queryFn: () => userService.list({ page: 0, size: 20, sort: tableSort }),
   });
-  console.log("data", data);
   const [items, setItems] = useState<UserListItem[]>([]);
   const [current, setCurrent] = useState<UserListItem | null>(null);
   const [dialog, setDialog] = useState(false);

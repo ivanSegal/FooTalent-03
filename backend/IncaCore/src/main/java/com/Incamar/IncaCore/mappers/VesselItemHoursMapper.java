@@ -3,6 +3,7 @@ package com.Incamar.IncaCore.mappers;
 import com.Incamar.IncaCore.dtos.vesselItemHours.VesselItemHoursReq;
 import com.Incamar.IncaCore.dtos.vesselItemHours.VesselItemHoursRes;
 import com.Incamar.IncaCore.dtos.vesselItemHours.VesselItemHoursUpdateReq;
+import com.Incamar.IncaCore.exceptions.ResourceNotFoundException;
 import com.Incamar.IncaCore.models.VesselItem;
 import com.Incamar.IncaCore.models.VesselItemHours;
 import com.Incamar.IncaCore.models.VesselItemHoursDetails;
@@ -29,13 +30,13 @@ public interface VesselItemHoursMapper {
         List<VesselItemHoursDetails> details = dto.items().stream().map(d -> {
             VesselItemHoursDetails detail = new VesselItemHoursDetails();
             detail.setVesselItemHours(entity);
-            detail.setAssignedHours(d.addedHours().intValue());
+            detail.setAssignedHours(d.addedHours());
 
             // 🔹 Validamos si el item pertenece al vessel
             VesselItem vesselItem = vesselItems.stream()
                     .filter(vi -> vi.getId().equals(d.vesselItemId()))
                     .findFirst()
-                    .orElseThrow(() -> new RuntimeException(
+                    .orElseThrow(() -> new ResourceNotFoundException(
                             "El item con id " + d.vesselItemId() +
                                     " no pertenece a la embarcacion seleccionada con id " + entity.getVessel().getId()
                     ));
@@ -77,7 +78,7 @@ public interface VesselItemHoursMapper {
     default VesselItemHoursRes.Items mapItem(VesselItemHoursDetails entity) {
         return new VesselItemHoursRes.Items(
                 entity.getVesselItem().getId(),
-                entity.getAssignedHours().doubleValue()
+                entity.getAssignedHours()
         );
     }
 
@@ -103,7 +104,7 @@ public interface VesselItemHoursMapper {
             VesselItemHoursDetails detail = new VesselItemHoursDetails();
             detail.setVesselItemHours(entity);
             detail.setVesselItem(item);
-            detail.setAssignedHours(d.addedHours().intValue());
+            detail.setAssignedHours(d.addedHours());
 
             return detail;
         }).collect(Collectors.toList());
