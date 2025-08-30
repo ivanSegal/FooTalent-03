@@ -1,5 +1,6 @@
 package com.Incamar.IncaCore.dtos.vessels;
 
+import com.Incamar.IncaCore.enums.VesselStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -80,4 +81,7 @@ public class VesselRequestDto {
     @PositiveOrZero(message = "Las horas de navegación no pueden ser negativas")
     @Schema(description = "Horas de navegación de la embarcación", example = "12500.5", minimum = "0",required = true)
     private Double navigationHours;
+
+    @Schema(description = "Estado de la embarcacion")
+    private VesselStatus status;
 }

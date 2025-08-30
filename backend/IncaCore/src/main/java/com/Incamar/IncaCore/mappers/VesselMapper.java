@@ -23,7 +23,7 @@ public class VesselMapper {
         vessel.setSternType(dto.getSternType());
         vessel.setFuelType(dto.getFuelType());
         vessel.setNavigationHours(dto.getNavigationHours());
-        vessel.setStatus(VesselStatus.OPERATIONAL);
+        vessel.setStatus(dto.getStatus());
         return vessel;
     }
 
@@ -59,5 +59,6 @@ public class VesselMapper {
         vessel.setSternType(dto.getSternType());
         vessel.setFuelType(dto.getFuelType());
         vessel.setNavigationHours(dto.getNavigationHours());
+        vessel.setStatus(dto.getStatus());
     }
 }
