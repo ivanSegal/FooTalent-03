@@ -38,8 +38,6 @@ public class IventoryMovementController {
     }
 
     @GetInventoryMovementByIdEndpointDoc
-    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','INVENTORY') OR " +
-            "@securityService.hasRoleAndDepartment('OPERATOR','INVENTORY')")
     @GetMapping("/{id}")
     public ResponseEntity<ApiResult<?>> getInventoryMovementById(@PathVariable Long id) {
         InventoryMovementResponseDto responseDto = inventoryMovementService.getInventoryMovementById(id);
@@ -56,8 +54,6 @@ public class IventoryMovementController {
 
 
     @GetAllInventoryMovementsEndpointDoc
-    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','INVENTORY') OR " +
-            "@securityService.hasRoleAndDepartment('OPERATOR','INVENTORY')")
     @GetMapping
     public ResponseEntity<ApiResult<?>> getAllInventory(@ParameterObject Pageable pageable) {
         return ResponseEntity.ok(ApiResult.success(inventoryMovementService.getAllInventoryMovement(pageable),"Se visualizan exitosamente todos los movimientos de inventario."));
