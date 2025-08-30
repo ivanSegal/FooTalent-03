@@ -271,4 +271,17 @@ public class GlobalExceptionHandler {
     );
     return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body(errorResponse);
   }
+
+  @ExceptionHandler(EmailSendingException.class)
+  public ResponseEntity<ErrorResponse> handleEmailSendingException(EmailSendingException ex, HttpServletRequest request) {
+    String causeMessage = ex.getCause() != null ? ex.getCause().getMessage() : "Error desconocido al enviar el correo";
+    ErrorResponse errorResponse = new ErrorResponse(
+            HttpStatus.SERVICE_UNAVAILABLE.value(),
+            "EMAIL_SENDING_ERROR",
+            "No se pudo enviar el correo electrónico",
+            List.of(ex.getMessage(), causeMessage),
+            request.getRequestURI()
+    );
+    return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(errorResponse);
+  }
 }

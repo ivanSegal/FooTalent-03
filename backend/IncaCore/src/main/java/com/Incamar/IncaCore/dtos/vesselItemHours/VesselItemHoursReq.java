@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public record VesselItemHoursReq(
             @NotNull
             @Positive
             @Schema(description = "Horas asignadas a este componente", example = "5.5")
-            Double addedHours
+            BigDecimal addedHours
     ) {}
 
 }

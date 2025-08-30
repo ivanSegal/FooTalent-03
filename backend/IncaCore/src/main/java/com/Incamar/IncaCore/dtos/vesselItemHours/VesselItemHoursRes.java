@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Builder;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public record VesselItemHoursRes(
 ) {
     public record Items(
             Long vesselItemId,
-            Double addedHours
+            BigDecimal addedHours
     ) {
     }
 }

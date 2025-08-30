@@ -3,29 +3,22 @@ package com.Incamar.IncaCore.services.impl;
 import com.Incamar.IncaCore.dtos.vesselItemHours.VesselItemHoursReq;
 import com.Incamar.IncaCore.dtos.vesselItemHours.VesselItemHoursRes;
 import com.Incamar.IncaCore.dtos.vesselItemHours.VesselItemHoursUpdateReq;
-import com.Incamar.IncaCore.enums.MaintenanceOrderStatus;
 import com.Incamar.IncaCore.exceptions.ResourceNotFoundException;
 import com.Incamar.IncaCore.mappers.VesselItemHoursMapper;
 import com.Incamar.IncaCore.models.*;
-import com.Incamar.IncaCore.repositories.UserRepository;
 import com.Incamar.IncaCore.repositories.VesselItemHoursRepository;
 import com.Incamar.IncaCore.repositories.VesselItemRepository;
 import com.Incamar.IncaCore.repositories.VesselRepository;
 import com.Incamar.IncaCore.services.AuthService;
-import com.Incamar.IncaCore.services.EmailService;
 import com.Incamar.IncaCore.services.VesselItemHoursService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,8 +29,6 @@ public class VesselItemHoursServiceImpl implements VesselItemHoursService {
     private final VesselItemRepository vesselItemRepository;
     private final VesselItemHoursMapper vesselItemHoursMapper;
     private final VesselItemHoursRepository vesselItemHoursRepository;
-    private final EmailService emailService;
-    private final UserRepository userRepository;
 
 
     @Override
@@ -69,9 +60,9 @@ public class VesselItemHoursServiceImpl implements VesselItemHoursService {
         entity.getItems().forEach(detail -> {
             VesselItem item = detail.getVesselItem();
             if (item.getAccumulatedHours() == null) {
-                item.setAccumulatedHours(BigDecimal.valueOf(detail.getAssignedHours()));
+                item.setAccumulatedHours(detail.getAssignedHours());
             } else {
-                item.setAccumulatedHours(item.getAccumulatedHours().add(BigDecimal.valueOf(detail.getAssignedHours())));
+                item.setAccumulatedHours(item.getAccumulatedHours().add(detail.getAssignedHours()));
             }
         });
 
@@ -94,7 +85,7 @@ public class VesselItemHoursServiceImpl implements VesselItemHoursService {
             VesselItem item = detail.getVesselItem();
             if (item.getAccumulatedHours() != null) {
                 item.setAccumulatedHours(item.getAccumulatedHours()
-                        .subtract(BigDecimal.valueOf(detail.getAssignedHours())));
+                        .subtract(detail.getAssignedHours()));
             }
         });
 
@@ -103,10 +94,10 @@ public class VesselItemHoursServiceImpl implements VesselItemHoursService {
         existing.getItems().forEach(detail -> {
             VesselItem item = detail.getVesselItem();
             if (item.getAccumulatedHours() == null) {
-                item.setAccumulatedHours(BigDecimal.valueOf(detail.getAssignedHours()));
+                item.setAccumulatedHours(detail.getAssignedHours());
             } else {
                 item.setAccumulatedHours(item.getAccumulatedHours()
-                        .add(BigDecimal.valueOf(detail.getAssignedHours())));
+                        .add(detail.getAssignedHours()));
             }
         });
 

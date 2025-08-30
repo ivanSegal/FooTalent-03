@@ -91,7 +91,7 @@ public class VesselItemController {
     @PostMapping("/maintenance-alert")
     public ResponseEntity<?> sendMaintenanceAlert(@RequestParam String email) {
         vesselItemService.vesselItemsAlert(email);
-        return ResponseEntity.ok().body(ApiResult.success("Se ha enviaddo un correo con la inormación requerida"));
+        return ResponseEntity.ok().body(ApiResult.success("Se ha enviaddo un correo con la información requerida"));
     }
 
 

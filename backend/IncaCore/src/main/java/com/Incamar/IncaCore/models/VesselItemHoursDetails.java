@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "vessel_item_hours_details")
 @Data
@@ -18,8 +20,8 @@ public class VesselItemHoursDetails {
     @JoinColumn(name = "vessel_item_id", nullable = false)
     private VesselItem vesselItem;
 
-    @Column(nullable = false)
-    private Integer assignedHours;
+    @Column(precision = 10, scale = 2)
+    private BigDecimal assignedHours;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
