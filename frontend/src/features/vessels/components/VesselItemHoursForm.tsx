@@ -37,6 +37,13 @@ export default function VesselItemHoursForm({
   const [hoursMap, setHoursMap] = React.useState<Record<number, number>>({});
   const [submitting, setSubmitting] = React.useState(false);
 
+  // Helper para resetear el formulario
+  const resetForm = React.useCallback(() => {
+    setDate(dayjs());
+    setComments("");
+    setHoursMap({});
+  }, []);
+
   // Prefill en modo edición
   React.useEffect(() => {
     if (initial && initial.id) {
@@ -122,6 +129,7 @@ export default function VesselItemHoursForm({
         });
         onSaved(updated);
         await showAlert("Actualizado", "Reporte de horas actualizado.", "success");
+        resetForm();
       } else {
         // Modo creación
         await vesselItemHoursService.create(payload);
@@ -133,6 +141,7 @@ export default function VesselItemHoursForm({
         });
         onSaved(updated);
         await showAlert("Guardado", "Horas registradas correctamente.", "success");
+        resetForm();
       }
     } catch (e) {
       await showAlert("No se pudo guardar", (e as Error)?.message || "Intenta nuevamente", "error");

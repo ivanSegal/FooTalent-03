@@ -17,8 +17,8 @@ export const vesselSchema = z.object({
     .trim()
     .min(1, "Requerido")
     .transform((s) => s.toUpperCase())
-    .refine((v) => /^\d+$/.test(v) || /^ISM-\d{4}$/.test(v), {
-      message: "Debe ser numérico o con formato ISM-####",
+    .refine((v) => /^\d+$/.test(v) || /^ISMM-\d{4}$/.test(v), {
+      message: "Debe ser numérico o con formato ISMM-####",
     }),
   flagState: z.string().trim().min(1, "Requerido"),
   callSign: z.string().trim().min(1, "Requerido"),

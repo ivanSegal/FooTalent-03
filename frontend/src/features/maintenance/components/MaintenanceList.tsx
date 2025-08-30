@@ -55,7 +55,6 @@ export const MaintenanceList = () => {
   // Modal y datos para ver actividades por orden (similar a Ítems en Vessels)
   const [activitiesManagerOrderId, setActivitiesManagerOrderId] = useState<number | null>(null);
   const [activitiesModalData, setActivitiesModalData] = useState<MaintenanceActivityItem[]>([]);
-  console.log("activitiesModalData", activitiesModalData);
   const [activitiesModalLoading, setActivitiesModalLoading] = useState(false);
   // Nuevo: cache de conteos por orden y paginación del modal
   const [countsByOrder, setCountsByOrder] = useState<Record<number, number>>({});
@@ -85,7 +84,6 @@ export const MaintenanceList = () => {
           page: page - 1,
           size,
         });
-        console.log("resp", resp);
         setActivitiesModalData(resp.content ?? []);
         setActivitiesModalTotal(resp.totalElements ?? resp.content?.length ?? 0);
         setActivitiesModalPage((resp.number ?? page - 1) + 1);

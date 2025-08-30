@@ -88,7 +88,6 @@ export const MaintenanceForm: React.FC<Props> = ({
 
       if (maintenanceList) {
         const updatedMaintenance = await maintenanceService.update(maintenanceList.id, payload);
-        console.log("Updated maintenance order:", updatedMaintenance);
         const updatedMaintenanceLists = maintenanceLists.map((t) =>
           t.id === updatedMaintenance.id ? updatedMaintenance : t,
         );
@@ -108,8 +107,6 @@ export const MaintenanceForm: React.FC<Props> = ({
       // setMaintenanceList(null);
     }
   };
-  console.log("errors", errors);
-  // console.log("test", watch());
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div className="grid gap-4 md:grid-cols-2">

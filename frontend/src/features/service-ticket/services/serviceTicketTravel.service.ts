@@ -35,7 +35,6 @@ const TRAVEL_BASE = "/travels";
 
 export const serviceTicketTravelService = {
   async create(payload: CreateServiceTicketTravelPayload): Promise<ServiceTicketTravel> {
-    console.log("Creating travel with payload:", payload);
     const { data } = await api.post<ServiceTicketTravel | ApiResult<ServiceTicketTravel>>(
       TRAVEL_BASE,
       payload,
