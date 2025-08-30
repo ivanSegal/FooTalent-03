@@ -26,16 +26,12 @@ public class ServiceTicketController {
     private final ServiceTicketServiceImpl ticket;
 
     @GetAllServiceTicketEndpointDoc
-    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
-            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @GetMapping
     public ResponseEntity<Page<ServiceTicketResponseDto>> getAll(@ParameterObject Pageable pageable) {
         return ResponseEntity.ok(ticket.getAllBoletasServicio(pageable));
     }
 
     @GetServiceTicketByIdEndpointDoc
-    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
-            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @GetMapping("/{id}")
     public ResponseEntity<ServiceTicketResponseDto> getById(@PathVariable Long id) {
         return ResponseEntity.ok(ticket.getBoletaServicioById(id));

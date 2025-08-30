@@ -28,16 +28,12 @@ public class VesselController {
 
 
     @GetAllEmbarcacionesEndpointDoc
-    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
-            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @GetMapping
     public ResponseEntity<ApiResult<?>> getAllVessel(@ParameterObject Pageable pageable) {
         return ResponseEntity.ok(ApiResult.success(vesselService.getAllVessels(pageable), "Se visualizan exitosamente todas las embarcaciones."));
     }
 
     @GetEmbarcacionByIdEndpointDoc
-    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
-            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @GetMapping("/{id}")
     public ResponseEntity<ApiResult<?>> getVesselById(@PathVariable Long id) {
         VesselResponseDto vesselResponseDto = vesselService.getVesselById(id);

@@ -29,8 +29,6 @@ public class VesselItemHoursController {
     private final VesselItemHoursService vesselItemHoursService;
 
     @GetAllVesselItemHoursEndpointDoc
-    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
-            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @GetMapping
     public ResponseEntity<?> getAll(@ParameterObject Pageable pageable){
         Page<VesselItemHoursRes> response = vesselItemHoursService.getAll(pageable);
@@ -39,8 +37,6 @@ public class VesselItemHoursController {
     }
 
     @GetVesselItemHoursByIdEndpointDoc
-    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','VESSEL') OR " +
-            "@securityService.hasRoleAndDepartment('OPERATOR','VESSEL') ")
     @GetMapping("{id}")
     public ResponseEntity<?> getById(@PathVariable Long id){
         VesselItemHoursRes response = vesselItemHoursService.getById(id);

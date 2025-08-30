@@ -37,8 +37,6 @@ public class StockController {
     }
 
     @GetStockByIdEndpointDoc
-    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','INVENTORY') OR " +
-            "@securityService.hasRoleAndDepartment('OPERATOR','INVENTORY')")
     @GetMapping("/{id}")
     public ResponseEntity<ApiResult<?>> getStockById(@PathVariable Long id) {
         StockResponseDto responseDto = stockService.getStockById(id);
@@ -54,8 +52,6 @@ public class StockController {
     }
 
     @GetAllStocksEndpointDoc
-    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','INVENTORY') OR " +
-            "@securityService.hasRoleAndDepartment('OPERATOR','INVENTORY')")
     @GetMapping
     public ResponseEntity<ApiResult<?>> getAllStock(@ParameterObject Pageable pageable) {
         return ResponseEntity.ok(ApiResult.success(stockService.getAllStock(pageable),

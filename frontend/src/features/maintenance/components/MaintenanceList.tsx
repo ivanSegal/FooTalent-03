@@ -1,17 +1,6 @@
 "use client";
 import React, { useState, useMemo, useCallback, useEffect } from "react";
-import {
-  Table,
-  Tag,
-  Button,
-  Space,
-  Input,
-  Select,
-  Tooltip,
-  DatePicker,
-  Skeleton,
-  Modal,
-} from "antd";
+import { Table, Tag, Button, Space, Input, Select, Tooltip, DatePicker, Modal } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
@@ -37,6 +26,8 @@ import type { TableProps } from "antd";
 import { NormalizedApiError } from "@/types/api";
 import { showAlert, showConfirmAlert } from "@/utils/showAlert";
 import PDFGenerator from "@/components/pdf/PDFGenerator";
+import { inventoryMovementService } from "@/features/inventory-items/services/inventoryMovement.service";
+import type { InventoryMovement } from "@/features/inventory-items/types/inventoryMovement.types";
 
 dayjs.extend(customParseFormat);
 
@@ -71,6 +62,10 @@ export const MaintenanceList = () => {
   const [activitiesModalPage, setActivitiesModalPage] = useState<number>(1);
   const [activitiesModalSize, setActivitiesModalSize] = useState<number>(10);
   const [activitiesModalTotal, setActivitiesModalTotal] = useState<number>(0);
+  // Modal de detalles de movimiento de inventario
+  const [movementModalOpen, setMovementModalOpen] = useState(false);
+  const [movementModalLoading, setMovementModalLoading] = useState(false);
+  const [movementModal, setMovementModal] = useState<InventoryMovement | null>(null);
   // Filtros y ordenamiento
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string | undefined>(undefined);
@@ -363,6 +358,22 @@ export const MaintenanceList = () => {
               template={MaintenanceTemplate}
               data={record}
               fileName={`orden-mantenimiento-${record.id ?? "sin-id"}.pdf`}
+              templateProps={{ activities: activitiesModalData }}
+              onBeforeOpen={async () => {
+                // Cargar actividades para el PDF si hay id
+                if (record.id != null) {
+                  try {
+                    const page = await maintenanceActivitiesService.searchByOrder(record.id, {
+                      page: 0,
+                      size: 100,
+                    });
+                    return { activities: page.content ?? [] };
+                  } catch {
+                    return { activities: activitiesModalData };
+                  }
+                }
+                return { activities: [] };
+              }}
             />
           </Tooltip>
           {/* Nueva actividad: abre modal de actividades con formulario */}
@@ -440,9 +451,21 @@ export const MaintenanceList = () => {
       key: "inventoryMovementIds",
       width: 200,
       render: (_: unknown, r: MaintenanceActivityItem) => {
-        const ids = r.inventoryMovementIds ?? r.inventoryMovementsIds;
+        const ids = r.inventoryMovementIds;
         return Array.isArray(ids) && ids.length ? (
-          <span className="font-mono text-xs">[{ids.join(", ")}]</span>
+          <Space size="small" wrap>
+            {ids.map((id) => (
+              <Tooltip key={id} title="Ver movimiento">
+                <Tag
+                  color="blue"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => openMovementModal(id)}
+                >
+                  #{id}
+                </Tag>
+              </Tooltip>
+            ))}
+          </Space>
         ) : (
           <span className="text-gray-400">—</span>
         );
@@ -516,6 +539,24 @@ export const MaintenanceList = () => {
     }
     return undefined;
   }, [selectedActivity, activitiesManagerOrderId, maintenanceLists]);
+
+  const openMovementModal = useCallback(async (id: number) => {
+    setMovementModalOpen(true);
+    setMovementModalLoading(true);
+    try {
+      const mov = await inventoryMovementService.getById(id);
+      setMovementModal(mov);
+    } catch {
+      setMovementModal(null);
+    } finally {
+      setMovementModalLoading(false);
+    }
+  }, []);
+
+  const closeMovementModal = useCallback(() => {
+    setMovementModalOpen(false);
+    setMovementModal(null);
+  }, []);
 
   return (
     <main className="min-h-screen bg-gray-50 p-8">
@@ -737,6 +778,65 @@ export const MaintenanceList = () => {
           }}
           scroll={{ x: "max-content" }}
         />
+      </Modal>
+
+      {/* Modal: Detalle de movimiento de inventario */}
+      <Modal
+        open={movementModalOpen}
+        title={movementModal ? `Movimiento #${movementModal.id}` : "Movimiento"}
+        onCancel={closeMovementModal}
+        footer={null}
+        width={720}
+      >
+        {movementModalLoading ? (
+          <div className="p-4 text-center text-gray-500">Cargando…</div>
+        ) : movementModal ? (
+          <div className="space-y-4">
+            <div className="grid gap-3 md:grid-cols-2">
+              <div>
+                <div className="text-xs text-gray-500">Fecha</div>
+                <div className="font-medium">{movementModal.date}</div>
+              </div>
+              <div>
+                <div className="text-xs text-gray-500">Tipo</div>
+                <Tag color={movementModal.movementType === "ENTRADA" ? "green" : "red"}>
+                  {movementModal.movementType}
+                </Tag>
+              </div>
+              <div>
+                <div className="text-xs text-gray-500">Almacén</div>
+                <div className="font-medium">{movementModal.warehouseName}</div>
+              </div>
+              <div>
+                <div className="text-xs text-gray-500">Responsable</div>
+                <div className="font-medium">{movementModal.responsibleName ?? "—"}</div>
+              </div>
+              <div className="md:col-span-2">
+                <div className="text-xs text-gray-500">Motivo</div>
+                <div className="font-medium">{movementModal.reason ?? "—"}</div>
+              </div>
+            </div>
+            <div>
+              <div className="mb-2 text-sm font-semibold">Detalles</div>
+              <Table
+                size="small"
+                rowKey={(r) => String(r.itemWarehouseId)}
+                dataSource={movementModal.movementDetails}
+                pagination={false}
+                columns={[
+                  {
+                    title: "Ítem almacén",
+                    dataIndex: "itemWarehouseName",
+                    key: "itemWarehouseName",
+                  },
+                  { title: "Cantidad", dataIndex: "quantity", key: "quantity", width: 120 },
+                ]}
+              />
+            </div>
+          </div>
+        ) : (
+          <div className="p-4 text-center text-gray-500">No se encontró el movimiento.</div>
+        )}
       </Modal>
     </main>
   );

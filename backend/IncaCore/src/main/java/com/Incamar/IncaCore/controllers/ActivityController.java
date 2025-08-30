@@ -29,16 +29,12 @@ public class ActivityController {
     private final ActivityService activityService;
 
     @GetAllActivitiesEndpointDoc
-    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','MAINTENANCE') OR " +
-            "@securityService.hasRoleAndDepartment('OPERATOR','MAINTENANCE') ")
     @GetMapping
     public ResponseEntity<Page<ActivityResponseDto>> getAllActivities(@ParameterObject Pageable pageable) {
         return ResponseEntity.ok(activityService.getAllActivities(pageable));
     }
 
     @GetActivityByIdEndpointDoc
-    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','MAINTENANCE') OR " +
-            "@securityService.hasRoleAndDepartment('OPERATOR','MAINTENANCE') ")
     @GetMapping("/{id}")
     public ResponseEntity<ActivityResponseDto> getActivityById(@PathVariable Long id) {
         return ResponseEntity.ok(activityService.getActivityById(id));

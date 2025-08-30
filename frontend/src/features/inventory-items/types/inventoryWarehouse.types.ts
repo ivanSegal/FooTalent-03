@@ -1,9 +1,9 @@
 import type { PageResponse } from "@/features/maintenance";
 
-export interface Warehouse {
+export interface InventoryWarehouse {
   id: number;
   name: string;
   location: string;
 }
 
-export type WarehousePage = PageResponse<Warehouse>;
+export type InventoryWarehousePage = PageResponse<InventoryWarehouse>;

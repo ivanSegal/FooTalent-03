@@ -37,8 +37,6 @@ public class WarehouseController {
     }
 
     @GetWarehouseByIdEndpointDoc
-    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','INVENTORY') OR " +
-            "@securityService.hasRoleAndDepartment('OPERATOR','INVENTORY')")
     @GetMapping("/{id}")
     public ResponseEntity<ApiResult<?>> getWarehouseById(@PathVariable Long id) {
         WarehouseResponseDto warehouseResponseDto = warehouseService.getWarehouseById(id);
@@ -63,8 +61,6 @@ public class WarehouseController {
     }
 
     @GetAllWarehousesEndpointDoc
-    @PreAuthorize("hasRole('ADMIN') OR @securityService.hasRoleAndDepartment('SUPERVISOR','INVENTORY') OR " +
-            "@securityService.hasRoleAndDepartment('OPERATOR','INVENTORY')")
     @GetMapping
     public ResponseEntity<ApiResult<?>> getAllWarehouse(@ParameterObject Pageable pageable) {
         return ResponseEntity.ok(ApiResult.success(warehouseService.getAllWarehouse(pageable),"Se visualizan exitosamente todas las embarcaciones."));
