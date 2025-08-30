@@ -6,11 +6,15 @@ import { PrinterOutlined } from "@ant-design/icons";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 
 type PDFGeneratorProps<T> = {
-  template: React.ComponentType<{ data: T }>;
+  template: React.ComponentType<{ data: T } & Record<string, unknown>>;
   data: T;
   fileName?: string;
   showPreview?: boolean;
   downloadText?: string;
+  // Extra props to pass directly to the template
+  templateProps?: Record<string, unknown>;
+  // Optional async loader invoked before opening preview; its result will be spread into template props
+  onBeforeOpen?: () => Promise<Record<string, unknown>>;
 };
 
 // Carga dinámica para evitar SSR del visor
@@ -40,8 +44,27 @@ const PDFGenerator = <T,>({
   showPreview = true,
   fileName = "document.pdf",
   downloadText = "Descargar PDF",
+  templateProps,
+  onBeforeOpen,
 }: PDFGeneratorProps<T>) => {
   const [showFullPreview, setShowFullPreview] = useState(false);
+  const [extra, setExtra] = useState<Record<string, unknown>>({});
+  const [loading, setLoading] = useState(false);
+
+  const handleOpen = async () => {
+    if (onBeforeOpen) {
+      try {
+        setLoading(true);
+        const loaded = await onBeforeOpen();
+        setExtra(loaded || {});
+      } finally {
+        setLoading(false);
+      }
+    }
+    setShowFullPreview(true);
+  };
+
+  const mergedProps = { ...(templateProps ?? {}), ...(extra ?? {}) } as Record<string, unknown>;
 
   return (
     <div className="pdf-generator m-0">
@@ -49,9 +72,10 @@ const PDFGenerator = <T,>({
         {showPreview && (
           <Button
             icon={<PrinterOutlined />}
-            onClick={() => setShowFullPreview(!showFullPreview)}
+            onClick={() => void handleOpen()}
             shape="circle"
             size="small"
+            loading={loading}
           />
         )}
       </div>
@@ -68,11 +92,11 @@ const PDFGenerator = <T,>({
               </Button>
               <PDFDownloadLink
                 key="download"
-                document={<Template data={data} />}
+                document={<Template data={data} {...mergedProps} />}
                 fileName={fileName}
               >
-                {({ loading }) => (
-                  <Button type="primary" loading={loading}>
+                {({ loading: downloadLoading }) => (
+                  <Button type="primary" loading={downloadLoading}>
                     {downloadText}
                   </Button>
                 )}
@@ -84,7 +108,7 @@ const PDFGenerator = <T,>({
         >
           <div style={{ width: "100%", height: "100%" }}>
             <PDFViewer width="100%" height="100%">
-              <Template data={data} />
+              <Template data={data} {...mergedProps} />
             </PDFViewer>
           </div>
         </Modal>

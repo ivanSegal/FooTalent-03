@@ -25,13 +25,13 @@ public class VesselRequestDto {
 
     @NotBlank(message = "El ISMM es obligatorio")
     @Pattern(
-            regexp = "^(ISM-[0-9]{3,6}|[0-9]{3,12})$",
-            message = "El ISM debe ser numérico o tener el formato ISM-####"
+            regexp = "^(ISMM-[0-9]{3,6}|[0-9]{3,12})$",
+            message = "El ISMM debe ser numérico o tener el formato ISMM-####"
     )
     @Schema(
             description = "Número ISMM de la embarcación. Puede ser numérico o en formato ISM-####",
-            example = "775991344",
-            pattern = "^(ISM-[0-9]{3,6}|[0-9]{3,12})$",
+            example = "ISMM-775991344",
+            pattern = "^(ISMM-[0-9]{3,6}|[0-9]{3,12})$",
             required = true
     )
     private String ismm;

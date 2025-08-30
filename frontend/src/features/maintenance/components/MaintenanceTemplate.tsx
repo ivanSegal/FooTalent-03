@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 
 import LogoLogin from "@/assets/images/logo-incacore.svg";
+import type { MaintenanceActivityItem } from "../types/maintenanceActivities.types";
 
 // Registrar la fuente "DM Sans" desde archivos locales para evitar errores de formato/CORS
 let dmSansRegistered = false;
@@ -123,16 +124,27 @@ const styles = StyleSheet.create({
   analysisValuePositive: { color: "#16a34a" },
   analysisValueNegative: { color: "#dc2626" },
   analysisValueNeutral: { color: "#334155" },
+  // Actividades
+  activitiesHeaderRow: {
+    flexDirection: "row",
+    backgroundColor: "#f5f5f5",
+    borderBottomWidth: 1,
+    borderBottomColor: "#e6effa",
+  },
+  activitiesHeaderCell: { padding: 4, fontWeight: "bold", color: "#333" },
+  activitiesRow: { flexDirection: "row", borderTopWidth: 1, borderTopColor: "#e6effa" },
+  activitiesCell: { padding: 4, color: "#222" },
 });
 
 const safe = (v?: string | number | null) => {
   return v === undefined || v === null || v === "" ? "—" : String(v);
 };
 
-export const MaintenanceTemplate: React.FC<{ data: MaintenanceData; logoSrc?: string }> = ({
-  data,
-  logoSrc,
-}) => {
+export const MaintenanceTemplate: React.FC<{
+  data: MaintenanceData;
+  logoSrc?: string;
+  activities?: MaintenanceActivityItem[];
+}> = ({ data, logoSrc, activities }) => {
   dayjs.extend(customParseFormat);
   const parse = (s?: string | null) => (s ? dayjs(s, "DD-MM-YYYY", true) : undefined);
   const diffDays = (a?: string | null, b?: string | null) => {
@@ -232,6 +244,37 @@ export const MaintenanceTemplate: React.FC<{ data: MaintenanceData; logoSrc?: st
               ))}
             </View>
           </View>
+
+          {/* Actividades */}
+          {Array.isArray(activities) && activities.length > 0 && (
+            <View style={styles.section}>
+              <View style={styles.tableBox}>
+                <Text style={styles.sectionTitleBar}>Actividades</Text>
+                <View style={[styles.activitiesHeaderRow]}>
+                  <Text style={[styles.activitiesHeaderCell, { flex: 0.6 }]}>ID</Text>
+                  <Text style={[styles.activitiesHeaderCell, { flex: 1 }]}>Tipo</Text>
+                  <Text style={[styles.activitiesHeaderCell, { flex: 1.2 }]}>Ítem</Text>
+                  <Text style={[styles.activitiesHeaderCell, { flex: 2 }]}>Descripción</Text>
+                  <Text style={[styles.activitiesHeaderCell, { flex: 1.4 }]}>Movimientos</Text>
+                </View>
+                {activities.map((a, idx) => (
+                  <View key={a.id ?? idx} style={[styles.activitiesRow, idx === 0 ? {} : {}]}>
+                    <Text style={[styles.activitiesCell, { flex: 0.6 }]}>{safe(a.id)}</Text>
+                    <Text style={[styles.activitiesCell, { flex: 1 }]}>{safe(a.activityType)}</Text>
+                    <Text style={[styles.activitiesCell, { flex: 1.2 }]}>
+                      {a.vesselItemName ? a.vesselItemName : `#${safe(a.vesselItemId)}`}
+                    </Text>
+                    <Text style={[styles.activitiesCell, { flex: 2 }]}>{safe(a.description)}</Text>
+                    <Text style={[styles.activitiesCell, { flex: 1.4 }]}>
+                      {Array.isArray(a.inventoryMovementIds) && a.inventoryMovementIds.length
+                        ? `[${a.inventoryMovementIds.join(", ")}]`
+                        : "—"}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+          )}
 
           {/* Análisis de tiempos */}
           <View style={styles.section}>
