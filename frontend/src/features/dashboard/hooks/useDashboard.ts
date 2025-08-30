@@ -326,9 +326,10 @@ export function useDashboard(): UseDashboardResult {
     const validMaint = maintItems.filter(
       (it) => !canceledSet.has(String(it.status ?? "").toUpperCase()),
     );
-    const maintenanceFinished = validMaint.filter(
-      (it) => finishedSet.has(String(it.status ?? "").toUpperCase()) || Boolean(it.finishedAt),
-    ).length;
+    const maintenanceFinished = validMaint.filter((it) => {
+      const st = String(it.status ?? "").toUpperCase();
+      return finishedSet.has(st) && Boolean(it.finishedAt);
+    }).length;
     const maintenanceOthers = Math.max(0, validMaint.length - maintenanceFinished);
     const maintenancePreventive = validMaint.filter((it) =>
       ["PREVENTIVO", "PREVENTIVE"].includes(String(it.maintenanceType ?? "").toUpperCase()),

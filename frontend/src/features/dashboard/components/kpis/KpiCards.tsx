@@ -29,8 +29,8 @@ export default function KpiCards({ totals }: Props) {
       title: "Órdenes de Mantenimiento",
       items: [
         { label: "Finalizadas", value: totals.maintenanceFinished, color: "text-emerald-600" },
-        { label: "Otras", value: totals.maintenanceOthers, color: "text-slate-700" },
-        { label: "Preventivo", value: totals.maintenancePreventive, color: "text-blue-600" },
+        { label: "Abiertas", value: totals.maintenanceOthers, color: "text-amber-600" },
+        { label: "Totales", value: totals.totalMaintenanceOrders, color: "text-slate-700" },
       ],
       iconColor: "text-indigo-600",
       icon: <MaintenanceIcon className="h-6 w-6" />,
