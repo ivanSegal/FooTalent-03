@@ -37,7 +37,6 @@ export default function VesselItemForm({ vesselId, current, onSaved, onCancel }:
       materialType: "COMPONENTS",
     },
   });
-
   React.useEffect(() => {
     if (current) {
       reset(current);

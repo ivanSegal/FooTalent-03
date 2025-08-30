@@ -45,8 +45,6 @@ export const vesselItemService = {
   },
 
   async create(payload: Partial<VesselItem> & { vesselId: number }): Promise<VesselItem> {
-    console.log("Creating vessel with payload:", payload);
-
     const { data } = await api.post<VesselItem | ApiResult<VesselItem>>(`${BASE}`, payload);
     return unwrap<VesselItem>(data);
   },

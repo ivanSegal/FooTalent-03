@@ -145,7 +145,6 @@ export const maintenanceActivitiesService = {
 
   async create(payload: Partial<MaintenanceActivityItem>): Promise<MaintenanceActivityItem> {
     const body = normalizeActivityPayload(payload);
-    console.log("Creating activity with payload:", JSON.stringify(body));
     const { data } = await api.post<MaintenanceActivityItem | ApiResult<MaintenanceActivityItem>>(
       BASE,
       body,
@@ -159,7 +158,6 @@ export const maintenanceActivitiesService = {
     payload: Partial<MaintenanceActivityItem>,
   ): Promise<MaintenanceActivityItem> {
     const body = normalizeActivityPayload(payload);
-    console.log("Updating activity id:", id, "with payload:", JSON.stringify(body));
     const { data } = await api.put<MaintenanceActivityItem | ApiResult<MaintenanceActivityItem>>(
       `${BASE}/${id}`,
       body,
